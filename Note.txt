@@ -10,4 +10,5 @@ Note
 像是<'XXX' = XX, 'ooo'= oo, .....>
 value = soup.find(.....).get('ooo')
 
+3.執行 pyinstaller -F .\XXXXXX.py 轉成 .exe檔
 
