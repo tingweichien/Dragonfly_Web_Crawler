@@ -1,0 +1,13 @@
+Note
+1. selenium 用來執行像登入，按下一頁的動作，或是按鍵
+回傳網頁資訊 = selenium.post(url, data, headers)
+回傳值若要看內容-->回傳網頁資訊.text
+當然也可以用 selenium.get(url. headers)來回傳資料
+
+2. beautifulsoup用來搜尋字串，回傳即回字串，就是那行html或css
+像這裡我就用id做搜尋
+找到那串字串之後，如果要在解析裡面的變數值，即可以用get
+像是<'XXX' = XX, 'ooo'= oo, .....>
+value = soup.find(.....).get('ooo')
+
+
