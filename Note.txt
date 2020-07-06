@@ -10,5 +10,7 @@ Note
 像是<'XXX' = XX, 'ooo'= oo, .....>
 value = soup.find(.....).get('ooo')
 
-3.執行 pyinstaller -F .\XXXXXX.py 轉成 .exe檔
-
+3.執行 pyinstaller -F -w --onefile.\XXXXXX.py 轉成 .exe檔
+-w是不要出現console
+--onefile是產生一個.exe檔
+記得要將.exe檔從dist中拉到目錄，如果你有連結檔按圖片的話ㄨㄣ
