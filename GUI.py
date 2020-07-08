@@ -5,13 +5,14 @@
 # https://www.itread01.com/content/1548486187.html
 # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/anchors.html
 # https://www.geeksforgeeks.org/python-grid-method-in-tkinter/
-#https://www.youtube.com/watch?v=UZX5kH72Yx4
+# https://www.youtube.com/watch?v=UZX5kH72Yx4
+# https://stackoverflow.com/questions/1101750/tkinter-attributeerror-nonetype-object-has-no-attribute-attribute-name
 
-from Dragonfly import DataCrawler
-from ColorClass import color 
+from Dragonfly import *
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
+from tkinter import ttk 
 from tkinter.messagebox import *
 import os
 import os.path
@@ -23,7 +24,11 @@ InputArgumentsLabel = ["Account", "Password", "ID"]
 # auto save account and password file
 path = os.getenv('temp')
 filename = os.path.join(path, 'info.txt')
-    
+
+current_dropdown_index = 0 
+Login_Response = 0
+Login_state = 0    
+
 ##################################################################
 # check if the user enter the info properly
 def check(InputList):
@@ -50,20 +55,24 @@ def auto_fill():
 
 
 ##################################################################
-def show_result():
+def show_result_button():
     InputList = [account.get(), password.get(), ID.get()]
 
     # check if the user enter the info properly
     empty_or_not = check(InputList)
+    
+    #login
+    #[Login_Response, Login_state] = Login_Web(account.get(), password.get())    
+    if (Login_state == False):
+        messagebox.showwarning('Warning!!!','Please Login first')
+        return
 
     # this datd do not contain the Longitude and Latitude infomation
     if (empty_or_not == 0):
-        [Output_LNG, Output_LAT] = DataCrawler(InputList[0], InputList[1], InputList[2])
+        [Output_LNG, Output_LAT] = DataCrawler(Login_Response, ID.get())
         if (Output_LNG == '' or Output_LAT == ''):
             Output_LNG = 'No Data'
             Output_LAT = 'No Data'
-        elif (Output_LNG == -1):    
-            messagebox.showwarning('Warning!!!', InputArgumentsLabel[0] + " or " + InputArgumentsLabel[1] + " might be incorrect!!!!")    #incorrect account or password
         elif (Output_LNG == -2):
             messagebox.showwarning('Warning!!!', InputArgumentsLabel[2] + " number is out of range!!!!")    #ID number overflow
 
@@ -74,8 +83,32 @@ def show_result():
 
     # and write the account and password to the filename
     with open(filename, 'w') as fp:
-        fp.write(','.join((InputList[0],InputList[1])))
-    
+        fp.write(','.join((InputList[0], InputList[1])))
+
+
+def LoginButton():
+    global Login_Response, Login_state
+    [Login_Response, Login_state] = Login_Web(account.get(), password.get())
+    if (Login_state == False):    
+        messagebox.showwarning('Warning!!!', InputArgumentsLabel[0] + " or " + InputArgumentsLabel[1] + " might be incorrect!!!!")    #incorrect account or password
+
+        
+#############################################################
+def Family_drop_down_menu_callback(*args):
+
+    global current_dropdown_index
+    current_dropdown_index = Family_drop_down_menu.current()
+    tmp = Species_Name_Group[current_dropdown_index]
+    Species_drop_down_menu['value'] = tmp
+    var_species.set(tmp[0])
+    print (var_family.get())
+    print (Family_drop_down_menu.current())
+
+      
+def Species_drop_down_menu_callback(*args):
+    map_result_List = SpeiciesCrawler(Login_Response, var_family.get(), var_species.get())
+
+   
 
 ################################################################### main
 ################################################################### start
@@ -98,8 +131,8 @@ canvas.grid(row = 0, column = 0, columnspan = 2)
 Label(main, text = "Account:").grid(row=1)
 Label(main, text = "Password:").grid(row=2)
 Label(main, text = "ID:").grid(row=3)
-Label(main, text = "The Longitude is:").grid(row=5)
-Label(main, text = "The Lateral is:").grid(row=6)
+Label(main, text = "The Latutude is:").grid(row=5)
+Label(main, text = "The Longitude is:").grid(row=6)
 
 # Entry
 VarName = StringVar(main, value='')
@@ -114,8 +147,26 @@ blank_LAT = Entry(main)
 account.grid(row=1, column=1)
 password.grid(row=2, column=1)
 ID.grid(row=3, column=1)
-blank_LNG.grid(row=5, column=1)
-blank_LAT.grid(row=6, column=1)
+blank_LAT.grid(row=5, column=1)
+blank_LNG.grid(row=6, column=1)
+
+
+# drop down menu
+# family
+var_family = StringVar(main)
+var_family.set(Species_Family_Name[0])
+Family_drop_down_menu = ttk.Combobox(main, width=10, textvariable=var_family, values=Species_Family_Name)
+Family_drop_down_menu.bind("<<ComboboxSelected>>", Family_drop_down_menu_callback)
+Family_drop_down_menu.grid(row=2, column=3)
+
+
+# species
+var_species = StringVar(main)
+var_species.set(Calopterygidae_Species[0])
+Species_drop_down_menu = ttk.Combobox(main, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
+Species_drop_down_menu.bind("<<ComboboxSelected>>", Species_drop_down_menu_callback)
+Species_drop_down_menu.grid(row=2, column=4)
+tmp = Entry(main, textvariable=var_family).grid(row=3, column=3)
 
 
 # try to auto fill the account and password
@@ -124,10 +175,14 @@ VarName.set(n)
 VarPwd.set(p)   
 
 
+Button(main,
+        text='Login',
+        command=LoginButton).grid(row=4, column=2, sticky=W, pady=4)
+
 # Button(main, text='Quit', command=main.destroy).grid(row=5, column=0, sticky=W, pady=4)
 Button( main,
         text='Enter\b',
-        command=show_result,
+        command=show_result_button,
         height=2,
         width=53,
         bg="gray80").grid(row=4, column=0, columnspan=2, sticky=W, pady=4)
