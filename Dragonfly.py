@@ -125,7 +125,7 @@ def DataCrawler(Input_account, Input_password, Input_ID):
         for All_Observation_Data_response_Data in All_Observation_Data_response_Data_Set.find_all('td'):
             # check if the wanted data crawl to the last and avoid the unwanted data
             if All_Observation_Data_response_Data.text == '簡述':
-                Data_List.append(simplifyTableInfo(tmp_List[0], tmp_List[1], tmp_List[2], tmp_List[3], tmp_List[4], tmp_List[5], tmp_List[6]))
+                Data_List.append(simplifyTableInfo(tmp_List[0], tmp_List[1], tmp_List[2], tmp_List[3], tmp_List[4], tmp_List[5], tmp_List[6], tmp_Listp[7]))
                 tmp_List.clear()
                 break
             tmp_List.append(All_Observation_Data_response_Data.text)

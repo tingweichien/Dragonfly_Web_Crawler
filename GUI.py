@@ -5,6 +5,7 @@
 # https://www.itread01.com/content/1548486187.html
 # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/anchors.html
 # https://www.geeksforgeeks.org/python-grid-method-in-tkinter/
+#https://www.youtube.com/watch?v=UZX5kH72Yx4
 
 from Dragonfly import DataCrawler
 from ColorClass import color 
