@@ -1,5 +1,11 @@
 #Put the info and parameter in here
 
+
+###################################################
+# GUI setting
+Table_scroll_num = 10 
+
+
 ###################################################
 #\ request url
 # general ur 
@@ -30,6 +36,7 @@ map_info_url = "tokei.php?kind_key="
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
     }
+
 
 # Species name
 Calopterygidae_Species = [

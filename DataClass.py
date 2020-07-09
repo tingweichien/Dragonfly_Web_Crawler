@@ -1,3 +1,5 @@
+from tkinter import *
+
 class simplifyTableInfo:
     def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User):
         self.IdNumber = IdNumber
@@ -49,3 +51,17 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Longitude]: ' + self.Longitude +
                 '  [Species]: ' + self.Species +
                 '  [Description]: ' + self.Description)        
+
+
+
+# table class for tk GUI
+# reference : https://www.geeksforgeeks.org/create-table-using-tkinter/
+class Table:
+    def __init__(self, root, list, row_start, column_start):
+        for i in range(row_start, len(list)):
+            for j in range(column_start, len(list[0])):
+                self.e = Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, list[i][j])
+
+        
