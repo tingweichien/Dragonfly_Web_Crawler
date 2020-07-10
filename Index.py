@@ -1,4 +1,12 @@
-#Put the info and parameter in here
+#\ Put the info and parameter in here
+
+# import
+from fake_useragent import UserAgent
+
+# color setting
+
+Bold = "\033[1;31m"
+bold = "\033[0;0m"
 
 
 ###################################################
@@ -7,6 +15,8 @@ Table_scroll_num = 10
 
 # map setting
 mapfilename = "map.html"
+map_plot_max_data_num = 200
+
 # initial map location
 Init_Map_LAT = 24.150924
 Init_Map_LNG = 120.650710
@@ -40,9 +50,17 @@ Detailed_discriptions_url = 'read_data.php?id='
 map_info_url = "tokei.php?kind_key="
 
 # Header
+'''
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
     }
+'''
+#--->Now use random fake user agent
+# https://ithelp.ithome.com.tw/articles/10209356
+UA = UserAgent()
+headers = {
+        'User-Agent' : UA.random,
+}
 
 
 # Species name

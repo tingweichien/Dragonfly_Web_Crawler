@@ -6,14 +6,15 @@ import re
 from Index import *
 
 
+
 ########################
 ErrorID = {
     "Login_error": -1,
     "ID_overflow": -2
 }
 
-session = requests.Session()
 
+session = requests.Session()
 
 ##################################################################
 def Login_Web(Input_account, Input_password):
@@ -153,7 +154,7 @@ def DataCrawler(Login_Response, Input_ID):
     Max_All_Observation_Data_response_Data = All_Observation_Data_response_Data_Set.find_all('td')
     #print('Max = ' + Max_All_Observation_Data_response_Data[0].text)
     if (int(id) > int(Max_All_Observation_Data_response_Data[0].text) or int(id) < 0):
-        return [ErrorID["ID_overflow"], ErrorID["ID_overflow"]] # to show the error that the ID number is out of range
+        return [ErrorID["ID_overflow"], Max_All_Observation_Data_response_Data[0].text] # to show the error that the ID number is out of range
 
     #\ 執行 
     response_Detailed_discriptions2 = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
@@ -195,20 +196,22 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
     # }
     map_result = []
     map_result_List = []
-    for map_script in re.split(r'},', soup_map.text):
-        #!!!! the return of the re.findall or re.split is a list type, so access the member in the list
-        map_result.append(re.findall(r'(?<=latitude\":).+(?=,\"longitude\")', map_script)[0])    # latitude     
-        map_result.append(re.findall(r'(?<=longitude\":).+(?=,\"title\")', map_script)[0])    # longitude
-        map_result.append(re.findall(r'(?<=title\":\").+(?=\()', map_script)[0].encode('utf-8').decode('unicode_escape'))  # title ,actually is place
-        content = re.findall(r'(?<=content\":\").+(?=<)',map_script)[0]
-        Date_Time = re.findall(r'(?<=\\u65e5\\u3000\\u671f ).+(?=\\u6d77\\u3000\\u62d4)', content)[0]
-        map_result.append(Date_Time.split('\\u3000')[0])  # Date
-        map_result.append(Date_Time.split('\\u3000')[1])  # Time
-        map_result.append(re.findall(r'(?<=\\u6d77\\u3000\\u62d4 ).+(?=\\u7d00)', map_script)[0]) # Altitude
-        map_result.append(re.findall(r'(?<=\\u7d00\\u9304\\u8005 ).+(?=<)', map_script)[0].encode('utf-8').decode('unicode_escape'))  #Recorder
-        print(map_result)
-        map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], species_input, '-'))
-        map_result.clear()
+    split_all_to_one_DetailedInfo = re.split(r'},', soup_map.text)
+    if (len(split_all_to_one_DetailedInfo) > 1):    #'{"markers":[]}@@@@@@@@' --> this is what zero result will be
+        for map_script in split_all_to_one_DetailedInfo:
+            #!!!! the return of the re.findall or re.split is a list type, so access the member in the list, add XXXX[0]
+            map_result.append(re.findall(r'(?<=latitude\":).+(?=,\"longitude\")', map_script)[0])    # latitude     
+            map_result.append(re.findall(r'(?<=longitude\":).+(?=,\"title\")', map_script)[0])    # longitude
+            map_result.append(re.findall(r'(?<=title\":\").+(?=\()', map_script)[0].encode('utf-8').decode('unicode_escape'))  # title ,actually is place
+            content = re.findall(r'(?<=content\":\").+(?=<)',map_script)[0]
+            Date_Time = re.findall(r'(?<=\\u65e5\\u3000\\u671f ).+(?=\\u6d77\\u3000\\u62d4)', content)[0]
+            map_result.append(Date_Time.split('\\u3000')[0])  # Date
+            map_result.append(Date_Time.split('\\u3000')[1])  # Time
+            map_result.append(re.findall(r'(?<=\\u6d77\\u3000\\u62d4 ).+(?=\\u7d00)', map_script)[0]) # Altitude
+            map_result.append(re.findall(r'(?<=\\u7d00\\u9304\\u8005 ).+(?=<)', map_script)[0].encode('utf-8').decode('unicode_escape'))  #Recorder
+            print(map_result)
+            map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], species_input, '-'))
+            map_result.clear()
 
     return map_result_List
 
