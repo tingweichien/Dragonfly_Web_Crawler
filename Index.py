@@ -5,6 +5,13 @@
 # GUI setting
 Table_scroll_num = 10 
 
+# map setting
+mapfilename = "map.html"
+# initial map location
+Init_Map_LAT = 24.150924
+Init_Map_LNG = 120.650710
+
+
 
 ###################################################
 #\ request url

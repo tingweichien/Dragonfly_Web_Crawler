@@ -20,6 +20,9 @@ from tkinter.messagebox import *
 import os
 import os.path
 import PySimpleGUI as PYGUI
+import gmplot
+import webbrowser
+from Index import *
 
 
 ##################################################################
@@ -99,6 +102,32 @@ def LoginButton():
         
 
 ############################################################
+#\ map
+# https://github.com/gmplot/gmplot/blob/master/gmplot/google_map_plotter.py
+# https://stackoverflow.com/questions/40905703/how-to-open-an-html-file-in-the-browser-from-python/40905794
+'''
+apikey = '' # (your API key here)
+            gmap = gmplot.GoogleMapPlotter(37.766956, -122.438481, 13, apikey=apikey)
+'''
+
+
+def show_on_map(map_list):
+    global mapfilename
+    file_path = os.path.realpath(mapfilename)
+    gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13)
+    for index in map_list:
+        context = "[User]: " + index.User + "\n[Time]: " + index.Dates + index.Times + "\n[Place]: " + index.Place + "\n[Altitude]: " + index.Altitude          
+        gmp.marker(float(index.Latitude), float(index.Longitude),
+                    color="red",
+                    label= index.Place.encode('unicode_escape').decode("utf-8"),
+                    info_window=context.encode('unicode_escape').decode("utf-8"))
+        gmp.draw(file_path)
+    webbrowser.open(file_path) 
+
+
+
+############################################################
+#\ Table
 def New_table(map_result_List):
     global Table_scroll_num
     Data = [
@@ -115,17 +144,25 @@ def New_table(map_result_List):
         [PYGUI.Table(Data,
                     headings=["Place", "Date-Time", "Recorder",
                                     "Latitude", "Longitude", "Altitude"],
-                    justification="left",
+                    justification="center",
                     num_rows=Table_scroll_num,
-                    display_row_numbers=True,)]
-        ]
+                    display_row_numbers=True,)],
+        [PYGUI.Button(button_text='Show on map')]]
     
-    window = PYGUI.Window("title", layout=layout)
-    window.Read()
+    window = PYGUI.Window("Show Species info", layout=layout)
+
+    while True:             # Event Loop
+        event, values = window.Read()
+        if event in (None, 'Exit'):
+            break
+        if event == 'Show on map':
+            show_on_map(map_result_List)
+    window.Close()
 
 
 
 #############################################################
+# dropdown list
 def Family_drop_down_menu_callback(*args):
     
     global current_dropdown_index
