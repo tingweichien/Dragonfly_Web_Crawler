@@ -15,7 +15,7 @@ Table_scroll_num = 10
 
 # map setting
 mapfilename = "map.html"
-map_plot_max_data_num = 200
+map_plot_max_data_num = 150
 
 # initial map location
 Init_Map_LAT = 24.150924

@@ -1,5 +1,5 @@
 
-'''
+
 import PySimpleGUI as sg
 
 data = [
@@ -9,6 +9,7 @@ data = [
     [41,42,43,44],
     [51,52,53,54]
     ]
+data2 = [["","","",""]]
 
 print(data[0])
 print([a[0] for a in data])
@@ -16,15 +17,29 @@ print([a[0] for a in data])
 
 layout = [
     [sg.Table(data, headings=["col1", "col2", "col3", "col4"],
+    visible_column_map=[True,True,False,True],
     background_color= "green",
     alternating_row_color="gray",
-    num_rows=3)]
+    #visible=False,
+    num_rows=3)],
+    [sg.Text("test",relief=sg.RELIEF_SOLID,text_color="red")],
+    [sg.Text("test",relief=sg.RELIEF_RIDGE), sg.Text("test",relief=sg.RELIEF_GROOVE),sg.Text("test",relief=sg.RELIEF_RIDGE), sg.Text("test",relief=sg.RELIEF_RAISED)],
+    [sg.Table(data, headings=["col1", "col2", "col3", "col4"],
+    background_color= "green",
+    alternating_row_color="gray",
+    visible=False,
+    num_rows=3)],
+    [sg.Text("test",relief=sg.RELIEF_FLAT)],
+    [sg.Text("test",relief=sg.RELIEF_SUNKEN)],
+    [sg.Table(data2, headings=["col1", "col2", "col3", "col4"],
+    visible=False,
+    num_rows=3)],   
     ]
 
 window = sg.Window("Scroll Test", layout=layout)
 
 window.read()
-'''
+
 
 
 
@@ -113,7 +128,7 @@ fig = gmaps.figure()
 fig.add_layer(marker_layer)
 fig
 '''
-
+'''
 import tkinter as tk 
 from tkinter import ttk 
    
@@ -249,3 +264,17 @@ class Page2(tk.Frame):
 # Driver Code 
 app = tkinterApp() 
 app.mainloop() 
+'''
+
+'''
+l = ['tt', 'tt', 'tr', 'tc', 'ata', 'tt', 'at']
+print(list(set(l)))
+import os
+import os.path
+import PySimpleGUI as sg
+for i in range(10000000):
+    sg.PopupAnimated(os.getcwd() + "\Waiting.gif", background_color='white', time_between_frames=50)
+
+sg.PopupAnimated(None)  # close all Animated Popups
+'''
+

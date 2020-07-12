@@ -39,6 +39,11 @@ Login_state = False
 
 LoginlnputList = []
 
+# state the wanted spec for plotting on the map
+Place_select_value = ''
+User_select_value = ''
+Map_spec_method_or_and = ''
+
 # init text color
 colorama.init()
 
@@ -123,12 +128,12 @@ def SpeciesFindButton(*args):
     if (Login_state == False):
         messagebox.showwarning('Warning!!!','Please Login first')
         return
-    map_result_List = SpeiciesCrawler(Login_Response, var_family.get(), var_species.get())
-    if len(map_result_List) == 0:
+    map_result_list = SpeiciesCrawler(Login_Response, var_family.get(), var_species.get())
+    if len(map_result_list) == 0:
         messagebox.showinfo("Infomation", "The selected species does not have any record")
         return
     else:
-        New_table(map_result_List)            
+        New_table(map_result_list)            
         
 
 ############################################################
@@ -142,22 +147,54 @@ apikey = '' # (your API key here)
             gmap = gmplot.GoogleMapPlotter(37.766956, -122.438481, 13, apikey=apikey)
 '''
 
-def Show_on_map(map_list):
-    global mapfilename, map_plot_max_data_num
+def Show_on_map(input_map_list):
+    global mapfilename, map_plot_max_data_num, Map_spec_method_or_and
+    map_list = []
     file_path = os.path.realpath(mapfilename)
+    # specify by selected item
+    for tmp in input_map_list:
+        if (len(Place_select_value) > 0):
+            if (len(User_select_value) > 0):
+                if (Map_spec_method_or_and == 'or'):
+                    if ((tmp.Place in Place_select_value) or (tmp.User in User_select_value)):
+                        map_list.append(tmp)
+                elif (Map_spec_method_or_and == 'and'):
+                    if ((tmp.Place in Place_select_value) and (tmp.User in User_select_value)):
+                        map_list.append(tmp)
+                else:
+                    PYGUI.popup_animated(None)
+                    messagebox.showwarning("warning", "Please select the method (or , and) between two spec")
+                    return []
+            else:
+                if (tmp.Place in Place_select_value):
+                    map_list.append(tmp)
+        else:
+            if (len(User_select_value) > 0):
+                if (tmp.User in User_select_value):
+                    map_list.append(tmp)
+            else:
+                map_list = input_map_list
+                break
+
+
+    # the gmplot have some problem on plotting too many data
     if (len(map_list) > map_plot_max_data_num):
         del map_list[0: len(map_list) - map_plot_max_data_num]
+    elif (len(map_list) == 0):  # make sure the map data is not empty
+        PYGUI.popup_animated(None)
+        messagebox.showinfo("Info", "No data match the spec")
+        return []
         
     gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13)
     for index in map_list:
-        context = "[User]: " + index.User + "  [Time]: " + index.Dates + index.Times + "  [Place]: " + index.Place + "  [Altitude]: " + index.Altitude          
+        context = index.User + "/" + index.Dates + "/" + index.Times + "/" + index.Place + "/"  + index.Altitude + "/" + index.Latitude + ","  + index.Longitude          
         gmp.marker(float(index.Latitude), float(index.Longitude),
                     color="red",
                     label= index.Place.encode('unicode_escape').decode("utf-8"),
                     info_window=context.encode('unicode_escape').decode("utf-8"))
         gmp.draw(file_path)
-    webbrowser.open(file_path) 
-
+    webbrowser.open(file_path)
+    return map_list
 
 
 
@@ -165,26 +202,66 @@ def Show_on_map(map_list):
 #\ Table
 # bad since the flexibility of the option are limited
 # this coded in PySimpleGUI library
-def New_table(map_result_List):
-    global Table_scroll_num
+def New_table(map_result_list):
+    global Table_scroll_num, User_select_value, Place_select_value, Map_spec_method_or_and
     Data = [
         [index.Place,
         index.Dates + "-" + index.Times,
         index.User,
         index.Latitude,
         index.Longitude,
-        index.Altitude] for index in map_result_List
+        index.Altitude] for index in map_result_list
     ]
 
     layout = [
-        [PYGUI.Text(str(var_species.get()))],
-        [PYGUI.Table(Data,
-                    headings=["Place", "Date-Time", "Recorder",
-                                    "Latitude", "Longitude", "Altitude"],
-                    justification="center",
-                    num_rows=Table_scroll_num,
-                    display_row_numbers=True,)],
-        [PYGUI.Button(button_text='Show on map')]]
+        [
+        PYGUI.Text("--" + str(var_species.get()) + "--", text_color="black"),
+            ],
+        [
+        PYGUI.Table(Data,
+                headings=["Place", "Date-Time", "Recorder",
+                                "Latitude", "Longitude", "Altitude"],
+                justification="center",
+                num_rows=Table_scroll_num,
+                display_row_numbers=True)
+            ],
+        [
+        PYGUI.Text("Select the user", auto_size_text=True, justification="center"),
+        PYGUI.Text("\tSelect the method", auto_size_text = True, justification="center"),
+        PYGUI.Text("Select the place", auto_size_text = True, justification="center"),
+            ],
+        [
+        PYGUI.Listbox(values=list({User_List.User for User_List in map_result_list}),
+            enable_events=True,
+            size=(None, 5),
+            auto_size_text=True,
+            select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
+            key='User_select'),
+        PYGUI.Button(button_text="or",size=(5,3)),
+        PYGUI.Button(button_text="and",size=(5,3)),
+        PYGUI.Listbox(values=list({Place_List.Place for Place_List in map_result_list}),
+            enable_events=True,
+            size=(None, 5),
+            auto_size_text=True,
+            select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
+            key='Place_select'),
+        PYGUI.Button(button_text='Show on map')      
+            ],
+        [
+        PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
+            ],
+        [
+        PYGUI.Table(values=[["","","","","",""]],
+                headings=["Place", "Date-Time", "Recorder",
+                                "Latitude", "Longitude", "Altitude"],
+                justification="center",
+                display_row_numbers=True,
+                hide_vertical_scroll=True,
+                visible=False,
+                num_rows=5,
+                key='Spec_Table')
+            ]  
+    ]
     
     window = PYGUI.Window("Show Species info", layout=layout)
 
@@ -193,7 +270,30 @@ def New_table(map_result_List):
         if event in (None, 'Exit'):
             break
         if event == 'Show on map':
-            Show_on_map(map_result_List)
+            PYGUI.popup_animated(os.getcwd() + "\Loading.gif")
+            Spec_DATA = Show_on_map(map_result_list)
+            PYGUI.popup_animated(None)             
+            window['Spec_Table'].update(values=[
+                                                [index.Place,
+                                                index.Dates + "-" + index.Times,
+                                                index.User,
+                                                index.Latitude,
+                                                index.Longitude,
+                                                index.Altitude] for index in Spec_DATA],
+                                        visible=True)
+            window['Spec_Table_Label'].update(visible=True)                                        
+        elif event == 'User_select':
+            User_select_value = values['User_select']
+        elif event == 'Place_select':
+            Place_select_value = values['Place_select']
+        elif event == 'or':
+            Map_spec_method_or_and = 'or'
+            window['or'].update(button_color=("black","green"))
+            window['and'].update(button_color=("black","white"))
+        elif event == 'and':
+            Map_spec_method_or_and = 'and'
+            window['and'].update(button_color=("black","green"))
+            window['or'].update(button_color=("black","white"))
     window.Close()
 
 
@@ -252,7 +352,7 @@ blank_LNG = Entry(main)
 blank_LAT = Entry(main)
 
 
-# drop down menu
+#\ drop down menu
 # family
 var_family = StringVar(main)
 var_family.set(Species_Family_Name[0])
@@ -265,8 +365,9 @@ var_species = StringVar(main)
 var_species.set(Calopterygidae_Species[0])
 Species_drop_down_menu = ttk.Combobox(main, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
 #Species_drop_down_menu.bind("<<ComboboxSelected>>", Species_drop_down_menu_callback)   # As soon as the dropdown list been selected, the table will automatically pop up  
-Family_drop_down_menu.grid(row=2, column=3)
-Species_drop_down_menu.grid(row=2, column=4)
+
+
+
 
 
 # try to auto fill the account and password
@@ -288,8 +389,6 @@ login_button = Button(main,
 enter_button = Button( main,
                 text='ID Enter\b',
                 command=Enter_button,
-                height=2,
-                width=15,
                 justify = 'center',
                 bg='gray80')
                 # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
@@ -317,22 +416,22 @@ canvas.grid(row = 0, column = 0, columnspan = 2)
 account_label.grid(row=1)
 password_label.grid(row=2)
 id_label.grid(row=3)
-latitude_label.grid(row=5)
-longitude_label.grid(row=6)
-Species_label.grid(row=1, column=3, columnspan=2)
+latitude_label.grid(row=4)
+longitude_label.grid(row=5)
+Species_label.grid(row=6, columnspan=2)
 
 account.grid(row=1, column=1)
 password.grid(row=2, column=1)
 ID.grid(row=3, column=1)
-blank_LAT.grid(row=5, column=1)
-blank_LNG.grid(row=6, column=1)
+blank_LAT.grid(row=4, column=1)
+blank_LNG.grid(row=5, column=1)
 
-Family_drop_down_menu.grid(row=2, column=3)
-Species_drop_down_menu.grid(row=2, column=4)
+Family_drop_down_menu.grid(row=7, column=0)
+Species_drop_down_menu.grid(row=7, column=1)
 
-login_button.grid(row=4, column=0, pady=2)
-enter_button.grid(row=4, column=1, columnspan=1, pady=2)
-species_find_button.grid(row=4, column=3, columnspan=2)
+login_button.grid(row=2, column=2, pady=2)
+enter_button.grid(row=3, column=2, columnspan=1, pady=2)
+species_find_button.grid(row=7, column=2, columnspan=1)
 
 mainloop()
 
