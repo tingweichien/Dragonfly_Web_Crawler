@@ -2,6 +2,7 @@
 
 # import
 from fake_useragent import UserAgent
+import os
 
 # color setting
 
@@ -62,6 +63,10 @@ headers = {
         'User-Agent' : UA.random,
 }
 
+
+
+# file path
+current_path = os.getcwd()
 
 # Species name
 Calopterygidae_Species = [

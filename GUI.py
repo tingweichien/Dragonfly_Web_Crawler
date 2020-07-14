@@ -73,7 +73,7 @@ def Auto_Fill():
 
 
 ##################################################################
-def Enter_button():
+def IDEnterButton():
     global LoginlnputList, Login_state
 
     # Check if the user enter the info properly
@@ -88,23 +88,27 @@ def Enter_button():
         return
 
     # Check if this data do not contain the Longitude and Latitude infomation
+    tmp_key = True
     if (LoginInput_Empty_Or_Not == 0):
-        [Output_LNG, Output_LAT] = DataCrawler(Login_Response, ID.get())
+        [Output_LNG, Output_LAT, Output_Detailed_Info] = DataCrawler(Login_Response, ID.get())
         if (Output_LNG == '' or Output_LAT == ''):
             Output_LNG = 'No Data'
             Output_LAT = 'No Data'
+            tmp_key = False
         elif (Output_LNG == -2):
             messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + Output_LAT)  #ID number overflow
             return 
-
         blank_LNG.delete(0, END)
         blank_LAT.delete(0, END)    
         blank_LNG.insert(0, Output_LNG)
         blank_LAT.insert(0, Output_LAT)
+        if (tmp_key):
+            msg = messagebox.askyesno("info", "Do you want to plot it on map?")
+            if (msg):
+                Show_on_map([Output_Detailed_Info])
 
-    # and write the account and password to the filename
-    with open(filename, 'w') as fp:
-        fp.write(','.join((LoginlnputList[0], LoginlnputList[1])))
+
+
 
 
 ###################################################################################
@@ -117,7 +121,10 @@ def LoginButton():
     else:
         login_button.config(bg='green')
         #messagebox.showinfo('Login success', 'Hi~ ' + account.get() + ' welcome')
-        main.title("蜻蜓資料庫經緯度查詢 -- "  + account.get() + "已登入")  
+        main.title("蜻蜓資料庫經緯度查詢 -- " + account.get() + "已登入")
+        # and write the account and password to the filename
+        with open(filename, 'w') as fp:
+            fp.write(','.join((LoginlnputList[0], LoginlnputList[1])))
 
 
 
@@ -133,7 +140,9 @@ def SpeciesFindButton(*args):
         messagebox.showinfo("Infomation", "The selected species does not have any record")
         return
     else:
-        New_table(map_result_list)            
+        New_table(map_result_list)
+        
+
         
 
 ############################################################
@@ -187,7 +196,7 @@ def Show_on_map(input_map_list):
         
     gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13)
     for index in map_list:
-        context = index.User + "/" + index.Dates + "/" + index.Times + "/" + index.Place + "/"  + index.Altitude + "/" + index.Latitude + ","  + index.Longitude          
+        context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude          
         gmp.marker(float(index.Latitude), float(index.Longitude),
                     color="red",
                     label= index.Place.encode('unicode_escape').decode("utf-8"),
@@ -251,15 +260,17 @@ def New_table(map_result_list):
         PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
             ],
         [
-        PYGUI.Table(values=[["","","","","",""]],
+        PYGUI.Table(values=[[" "," "," "," "," "," "]],
                 headings=["Place", "Date-Time", "Recorder",
                                 "Latitude", "Longitude", "Altitude"],
                 justification="center",
                 display_row_numbers=True,
                 hide_vertical_scroll=True,
+                auto_size_columns=False,
                 visible=False,
                 num_rows=5,
-                key='Spec_Table')
+                key='Spec_Table',
+                col_widths = 40)
             ]  
     ]
     
@@ -324,50 +335,65 @@ main = Tk()
 
 # 視窗基本設定
 main.title("蜻蜓資料庫經緯度查詢")
-main.geometry('500x300')  # Width*Height
+main.geometry('380x400')  # Width*Height
 #main.config(bg='white')
 
+
+# Label frames
+LabelFrame_Canvas = LabelFrame(main)
+LabelFrame_Canvas.pack()
+LabelFrame_Login = LabelFrame(main, text='Login')
+LabelFrame_Login.pack(fill="both", expand="yes")  
+LabelFrame_ID_Find = LabelFrame(main, text='ID Find')
+LabelFrame_ID_Find.pack(fill="both", expand="yes")  
+LabelFrame_Species_Find = LabelFrame(main, text='Species Find')
+LabelFrame_Species_Find.pack(fill="both", expand="yes")
+LabelFrame_CopyRight = LabelFrame(main)
+
+
+
+
 # 設定圖片
-current_path = os.getcwd()  # directory from where script was ran
-canvas = Canvas(main, height=100, width=200)
+# directory from where script was ran
+canvas = Canvas(LabelFrame_Canvas, height=100, width=200)
 image_path = current_path + "\dragonfly_picture.gif"
 image_file = PhotoImage(file = image_path)
 image = canvas.create_image(0, 0, anchor='nw', image=image_file)
+main.iconphoto(False, image_file)
+#main.iconbitmap(current_path+"\dragonfly_ico.ico")
 
 # label
-account_label = Label(main, text = "Account:")
-password_label = Label(main, text = "Password:")
-id_label = Label(main, text = "ID:")
-latitude_label = Label(main, text = "The Latitude is:")
-longitude_label = Label(main, text="The Longitude is:")
-Species_label = Label(main, text="Select the Family and Species")
+account_label = Label(LabelFrame_Login, text = "Account:")
+password_label = Label(LabelFrame_Login, text = "Password:")
+id_label = Label(LabelFrame_ID_Find, text = "ID:")
+latitude_label = Label(LabelFrame_ID_Find, text = "The Latitude is:")
+longitude_label = Label(LabelFrame_ID_Find, text="The Longitude is:")
+Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species")
+
 
 # Entry
-VarName = StringVar(main, value='')
-VarPwd = StringVar(main, value='')
-account = Entry(main, textvariable = VarName)
-password = Entry(main, textvariable = VarPwd)
-ID = Entry(main)
-blank_LNG = Entry(main)
-blank_LAT = Entry(main)
+VarName = StringVar(LabelFrame_Login, value='')
+VarPwd = StringVar(LabelFrame_Login, value='')
+account = Entry(LabelFrame_Login, textvariable = VarName)
+password = Entry(LabelFrame_Login, textvariable = VarPwd)
+ID = Entry(LabelFrame_ID_Find)
+blank_LNG = Entry(LabelFrame_ID_Find)
+blank_LAT = Entry(LabelFrame_ID_Find)
 
 
 #\ drop down menu
 # family
-var_family = StringVar(main)
+var_family = StringVar(LabelFrame_Species_Find)
 var_family.set(Species_Family_Name[0])
-Family_drop_down_menu = ttk.Combobox(main, width=10, textvariable=var_family, values=Species_Family_Name)
+Family_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_family, values=Species_Family_Name)
 Family_drop_down_menu.bind("<<ComboboxSelected>>", Family_drop_down_menu_callback)
 
 
 # species
-var_species = StringVar(main)
+var_species = StringVar(LabelFrame_Species_Find)
 var_species.set(Calopterygidae_Species[0])
-Species_drop_down_menu = ttk.Combobox(main, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
+Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
 #Species_drop_down_menu.bind("<<ComboboxSelected>>", Species_drop_down_menu_callback)   # As soon as the dropdown list been selected, the table will automatically pop up  
-
-
-
 
 
 # try to auto fill the account and password
@@ -379,35 +405,31 @@ VarPwd.set(p)
 LoginlnputList = [account.get(), password.get()]
 
 # button
-login_button = Button(main,
+login_button = Button(LabelFrame_Login,
                 text='Login',
                 justify='center',
                 bg='red',
                 command=LoginButton)
 
 # Button(main, text='Quit', command=main.destroy).grid(row=5, column=0, sticky=W, pady=4)
-enter_button = Button( main,
+id_enter_button = Button(LabelFrame_ID_Find,
                 text='ID Enter\b',
-                command=Enter_button,
+                command=IDEnterButton,
                 justify = 'center',
                 bg='gray80')
                 # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
 
-species_find_button = Button(main,
+#
+# id_plot_map_button = Button( main,
+#                 text='ID plot on map',
+#                 command=IdPlotMapButton,
+#                 justify = 'center')
+#
+species_find_button = Button(LabelFrame_Species_Find,
                             text='Find Species',
                             command=SpeciesFindButton,
-                            height=2,
-                            width=15,
                             justify='center')
-#Table
-#table = Table(main, result_list, 3, 1)
-'''
-layout = [
-    [PYGUI.Table(data, headings=["","","","","",""], num_rows=5)]
-]
-window = PYGUI.Window("Coordinate Info", layout=layout)
-window.Read()
-'''
+
 
 
 # grid
@@ -430,8 +452,9 @@ Family_drop_down_menu.grid(row=7, column=0)
 Species_drop_down_menu.grid(row=7, column=1)
 
 login_button.grid(row=2, column=2, pady=2)
-enter_button.grid(row=3, column=2, columnspan=1, pady=2)
+id_enter_button.grid(row=3, column=2, columnspan=1, pady=2)
 species_find_button.grid(row=7, column=2, columnspan=1)
+# id_plot_map_button.grid(row=4,column=2)
 
 mainloop()
 

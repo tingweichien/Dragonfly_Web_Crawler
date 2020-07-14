@@ -154,7 +154,7 @@ def DataCrawler(Login_Response, Input_ID):
     Max_All_Observation_Data_response_Data = All_Observation_Data_response_Data_Set.find_all('td')
     #print('Max = ' + Max_All_Observation_Data_response_Data[0].text)
     if (int(id) > int(Max_All_Observation_Data_response_Data[0].text) or int(id) < 0):
-        return [ErrorID["ID_overflow"], Max_All_Observation_Data_response_Data[0].text] # to show the error that the ID number is out of range
+        return [ErrorID["ID_overflow"], Max_All_Observation_Data_response_Data[0].text, [""]] # to show the error that the ID number is out of range
 
     #\ 執行 
     response_Detailed_discriptions2 = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
@@ -163,8 +163,20 @@ def DataCrawler(Login_Response, Input_ID):
     print('經度 : ' + Longitude)
     Lateral = soup2.find(id = 'R_LAT').get('value')
     print('緯度 : ' + Lateral)
+    ID_find_result = DetailedTableInfo(id,
+                                        soup2.find(id = '日期').get('value'),
+                                        soup2.find(id='時間').get('value'),
+                                        "",
+                                        "",
+                                        soup2.find(id='地點').get('value'),
+                                        soup2.find(id='R_ELEVATION').get('value'),
+                                        soup2.find(id='紀錄者').get('value'),
+                                        soup2.find(id ='R_LAT').get('value'),
+                                        soup2.find(id='R_LNG').get('value'),
+                                        "",
+                                        soup2.find(id='R_MEMO').get('value'))
 
-    return [Longitude, Lateral]
+    return [Longitude, Lateral, ID_find_result]
 
 
 
