@@ -3,11 +3,13 @@
 # import
 from fake_useragent import UserAgent
 import os
+from multiprocessing import Process
+import multiprocessing
 
-# color setting
-
-Bold = "\033[1;31m"
-bold = "\033[0;0m"
+##################################################
+# my account and password
+myaccount = "簡庭威"
+mypassword = "tim960622"
 
 
 ###################################################
@@ -33,6 +35,9 @@ general_url = 'http://dragonfly.idv.tw/dragonfly/'
 #Login_url = 'http://dragonfly.idv.tw/dragonfly/login.php'
 Login_url = general_url + 'login.php'
 
+#Login_url for webdriver
+webdriver_Login_url = general_url + 'index.php'
+
 # 蜓種觀察資料查詢作業
 #All_Observation_Data_url = 'http://dragonfly.idv.tw/dragonfly/rec_list_view.php'
 All_Observation_Data_url = general_url + 'rec_list_view.php'
@@ -48,7 +53,18 @@ Brief_discriptions_url = 'view_data.php?id='
 Detailed_discriptions_url = 'read_data.php?id='
 
 # 地圖 url
-map_info_url = "tokei.php?kind_key="
+map_info_url = 'tokei.php?kind_key='
+
+# 蜓轉相關資料一覽 url
+# http://dragonfly.idv.tw/dragonfly/rec_list_view_for_key.php?pageNum_rs_dragonfly_record=0&type=total_kind&kind=Chlorocyphidae01
+species_all_record_data_first_url = 'rec_list_view_for_key.php'
+species_all_record_data_page_url = '?pageNum_rs_dragonfly_record='
+species_all_record_data_species_url = '&type=total_kind&kind='
+
+# total number of the species url
+# "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
+total_num_species_url = "kind_total_records.php"
+
 
 # Header
 '''
@@ -64,10 +80,29 @@ headers = {
 }
 
 
-
 # file path
 current_path = os.getcwd()
 
+#image path
+Image_path = current_path + "\image"
+
+# webdriver to crawl the total number of the record
+popup_chrome_web = False
+
+# chrome driver path
+ChromeDriverPath = r".\\chromedriver.exe"
+
+# csv title
+CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "Dictrict", "Place", "Altitude", "Latitude", "Longitude", "Description"]
+
+
+# mutiprocessing cpu number
+cpus = multiprocessing.cpu_count()
+
+
+
+
+#####################################################################
 # Species name
 Calopterygidae_Species = [
                 # 珈蟌科
@@ -261,6 +296,7 @@ Libellulidae_Species = [
                 "纖腰蜻蜓"]
 
 
+# these are shown for the dropdown list
 Species_Family_Name = ["珈蟌科", "鼓蟌科", "細蟌科", "幽蟌科", "絲蟌科", "蹣蟌科", "琵蟌科",
                 "樸蟌科", "洵蟌科", "晏蜓科", "勾蜓科", "弓蜓科", "春蜓科", "蜻蜓科"]
 

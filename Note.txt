@@ -13,4 +13,32 @@ value = soup.find(.....).get('ooo')
 3.執行 pyinstaller -F -w --onefile.\XXXXXX.py 轉成 .exe檔
 -w是不要出現console
 --onefile是產生一個.exe檔
-記得要將.exe檔從dist中拉到目錄，如果你有連結檔按圖片的話ㄨㄣ
+記得要將.exe檔從dist中拉到目錄，如果你有連結檔按圖片的話
+
+-----------------------------------------------------------
+
+2020/7/17
+紀錄一下
+1.為了使request不要都來自同一個地方，request header代表了請求的一些資訊與規範
+其中的User-Agent(UA)代表了請求來源的作業系統、所使用的web driver等資訊，為了不要讓所請求的server覺得
+同一個請求位置一直請求，所以使用了random的UA
+https://progressbar.tw/posts/234
+https://ithelp.ithome.com.tw/articles/10209356
+https://blog.csdn.net/weixin_34364135/article/details/85864318?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
+
+2.再寫傳入CSV檔時，會出現CP950的字元 error，網路上解法是用 encoding = utf-8，我這樣做雖然可以解決error
+但是寫入的資料全都是亂數，所以歲後在open()中加入忽略error的指令:error ="ignore"
+
+3.".\\XXXXXX" 代表以現在的Folder路經基礎，也糾是相對於當前Folder的路徑
+
+4.如果想要print值不要換行，print("XXXX", End= "\r")
+
+5.正在想要怎麼加速爬蟲，可以試試用mutithread
+
+6.selenium + chromedriver 蠻好用的，指令頗直覺，像是人類在瀏覽網頁，有按鈕，填寫等功能，
+其實再PTT那個範例就用過了。而session則是用url請求，也是不錯的用法
+
+7.搞了很久的csv發現其食用xlsx還可以很方便的指定要存哪一行或列，不用像是csv要先讀，插入，再寫入
+
+
+

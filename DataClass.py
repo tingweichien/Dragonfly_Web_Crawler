@@ -25,11 +25,12 @@ class simplifyTableInfo:
 
 
 class DetailedTableInfo(simplifyTableInfo):
-    def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User, Latitude, Longitude, Species, Description):
+    def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User, Latitude, Longitude, SpeciesFamily ,Species, Description):
         super(DetailedTableInfo, self).__init__(IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User)
         self.Latitude = Latitude
         self.Longitude = Longitude
         self.Species = Species
+        self.SpeciesFamily = SpeciesFamily
         self.Description = Description
     def __str__(self):
         '''
@@ -50,6 +51,7 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Latitude]: ' + self.Latitude +
                 '  [Longitude]: ' + self.Longitude +
                 '  [Species]: ' + self.Species +
+                '  [SpeciesFamily]: ' + self.SpeciesFamily +
                 '  [Description]: ' + self.Description)        
 
 

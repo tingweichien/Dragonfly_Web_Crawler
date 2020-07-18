@@ -44,8 +44,7 @@ Place_select_value = ''
 User_select_value = ''
 Map_spec_method_or_and = ''
 
-# init text color
-colorama.init()
+
 
 ##################################################################
 # Check if the user have entered  the info (account and password) or not
@@ -88,24 +87,26 @@ def IDEnterButton():
         return
 
     # Check if this data do not contain the Longitude and Latitude infomation
-    tmp_key = True
+    map_key = True
     if (LoginInput_Empty_Or_Not == 0):
-        [Output_LNG, Output_LAT, Output_Detailed_Info] = DataCrawler(Login_Response, ID.get())
-        if (Output_LNG == '' or Output_LAT == ''):
-            Output_LNG = 'No Data'
-            Output_LAT = 'No Data'
-            tmp_key = False
-        elif (Output_LNG == -2):
-            messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + Output_LAT)  #ID number overflow
-            return 
+        [_ID_find_result, _overflow, _Max_ID_Num] = DataCrawler(Login_Response, ID.get())
+        if (_overflow):
+            messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + _Max_ID_Num)  #ID number overflow
+            return
+        else :
+            if (_ID_find_result.Longitude == '' or _ID_find_result.Latitude == ''):
+                _ID_find_result.Longitude = 'No Data'
+                _ID_find_result.Latitude = 'No Data'
+                map_key = False
+            
         blank_LNG.delete(0, END)
         blank_LAT.delete(0, END)    
-        blank_LNG.insert(0, Output_LNG)
-        blank_LAT.insert(0, Output_LAT)
-        if (tmp_key):
+        blank_LNG.insert(0, _ID_find_result.Longitude)
+        blank_LAT.insert(0, _ID_find_result.Latitude)
+        if (map_key):
             msg = messagebox.askyesno("info", "Do you want to plot it on map?")
             if (msg):
-                Show_on_map([Output_Detailed_Info])
+                Show_on_map([_ID_find_result])
 
 
 
@@ -117,6 +118,7 @@ def LoginButton():
     global Login_Response, Login_state 
     [Login_Response, Login_state] = Login_Web(account.get(), password.get())
     if (Login_state == False):    
+        main.title("蜻蜓資料庫經緯度查詢 --請登入--")
         messagebox.showwarning('Warning!!!', InputArgumentsLabel[0] + " or " + InputArgumentsLabel[1] + " might be incorrect!!!!")  #incorrect account or password
     else:
         login_button.config(bg='green')
@@ -124,7 +126,7 @@ def LoginButton():
         main.title("蜻蜓資料庫經緯度查詢 -- " + account.get() + "已登入")
         # and write the account and password to the filename
         with open(filename, 'w') as fp:
-            fp.write(','.join((LoginlnputList[0], LoginlnputList[1])))
+            fp.write(','.join((account.get(), password.get())))
 
 
 
@@ -281,7 +283,7 @@ def New_table(map_result_list):
         if event in (None, 'Exit'):
             break
         if event == 'Show on map':
-            PYGUI.popup_animated(os.getcwd() + "\Loading.gif")
+            PYGUI.popup_animated(Image_path + "\Loading.gif")
             Spec_DATA = Show_on_map(map_result_list)
             PYGUI.popup_animated(None)             
             window['Spec_Table'].update(values=[
@@ -316,7 +318,7 @@ def Family_drop_down_menu_callback(*args):
     current_dropdown_index = Family_drop_down_menu.current()
     tmp = Species_Name_Group[current_dropdown_index]
     Species_drop_down_menu['value'] = tmp
-    var_species.set(tmp[0])
+    var_species.set(tmp[0]) #init the dropdown list in the first element
     print (var_family.get())
     print (Family_drop_down_menu.current())
 
@@ -334,8 +336,8 @@ def Species_drop_down_menu_callback(*args):
 main = Tk()
 
 # 視窗基本設定
-main.title("蜻蜓資料庫經緯度查詢")
-main.geometry('380x400')  # Width*Height
+main.title("蜻蜓資料庫經緯度查詢--請登入--")
+main.geometry('380x450')  # Width*Height
 #main.config(bg='white')
 
 
@@ -355,8 +357,8 @@ LabelFrame_CopyRight = LabelFrame(main)
 
 # 設定圖片
 # directory from where script was ran
-canvas = Canvas(LabelFrame_Canvas, height=100, width=200)
-image_path = current_path + "\dragonfly_picture.gif"
+canvas = Canvas(LabelFrame_Canvas,height=180, width=380)
+image_path = Image_path + "\dragonfly_picture.gif"
 image_file = PhotoImage(file = image_path)
 image = canvas.create_image(0, 0, anchor='nw', image=image_file)
 main.iconphoto(False, image_file)
@@ -366,8 +368,8 @@ main.iconphoto(False, image_file)
 account_label = Label(LabelFrame_Login, text = "Account:")
 password_label = Label(LabelFrame_Login, text = "Password:")
 id_label = Label(LabelFrame_ID_Find, text = "ID:")
-latitude_label = Label(LabelFrame_ID_Find, text = "The Latitude is:")
-longitude_label = Label(LabelFrame_ID_Find, text="The Longitude is:")
+latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:")
+longitude_label = Label(LabelFrame_ID_Find, text="Longitude:")
 Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species")
 
 
