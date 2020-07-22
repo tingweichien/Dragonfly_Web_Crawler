@@ -304,6 +304,8 @@ for i in range(10000000):
 sg.PopupAnimated(None)  # close all Animated Popups
 '''
 
+
+'''
 #
 # https://stackoverflow.com/questions/209840/convert-two-lists-into-a-dictionary
 # https://ithelp.ithome.com.tw/articles/10204231
@@ -357,3 +359,146 @@ driver.quit()
 
 #Dictionary = dict(zip(lebel_muti.text ,Tag_muti.text))
 
+'''
+
+from multiprocessing import Pool, Value
+from time import sleep
+from functools import partial
+import time
+
+class test():
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+
+
+counter = Value('i', 0)
+
+def analyze_data(args, args2):
+
+    global counter
+    # += operation is not atomic, so we need to get a lock:
+    with counter.get_lock():
+        counter.value += 1
+        if counter.value >= 5:
+            raise StopIteration
+    print ("count: " + str(counter.value))
+    return (args-args2.b), args2.a
+
+
+def start_main():
+    
+        #
+        # initialize a cross-process counter and the input lists
+        #
+        start = time.time()
+        i = test(1, 2)
+        I = test(3, 4)
+        inputs = [i, I]
+        args2 = 100
+        #
+        # create the pool of workers, ensuring each one receives the counter 
+        # as it starts. 
+        #
+        p = Pool(4)
+        func = partial(analyze_data, args2)
+        i = p.map_async(func, inputs)
+        p.close()
+        p.join()
+        l = list(filter(None,i.get()))
+        print("result: " + str(l))
+        end = time.time()
+        print("spend  : {}".format(end - start))
+
+if __name__ == '__main__':
+    print('start')
+    start_main()
+    print('END')  
+
+
+'''
+import progressbar
+from time import sleep
+bar = progressbar.ProgressBar(maxval=20, \
+    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+bar.start()
+for i in range(0,20):
+    bar.update(i+1)
+    sleep(0.)
+bar.finish()'''
+
+
+'''import time
+import aiohttp
+import asyncio
+import time
+from bs4 import BeautifulSoup
+from urllib.request import urljoin
+import re
+import multiprocessing as mp
+
+base_url = "https://morvanzhou.github.io/"
+#base_url = "http://127.0.0.1:4000/"
+
+# DON'T OVER CRAWL THE WEBSITE OR YOU MAY NEVER VISIT AGAIN
+if base_url != "https://morvanzhou.github.io/":
+    restricted_crawl = True
+else:
+    restricted_crawl = False
+        
+        
+seen = set()
+unseen = set([base_url])
+
+
+def parse(html):
+    soup = BeautifulSoup(html, 'lxml')
+    urls = soup.find_all('a', {"href": re.compile('^/.+?/$')})
+    title = soup.find('h1').get_text().strip()
+    page_urls = set([urljoin(base_url, url['href']) for url in urls])
+    url = soup.find('meta', {'property': "og:url"})['content']
+    return title, page_urls, url
+
+
+async def crawl(url, session):
+    r = await session.get(url)
+    html = await r.text()
+    await asyncio.sleep(0.1)        # slightly delay for downloading
+    return html
+
+
+async def main(loop):
+    pool = mp.Pool(8)               # slightly affected
+    async with aiohttp.ClientSession() as session:
+        count = 1
+        while len(unseen) != 0:
+            print('\nAsync Crawling...')
+            tasks = [loop.create_task(crawl(url, session)) for url in unseen]
+            finished, unfinished = await asyncio.wait(tasks)
+            htmls = [f.result() for f in finished]
+            
+            print('\nDistributed Parsing...')
+            parse_jobs = [pool.apply_async(parse, args=(html,)) for html in htmls]
+            results = [j.get() for j in parse_jobs]
+            
+            print('\nAnalysing...')
+            seen.update(unseen)
+            unseen.clear()
+            for title, page_urls, url in results:
+                # print(count, title, url)
+                unseen.update(page_urls - seen)
+                count += 1
+
+if __name__ == "__main__":
+    t1 = time.time()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(loop))
+    # loop.close()
+    print("Async total time: ", time.time() - t1)'''
+
+
+'''from operator import add
+from functools import reduce
+
+print(reduce(add ,[[1,2,3],[1,2],[1,4,5,6,7]]))'''

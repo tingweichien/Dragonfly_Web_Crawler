@@ -8,8 +8,9 @@ import DataClass
 from DataClass import *
 import re
 from Index import *
-from multiprocessing import Process, Pool
-
+from multiprocessing import Process, Pool, Value, Lock
+from functools import partial
+import progressbar
 
 '''
 ErrorID = {
@@ -18,7 +19,14 @@ ErrorID = {
 }
 '''
 
+# global
 session = requests.Session()
+
+stop_crawl_all_data_mp = False
+
+DataCNT = 0
+
+
 
 ##################################################################
 def Login_Web(Input_account, Input_password):
@@ -39,7 +47,7 @@ def Login_Web(Input_account, Input_password):
     if (len(alert) > 0):
        Login_state = False # to show the error that the password or account might be wrong
 
-    return [Login_Response, Login_state]
+    return [session, Login_Response, Login_state]
       
 
 
@@ -189,7 +197,7 @@ def DataCrawler(Login_Response, Input_ID):
 
 
 ###############################################################################################
-# get the data from map
+#\ get the data from map
 # https://jzchangmark.wordpress.com/2015/03/05/%E9%80%8F%E9%81%8E-selenium-%E6%93%8D%E4%BD%9C%E4%B8%8B%E6%8B%89%E5%BC%8F%E9%81%B8%E5%96%AE-select/
 # 透過selenium 操作下拉式選單
 # 1.可以用selenium中的select 功能
@@ -249,7 +257,7 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
 
 
 ##########################################
-# crawl the detailed info to the database
+#\ crawl the detailed info to the database
 # from <23.各蜓種紀錄總筆數查詢>
 # crawl to the next is empty, the next page id show empty data in the table
 # multithread : https://www.maxlist.xyz/2020/03/20/multi-processing-pool/
@@ -259,9 +267,9 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
     page = 0
     DataCNT = 0
     id = 0
-    IDold = 0
     Data_List = []
     tmp_List = []  
+    
     
     while True:
         Species_all_record_data = session.post( general_url +
@@ -271,6 +279,7 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                                                 Species_class_key[Web_rawl_Species_family_name] +
                                                 Species_key[Web_rawl_Species_name],
                                                 headers=headers)    
+
         soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
         for Species_all_record_data_Data_Set in soup.find_all(id='theRow'):
             tmp_List = Species_all_record_data_Data_Set.find_all('td')
@@ -293,23 +302,67 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                                                 Web_rawl_Species_name,
                                                 soup2.find(id='R_MEMO').get('value')))
             DataCNT += 1
-            IDold = id
-            print("Current finished datas >> " + str(DataCNT) + " /" + str(Total_num) + " (" + str(DataCNT * 100 / Total_num) + "%)", end='\r')
-            #print(DataCNT)
-
+            print("Current finished datas >> " +
+                    str(DataCNT) + " /" + str(Total_num) +
+                    " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
+            
         page += 1                                            
+    
+    
+
+#\ multiprocessing ver
+
+# init pool
+def init(args):
+    global DataCNT
+    DataCNT = args
+
+
+#\ multiprocessing
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, Limit_CNT, expecting_page, renmaind_data_Last_page, page):
+    #\ 執行進入"蜓種觀察資料查詢作業"
+    global DataCNT
+    tmp_List = []
+    Data_List = []
+    Species_all_record_data = session.post( general_url +
+                                            species_all_record_data_first_url +
+                                            species_all_record_data_page_url + str(page) +
+                                            species_all_record_data_species_url +
+                                            Species_class_key[Web_rawl_Species_family_name] +
+                                            Species_key[Web_rawl_Species_name],
+                                            headers=headers  )    
+
+    soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
+    Row_Data = soup.find_all(id='theRow')
+    if page == expecting_page:
+        del Row_Data[renmaind_data_Last_page:]
+        
+    for Species_all_record_data_Data_Set in Row_Data:
+        tmp_List = Species_all_record_data_Data_Set.find_all('td')  
+        id = tmp_List[0].text
+        response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
+        soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
+        Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
+                                            soup2.find(id='R_LAT').get('value'),
+                                            soup2.find(id='R_LNG').get('value'),
+                                            Web_rawl_Species_family_name,
+                                            Web_rawl_Species_name,
+                                            soup2.find(id='R_MEMO').get('value')))
+        DataCNT_lock = Lock()
+        with DataCNT_lock:
+            DataCNT.value += 1
+            print("\rCurrent finished datas >> " +
+                    str(DataCNT.value) + " /" + str(Total_num) +
+                    " (" + str(int(DataCNT.value * 100 / Total_num)) + "%)", end='\r')
+    return Data_List
 
     
 
 
-'''
-# this is for the update data after the first crawl
-def crawl_all_data_update(current_ID):
 
-'''
     
-# find the total data of the species
-# using the webdriver in this method, actually you can use webdriver in login also
+#\ find the total data of the species
+#\ using the webdriver in this method, actually you can use webdriver in login also
 def Find_species_total_data():
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options

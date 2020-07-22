@@ -17,7 +17,7 @@ value = soup.find(.....).get('ooo')
 
 -----------------------------------------------------------
 
-2020/7/17
+[2020/7/17]
 紀錄一下
 1.為了使request不要都來自同一個地方，request header代表了請求的一些資訊與規範
 其中的User-Agent(UA)代表了請求來源的作業系統、所使用的web driver等資訊，為了不要讓所請求的server覺得
@@ -40,5 +40,29 @@ https://blog.csdn.net/weixin_34364135/article/details/85864318?utm_medium=distri
 
 7.搞了很久的csv發現其食用xlsx還可以很方便的指定要存哪一行或列，不用像是csv要先讀，插入，再寫入
 
+
+[2020/7/22]
+1. 原本一直是要用beautifulsoup find_all 的 return list當作arg輸入map_async， 但是不知道為甚麼一直顯示can't recover from stackover flow
+所以我改成值節傳一頁資訊進去，因為這樣就只需要將每個頁面的url傳進去當參數
+https://morvanzhou.github.io/tutorials/data-manipulation/scraping/4-01-distributed-scraping/
+
+2. 在住程式要加__init__ = __main__
+
+3. session 是可以當參數傳遞的，也就是說如果我想要將登入動作做一次就好了，那就將登入function的session return並且在下一個韓世忠當參數傳入，
+這樣那個函式就會是登入過的seesion
+
+https://stackoverflow.com/questions/26310467/python-requests-keep-session-between-function
+
+4. 在用 global variable時，記得要init,不然一直錯，會吃不到multiprocessing 時的 share value
+https://stackoverflow.com/questions/2080660/python-multiprocessing-and-a-shared-counter
+http://blog.carlcarl.me/1315/python-multiprocessing-share-counter/
+
+
+5. 如果在使用 map or map_async 輸入args如果飛iterable只是想帶一個常數或不變的字串進去的話，就可以用partial
+
+6. 用了 multiprocessing 速度至少快了一倍
+
+7. 取小數點
+https://www.itread01.com/content/1549397542.html
 
 

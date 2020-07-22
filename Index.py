@@ -99,6 +99,15 @@ CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "
 # mutiprocessing cpu number
 cpus = multiprocessing.cpu_count()
 
+# do multiprocessing or not
+do_multiprocessing = True
+
+# state how many row data in one page
+data_per_page = 10
+
+# determine how you want to parse the data
+# 'parse_a_family' 'parse_all' 'parse_one'
+parse_type = 'parse_a_family'
 
 
 

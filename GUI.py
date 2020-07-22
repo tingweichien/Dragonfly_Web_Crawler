@@ -30,8 +30,8 @@ import colorama
 InputArgumentsLabel = ["Account", "Password"]
 
 # auto save account and password file
-path = os.getenv('temp')
-filename = os.path.join(path, 'info.txt')
+Login_path = os.getenv('temp')
+Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 
 current_dropdown_index = 0 
 Login_Response = 0
@@ -47,7 +47,7 @@ Map_spec_method_or_and = ''
 
 
 ##################################################################
-# Check if the user have entered  the info (account and password) or not
+# Check if the user have entered the info (account and password) or not
 def Check(LoginlnputList):
     index = 0
     string = ""
@@ -64,7 +64,7 @@ def Check(LoginlnputList):
 # 嘗試自動填寫使用者名稱和密碼
 def Auto_Fill():
     try:
-        with open(filename) as fp:
+        with open(Login_Filename) as fp:
             n, p = fp.read().strip().split(',')
             return [n, p]
     except:
@@ -116,7 +116,7 @@ def IDEnterButton():
 #\ Login action
 def LoginButton():
     global Login_Response, Login_state 
-    [Login_Response, Login_state] = Login_Web(account.get(), password.get())
+    [session, Login_Response, Login_state] = Login_Web(account.get(), password.get())
     if (Login_state == False):    
         main.title("蜻蜓資料庫經緯度查詢 --請登入--")
         messagebox.showwarning('Warning!!!', InputArgumentsLabel[0] + " or " + InputArgumentsLabel[1] + " might be incorrect!!!!")  #incorrect account or password
@@ -124,8 +124,8 @@ def LoginButton():
         login_button.config(bg='green')
         #messagebox.showinfo('Login success', 'Hi~ ' + account.get() + ' welcome')
         main.title("蜻蜓資料庫經緯度查詢 -- " + account.get() + "已登入")
-        # and write the account and password to the filename
-        with open(filename, 'w') as fp:
+        # and write the account and password to the Login_Filename
+        with open(Login_Filename, 'w') as fp:
             fp.write(','.join((account.get(), password.get())))
 
 
@@ -161,7 +161,7 @@ apikey = '' # (your API key here)
 def Show_on_map(input_map_list):
     global mapfilename, map_plot_max_data_num, Map_spec_method_or_and
     map_list = []
-    file_path = os.path.realpath(mapfilename)
+    map_file_path = os.path.realpath(mapfilename)
     # specify by selected item
     for tmp in input_map_list:
         if (len(Place_select_value) > 0):
@@ -203,8 +203,8 @@ def Show_on_map(input_map_list):
                     color="red",
                     label= index.Place.encode('unicode_escape').decode("utf-8"),
                     info_window=context.encode('unicode_escape').decode("utf-8"))
-        gmp.draw(file_path)
-    webbrowser.open(file_path)
+        gmp.draw(map_file_path)
+    webbrowser.open(map_file_path)
     return map_list
 
 
@@ -278,7 +278,8 @@ def New_table(map_result_list):
     
     window = PYGUI.Window("Show Species info", layout=layout)
 
-    while True:             # Event Loop
+    # Event Loop
+    while True:             
         event, values = window.Read()
         if event in (None, 'Exit'):
             break
@@ -286,8 +287,7 @@ def New_table(map_result_list):
             PYGUI.popup_animated(Image_path + "\Loading.gif")
             Spec_DATA = Show_on_map(map_result_list)
             PYGUI.popup_animated(None)             
-            window['Spec_Table'].update(values=[
-                                                [index.Place,
+            window['Spec_Table'].update(values=[[index.Place,
                                                 index.Dates + "-" + index.Times,
                                                 index.User,
                                                 index.Latitude,
