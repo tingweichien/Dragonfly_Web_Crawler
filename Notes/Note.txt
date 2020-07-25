@@ -66,3 +66,13 @@ http://blog.carlcarl.me/1315/python-multiprocessing-share-counter/
 https://www.itread01.com/content/1549397542.html
 
 
+
+[2020/07/26]
+1. 完成looping through 整個資料庫，並依據缺少資料抓取
+
+2. 將所抓取個廷種資料的數量記錄到json檔中，並之後依此檢查，作為Update的參考
+
+3. Tkinter字體選擇，你可以用.config(font(字型, 大小, 粗體或斜體)
+https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-set-font-of-tkinter-text-widget/
+
+

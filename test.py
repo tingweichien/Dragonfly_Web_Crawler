@@ -154,10 +154,10 @@ fig = gmaps.figure()
 fig.add_layer(marker_layer)
 fig
 '''
-'''
+
 import tkinter as tk 
 from tkinter import ttk 
-   
+import PySimpleGUI as sg   
   
 LARGEFONT =("Verdana", 35) 
    
@@ -229,7 +229,10 @@ class StartPage(tk.Frame):
         button2.grid(row = 2, column = 1, padx = 10, pady = 10) 
    
            
-   
+
+
+
+
    
 # second window frame page1  
 class Page1(tk.Frame): 
@@ -256,7 +259,10 @@ class Page1(tk.Frame):
       
         # putting the button in its place by  
         # using grid 
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10) 
+        button2.grid(row=2, column=1, padx=10, pady=10)
+
+        for i in range(1, 10000):
+            sg.OneLineProgressMeter('My Meter', i+1, 10000,'Optional message', "something to show", orientation='h',)
    
    
    
@@ -290,7 +296,7 @@ class Page2(tk.Frame):
 # Driver Code 
 app = tkinterApp() 
 app.mainloop() 
-'''
+
 
 '''
 l = ['tt', 'tt', 'tr', 'tc', 'ata', 'tt', 'at']
@@ -490,7 +496,7 @@ print(reduce(add ,[[1,2,3],[1,2],[1,4,5,6,7]]))'''
 
 
 
-import json
+'''import json
 data = {}
 data['people'] = []
 data['people'].append({
@@ -520,7 +526,7 @@ with open('data_test.txt', 'r', errors='ignore') as Readfile:
         print('website:' + p['website'])
         print('from:' + p['from'])
         print(" ")
-
+'''
 '''
 A = {
     "a": 1,
@@ -563,6 +569,7 @@ print("The filtered dictionary is : " + str(res))
 D = {}
 print(len(D))'''
 
+'''
 #delete the empty row
 import csv
 from Index import *
@@ -582,4 +589,43 @@ for spec_family in Species_Family_Name:
                                 Data.append(read)
                         File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                         File_writer.writerows(Data)
-                        Data = []
+                        Data = []''' 
+                        
+
+
+
+
+'''# importing tkinter module 
+import tkinter as tk
+from tkinter import *
+from tkinter.ttk import *
+from tkinter import ttk
+
+root = Tk()
+root.title("this is root")
+root.geometry("600x400")
+
+def start_button(progressbar):
+    progressbar['value'] += 10
+    #newwindow.update_idletasks()
+    print("start")
+    #progressbar.start(10)
+
+def popup():
+    newwindow = tk.Toplevel(root)
+    #newwindow = Tk()
+    newwindow.title("this is new window")
+    newwindow.geometry("600x400")
+    progressbar = ttk.Progressbar(newwindow, orient=HORIZONTAL, length=300, mode="determinate")
+    progressbar.pack(pady=20)
+    button_popup = Button(newwindow, text="start", command=lambda: start_button(progressbar))
+    button_popup.pack(pady=20)
+    b = tk.Button(newwindow, text="Okay", command= newwindow.destroy)
+    b.pack(pady = 20)
+
+
+
+button = ttk.Button(root, text="popup", command=popup)
+button.pack(pady=20)
+
+root.mainloop()'''

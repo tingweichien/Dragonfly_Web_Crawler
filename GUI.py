@@ -10,6 +10,7 @@
 # https://stackoverflow.com/questions/31264522/getting-the-selected-value-from-combobox-in-tkinter
 # https://stackoverflow.com/questions/45441885/how-can-i-create-a-dropdown-menu-from-a-list-in-tkinter
 # https://pysimplegui.readthedocs.io/en/latest/call%20reference/?#table-element
+# https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-set-font-of-tkinter-text-widget/
 
 from Dragonfly import *
 import tkinter as tk
@@ -322,10 +323,7 @@ def Family_drop_down_menu_callback(*args):
     print (var_family.get())
     print (Family_drop_down_menu.current())
 
-'''    
-def Species_drop_down_menu_callback(*args):
-    # when the species been selected the new table will be created and display
-'''
+
    
 
 
@@ -342,13 +340,14 @@ main.geometry('380x450')  # Width*Height
 
 
 # Label frames
+labelframe_font_size = 11
 LabelFrame_Canvas = LabelFrame(main)
 LabelFrame_Canvas.pack()
-LabelFrame_Login = LabelFrame(main, text='Login')
+LabelFrame_Login = LabelFrame(main, text='Login', font=("Ink Free", labelframe_font_size, "bold"))
 LabelFrame_Login.pack(fill="both", expand="yes")  
-LabelFrame_ID_Find = LabelFrame(main, text='ID Find')
+LabelFrame_ID_Find = LabelFrame(main, text='ID Find', font=("Ink Free", labelframe_font_size, "bold"))
 LabelFrame_ID_Find.pack(fill="both", expand="yes")  
-LabelFrame_Species_Find = LabelFrame(main, text='Species Find')
+LabelFrame_Species_Find = LabelFrame(main, text='Species Find', font=("Ink Free", labelframe_font_size, "bold"))
 LabelFrame_Species_Find.pack(fill="both", expand="yes")
 LabelFrame_CopyRight = LabelFrame(main)
 
@@ -365,12 +364,14 @@ main.iconphoto(False, image_file)
 #main.iconbitmap(current_path+"\dragonfly_ico.ico")
 
 # label
-account_label = Label(LabelFrame_Login, text = "Account:")
-password_label = Label(LabelFrame_Login, text = "Password:")
-id_label = Label(LabelFrame_ID_Find, text = "ID:")
-latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:")
-longitude_label = Label(LabelFrame_ID_Find, text="Longitude:")
-Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species")
+label_font_size = 10
+label_font_style = ("Arial", label_font_size )
+account_label = Label(LabelFrame_Login, text = "Account:", font=label_font_style)
+password_label = Label(LabelFrame_Login, text = "Password:", font=label_font_style)
+id_label = Label(LabelFrame_ID_Find, text = "ID:", font=label_font_style)
+latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:", font=label_font_style)
+longitude_label = Label(LabelFrame_ID_Find, text="Longitude:", font=label_font_style)
+Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style)
 
 
 # Entry

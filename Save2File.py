@@ -91,6 +91,23 @@ def checkUpdateSpecies(NewNumberData, filepath):
     return Update
 
 
+def removeEmpty():
+    Data = []
+    for spec_family in Species_Family_Name:
+        for spec in Species_Name_Group[Species_Family_Name.index(spec_family)]:
+            Save_File = "Crawl_Data\\" + Species_class_key[spec_family] + "\\" + Species_class_key[spec_family] + Species_key[spec]
+            print(Save_File)
+            print(spec)
+            if os.path.exists(Save_File+ ".csv"):
+                with open(Save_File + ".csv", "r", newline='', errors = "ignore") as r:
+                        R = list(csv.reader(r))
+                        with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
+                            for read in R:
+                                if not len(read[0]) == 0:
+                                    Data.append(read)
+                            File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                            File_writer.writerows(Data)
+                            Data = []    
 
 
 
