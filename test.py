@@ -305,7 +305,7 @@ sg.PopupAnimated(None)  # close all Animated Popups
 '''
 
 
-'''
+
 #
 # https://stackoverflow.com/questions/209840/convert-two-lists-into-a-dictionary
 # https://ithelp.ithome.com.tw/articles/10204231
@@ -314,7 +314,7 @@ sg.PopupAnimated(None)  # close all Animated Popups
 # https://ithelp.ithome.com.tw/articles/10222029
 # https://stackoverflow.com/questions/1024847/how-can-i-add-new-keys-to-a-dictionary
 
-
+'''
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 account = "簡庭威"
@@ -331,37 +331,22 @@ if popup_chrome_web:
 driverpath = r".\\chromedriver.exe"
 driver = webdriver.Chrome(executable_path=driverpath, chrome_options = options)
 
-driver.get("http://dragonfly.idv.tw/dragonfly/index.php")
-driver.find_element_by_name("account").send_keys(account)
-driver.find_element_by_name("password").send_keys(password)
-driver.find_element_by_name("login").click()
-driver.get("http://dragonfly.idv.tw/dragonfly/kind_total_records.php")
-#Tag_muti = driver.find_elements_by_tag_name("a")
-#Tag_single = driver.find_element_by_tag_name("a")
-labe_list = driver.find_elements_by_tag_name("label")
-labe_list_text = [label_tmp.text for label_tmp in labe_list]
-td_list = driver.find_elements_by_tag_name("td")
-td_list_text = [td_tmp.text for td_tmp in td_list]
+driver.get("https://www.openstreetmap.org/#map=9/23.6873/120.7205")
+driver.find_element_by_id("query")
+driver.find_element_by_name("commit").click()
 
-Dictionary = dict()
-
-for td_list_text_tmp in td_list_text:
-    if td_list_text_tmp in labe_list_text:
-        number = td_list_text[(td_list_text.index(td_list_text_tmp)) + 1]
-        if number == ' ' :
-            number = '0'
-        Dictionary[td_list_text_tmp.split('.')[1]] = number
-print(Dictionary)
 
 
 driver.quit()
 
 
-#Dictionary = dict(zip(lebel_muti.text ,Tag_muti.text))
+#Dictionary = dict(zip(lebel_muti.text ,Tag_muti.text)
 
 '''
 
-from multiprocessing import Pool, Value
+
+
+'''from multiprocessing import Pool, Value
 from time import sleep
 from functools import partial
 import time
@@ -407,7 +392,7 @@ def start_main():
         p.close()
         p.join()
         l = list(filter(None,i.get()))
-        print("result: " + str(l))
+        print("result: " + str(l[:][0]))
         end = time.time()
         print("spend  : {}".format(end - start))
 
@@ -415,7 +400,7 @@ if __name__ == '__main__':
     print('start')
     start_main()
     print('END')  
-
+'''
 
 '''
 import progressbar
@@ -502,3 +487,99 @@ if __name__ == "__main__":
 from functools import reduce
 
 print(reduce(add ,[[1,2,3],[1,2],[1,4,5,6,7]]))'''
+
+
+
+import json
+data = {}
+data['people'] = []
+data['people'].append({
+    'name': '簡庭威',
+    'website': 'stackabuse.com',
+    'from': 'Nebraska'
+})
+data['people'].append({
+    'name': '趙薇凱',
+    'website': 'google.com',
+    'from': 'Michigan'
+})
+data['people'].append({
+    'name': '檢蜓欲',
+    'website': 'apple.com',
+    'from': 'Alabama'
+})
+
+with open('data_test.txt', 'w') as outputfile:
+    json.dump(data, outputfile, ensure_ascii=False, indent=4)
+    
+with open('data_test.txt', 'r', errors='ignore') as Readfile:
+    readData = json.load(Readfile)
+    print(readData)
+    for p in readData['people']:
+        print('name:' + p['name'])
+        print('website:' + p['website'])
+        print('from:' + p['from'])
+        print(" ")
+
+'''
+A = {
+    "a": 1,
+    "b": 2
+}
+B = {
+    "a": 22,
+    "b": 2,
+    "c": 45
+}
+
+for key in A:
+    if key in B and B[key] == A[key]:
+        print(A[key])
+
+l = []
+l.append([1, 2])
+print(l)
+
+# Python3 code to demonstrate 
+# Extracting specifix keys from dictionary 
+# Using dictionary comprehension + items() 
+  
+# initializing dictionary 
+test_dict = {'nikhil' : 1, "akash" : 2, 'akshat' : 3, 'manjeet' : 4} 
+  
+# printing original list 
+print("The original dictionary : " + str(test_dict)) 
+  
+# Using dictionary comprehension + items() 
+# Extracting specifix keys from dictionary
+want = ['akshat', 'nikhil']
+res = {key: test_dict[key] for key in test_dict.keys() 
+                               & set(want)}
+print(test_dict.keys())                                
+  
+# print result 
+print("The filtered dictionary is : " + str(res))
+
+D = {}
+print(len(D))'''
+
+#delete the empty row
+import csv
+from Index import *
+import os
+Data = []
+for spec_family in Species_Family_Name:
+    for spec in Species_Name_Group[Species_Family_Name.index(spec_family)]:
+        Save_File = "Crawl_Data\\" + Species_class_key[spec_family] + "\\" + Species_class_key[spec_family] + Species_key[spec]
+        print(Save_File)
+        print(spec)
+        if os.path.exists(Save_File+ ".csv"):
+            with open(Save_File + ".csv", "r", newline='', errors = "ignore") as r:
+                    R = list(csv.reader(r))
+                    with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
+                        for read in R:
+                            if not len(read[0]) == 0:
+                                Data.append(read)
+                        File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                        File_writer.writerows(Data)
+                        Data = []

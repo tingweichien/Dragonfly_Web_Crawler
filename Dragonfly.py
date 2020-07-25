@@ -24,7 +24,9 @@ session = requests.Session()
 
 stop_crawl_all_data_mp = False
 
-DataCNT = 0
+DataCNT = Value('i', 0)
+
+TotalCount = 0
 
 
 
@@ -248,7 +250,6 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
             map_result.append(Date_Time.split('\\u3000')[1])  # Time
             map_result.append(re.findall(r'(?<=\\u6d77\\u3000\\u62d4 ).+(?=\\u7d00)', map_script)[0]) # Altitude
             map_result.append(re.findall(r'(?<=\\u7d00\\u9304\\u8005 ).+(?=<)', map_script)[0].encode('utf-8').decode('unicode_escape'))  #Recorder
-            print(map_result)
             map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], "", species_input, '-'))
             map_result.clear()
 
@@ -268,9 +269,8 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
     DataCNT = 0
     id = 0
     Data_List = []
-    tmp_List = []  
-    
-    
+    tmp_List = []
+        
     while True:
         Species_all_record_data = session.post( general_url +
                                                 species_all_record_data_first_url +
@@ -309,9 +309,8 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
         page += 1                                            
     
     
-
+###########################################################
 #\ multiprocessing ver
-
 # init pool
 def init(args):
     global DataCNT
@@ -319,7 +318,7 @@ def init(args):
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, Limit_CNT, expecting_page, renmaind_data_Last_page, page):
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, expecting_CNT, expecting_page, renmaind_data_Last_page, page):
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT
     tmp_List = []
@@ -352,17 +351,20 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_n
         with DataCNT_lock:
             DataCNT.value += 1
             print("\rCurrent finished datas >> " +
-                    str(DataCNT.value) + " /" + str(Total_num) +
-                    " (" + str(int(DataCNT.value * 100 / Total_num)) + "%)", end='\r')
+                    str(DataCNT.value) + " /" + str(expecting_CNT) +
+                    " (" + str(int(DataCNT.value * 100 / expecting_CNT)) + "%)", end='\r')
     return Data_List
 
     
 
 
 
-    
+ ################################################################   
 #\ find the total data of the species
 #\ using the webdriver in this method, actually you can use webdriver in login also
+#\ input  : None
+#\ output : {"白痣珈蟌": "10000", "舞鋏晏蜓": "95", ....}
+
 def Find_species_total_data():
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options

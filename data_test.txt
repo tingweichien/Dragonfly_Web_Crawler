@@ -1,0 +1,19 @@
+{
+    "people": [
+        {
+            "name": "Â²®x«Â",
+            "website": "stackabuse.com",
+            "from": "Nebraska"
+        },
+        {
+            "name": "»¯Á¨³Í",
+            "website": "google.com",
+            "from": "Michigan"
+        },
+        {
+            "name": "ÀË¸»±ý",
+            "website": "apple.com",
+            "from": "Alabama"
+        }
+    ]
+}

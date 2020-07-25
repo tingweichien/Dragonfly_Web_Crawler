@@ -83,11 +83,14 @@ headers = {
 # file path
 current_path = os.getcwd()
 
-#image path
+# image path
 Image_path = current_path + "\image"
 
 # webdriver to crawl the total number of the record
 popup_chrome_web = False
+
+
+##----crawl dtat to csv----
 
 # chrome driver path
 ChromeDriverPath = r".\\chromedriver.exe"
@@ -97,7 +100,8 @@ CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "
 
 
 # mutiprocessing cpu number
-cpus = multiprocessing.cpu_count()
+extra_cpu = 0
+cpus = extra_cpu + multiprocessing.cpu_count()
 
 # do multiprocessing or not
 do_multiprocessing = True
@@ -107,8 +111,19 @@ data_per_page = 10
 
 # determine how you want to parse the data
 # 'parse_a_family' 'parse_all' 'parse_one'
-parse_type = 'parse_a_family'
+parse_type = 'parse_all'
+parse_family_name = "幽蟌科"
+parse_species_name = "短腹幽蟌"
 
+
+# limit the count for each time looping
+limit_cnt = 5000
+
+# first folder for crawling data
+folder_all_crawl_data = 'Crawl_Data\\'
+
+# json file path to record the total number of each species
+TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species.txt'
 
 
 #####################################################################
