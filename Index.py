@@ -13,7 +13,10 @@ mypassword = "tim960622"
 
 
 ###################################################
-# GUI setting
+# Gui setting
+Login_geometry = "300x330" # Width x Height
+
+# PY GUI setting
 Table_scroll_num = 10 
 
 # map setting
@@ -23,6 +26,12 @@ map_plot_max_data_num = 150
 # initial map location
 Init_Map_LAT = 24.150924
 Init_Map_LNG = 120.650710
+
+# ico image path
+ico_image_path = 'image\\dragonfly_ico.ico'
+
+# statement in the login page
+copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
 
 
 

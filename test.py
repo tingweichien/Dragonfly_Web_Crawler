@@ -155,12 +155,24 @@ fig.add_layer(marker_layer)
 fig
 '''
 
-import tkinter as tk 
-from tkinter import ttk 
+'''import tkinter as tk 
+from tkinter import ttk
+from tkinter import *
 import PySimpleGUI as sg   
   
 LARGEFONT =("Verdana", 35) 
    
+
+
+def Logincheck(controller, Account, Password):
+    if Account == '簡庭威' and Password == "tim960622":
+        controller.show_frame(Page1)
+    else:
+        print('error')
+
+
+
+
 class tkinterApp(tk.Tk): 
       
     # __init__ function for class tkinterApp  
@@ -181,52 +193,66 @@ class tkinterApp(tk.Tk):
    
         # iterating through a tuple consisting 
         # of the different page layouts 
-        for F in (StartPage, Page1, Page2): 
+        for F in (LoginPage, Page1, Page2): 
    
             frame = F(container, self) 
    
             # initializing frame of that object from 
-            # startpage, page1, page2 respectively with  
+            # LoginPage, page1, page2 respectively with  
             # for loop 
             self.frames[F] = frame  
    
             frame.grid(row = 0, column = 0, sticky ="nsew") 
    
-        self.show_frame(StartPage) 
+        self.show_frame(LoginPage) 
    
     # to display the current frame passed as 
     # parameter 
-    def show_frame(self, cont): 
-        frame = self.frames[cont] 
-        frame.tkraise() 
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
    
-# first window frame startpage 
+# first window frame LoginPage 
    
-class StartPage(tk.Frame): 
+class LoginPage(tk.Frame): 
     def __init__(self, parent, controller):  
-        tk.Frame.__init__(self, parent) 
-          
+        tk.Frame.__init__(self, parent, bg="white")
+        
         # label of frame Layout 2 
-        label = ttk.Label(self, text ="Startpage", font = LARGEFONT) 
+        Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
+        AccountLabel = tk.Label(self, text="Account", bg="white")
+        PasswordLabel = tk.Label(self, text="Password", bg="white")
+        StatementLabel = tk.Label(self, text="Developed by Ting Wei Chien\n 2020/7/26",
+                                    bg="white", fg = "gray", font = ("Arial", 8))
           
         # putting the grid in its place by using 
         # grid 
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)  
-   
-        button1 = ttk.Button(self, text ="Page 1", 
-        command = lambda : controller.show_frame(Page1)) 
+        #label.grid(row = 0, column = 4, padx = 10, pady = 10)  
+
+        VarName = StringVar(self, value='')
+        VarPwd = StringVar(self, value='')
+        accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+        accountEntry = Entry(accountFrame, textvariable=VarName, relief=FLAT)
+        passwordFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+        passwordEntry = Entry(passwordFrame, textvariable = VarPwd, relief=FLAT)
+
+        
+        Loginbutton = Button(self, text ="Login",font=("Arial", 9, "bold"), bg="lime green", fg='white', relief='groove', pady = 0.5, padx =54,
+        #command = lambda : controller.show_frame(Page1, 'LoginPage'))
+        command = lambda : Logincheck(controller, VarName.get(), VarPwd.get())) 
       
         # putting the button in its place by 
-        # using grid 
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10) 
-   
-        ## button to show frame 2 with text layout2 
-        button2 = ttk.Button(self, text ="Page 2", 
-        command = lambda : controller.show_frame(Page2)) 
-      
-        # putting the button in its place by 
-        # using grid 
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10) 
+        # using grid
+        Loginlabel.pack(pady=10)
+        AccountLabel.pack()
+        accountFrame.pack()
+        accountEntry.pack()
+        PasswordLabel.pack()
+        passwordFrame.pack() 
+        passwordEntry.pack() 
+        Loginbutton.pack(pady=10)
+        StatementLabel.pack(pady = 20)
+
    
            
 
@@ -245,8 +271,8 @@ class Page1(tk.Frame):
    
         # button to show frame 2 with text 
         # layout2 
-        button1 = ttk.Button(self, text ="StartPage", 
-                            command = lambda : controller.show_frame(StartPage)) 
+        button1 = ttk.Button(self, text ="LoginPage", 
+                            command = lambda : controller.show_frame(LoginPage)) 
       
         # putting the button in its place  
         # by using grid 
@@ -261,8 +287,8 @@ class Page1(tk.Frame):
         # using grid 
         button2.grid(row=2, column=1, padx=10, pady=10)
 
-        for i in range(1, 10000):
-            sg.OneLineProgressMeter('My Meter', i+1, 10000,'Optional message', "something to show", orientation='h',)
+        #for i in range(1, 10000):
+            #sg.OneLineProgressMeter('My Meter', i+1, 10000,'Optional message', "something to show", orientation='h',)
    
    
    
@@ -285,18 +311,19 @@ class Page2(tk.Frame):
    
         # button to show frame 3 with text 
         # layout3 
-        button2 = ttk.Button(self, text ="Startpage", 
-                            command = lambda : controller.show_frame(StartPage)) 
+        button2 = ttk.Button(self, text ="LoginPage", 
+                            command = lambda : controller.show_frame(LoginPage)) 
       
         # putting the button in its place by 
         # using grid 
         button2.grid(row = 2, column = 1, padx = 10, pady = 10) 
    
    
-# Driver Code 
-app = tkinterApp() 
+# Driver Code
+app = tkinterApp()
+app.title("Login")
 app.mainloop() 
-
+'''
 
 '''
 l = ['tt', 'tt', 'tr', 'tc', 'ata', 'tt', 'at']
@@ -629,3 +656,25 @@ button = ttk.Button(root, text="popup", command=popup)
 button.pack(pady=20)
 
 root.mainloop()'''
+
+
+from Save2File import *
+# --main--
+if __name__ == '__main__':
+    # start timer
+    Start = time.time()
+    
+    if parse_type == 'parse_a_family':          
+        parse_family()
+    elif parse_type == 'parse_all':  
+        parse_all()
+    elif parse_type == 'parse_one':
+        Save2File(parse_family_name, parse_species_name, None, None)
+        print("\n---Finishing crawling {} ---".format(parse_family_name))
+    else:
+        print("!!!! No parse type define !!!!!")
+
+    #End timer
+    End = time.time()
+    Time_interval = End - Start
+    print("---\nFinished crawling all the data---  Totally spend: {}m {}s".format(int(Time_interval/60), round(Time_interval % 60), 1))

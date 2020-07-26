@@ -57,12 +57,14 @@ def Write2File(File_name, folder, file_check, file_size, CSV_Head, Data, oldData
         if ((not file_check) or (file_size == 0)):
             File_writer.writerow(CSV_Head)
             File_writer.writerows(Data)
+            print("first write")
 
         # for inserting the data into the old one    
         else:
             for i in range(0, len(Data)):
                 oldData.insert(i, Data[i])
-            File_writer.writerows(oldData)    
+            File_writer.writerows(oldData)
+            print('insert')
 
 
 
@@ -112,6 +114,7 @@ def removeEmpty():
 
 
 def Save2File(Input_species_famliy, Input_species, session_S2F, Species_total_num_Dict, File_name, folder):
+    #if __name__ == 'Save2File':
     if __name__ == '__main__':
         # setting
         oldID = 0
