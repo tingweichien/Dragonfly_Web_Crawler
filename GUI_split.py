@@ -152,10 +152,7 @@ def SpeciesFindButton(var_family, var_species):
 # https://stackoverflow.com/questions/40905703/how-to-open-an-html-file-in-the-browser-from-python/40905794
 # https://stackoverflow.com/questions/55515627/pysimplegui-call-a-function-when-pressing-button
 # marker title has some problem
-'''
-apikey = '' # (your API key here)
-            gmap = gmplot.GoogleMapPlotter(37.766956, -122.438481, 13, apikey=apikey)
-'''
+
 
 def Show_on_map(input_map_list):
     global mapfilename, map_plot_max_data_num, Map_spec_method_or_and
@@ -195,13 +192,24 @@ def Show_on_map(input_map_list):
         messagebox.showinfo("Info", "No data match the spec")
         return []
         
-    gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13, apikey=var_APIKEY.get(),title=map_list[0].Species)
-    print(var_APIKEY.get())
-    info_box_template ="""
-
+    gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13, apikey=var_APIKEY.get(),
+                                    title= map_list[0].Species.encode('unicode_escape').decode("utf-8"))
+    info_box_template = """
+    <dl>
+    <dt><b>[User]</b></dt><dt>{User}</dt>
+    <dt><b>[Dates]</b></dt><dt>{Dates}</dt>
+    <dt><b>[Times]</b></dt><dt>{Times}</dt>
+    <dt><b>[Place]</b></dt><dt>{Place}</dt>
+    <dt><b>[Altitude]</b></dt><dt>{Altitude}</dt>
+    <dt><b>[Latitude]</b></dt><dt>{Latitude}</dt>
+    <dt><b>[Longitude]</b></dt><dt>{Longitude}</dt>
+    </dl>
     """
     for index in map_list:
-        context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude          
+        #context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude
+        tmp_dict = {"User": index.User, "Dates": index.Dates, "Times": index.Times, "Place": index.Place,
+                    "Altitude": index.Altitude, "Latitude": index.Latitude, "Longitude": index.Longitude}
+        context =  info_box_template.format(**tmp_dict) 
         gmp.marker(float(index.Latitude), float(index.Longitude),
                     color="red",
                     label= index.Place.encode('unicode_escape').decode("utf-8"),
@@ -385,7 +393,8 @@ class LoginPage(tk.Frame):
         passwordEntry = Entry(passwordFrame, textvariable=VarPwd, relief=FLAT)
         
         # button
-        Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white', activebackground = "green2",
+        Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
+                            activebackground = "green2", activeforeground = "white",
                             relief='groove', pady = 0.5, padx =54,
                             command = lambda : LoginButton(controller, VarName.get(), VarPwd.get())) 
       
