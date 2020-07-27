@@ -353,6 +353,7 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_n
             print("\rCurrent finished datas >> " +
                     str(DataCNT.value) + " /" + str(expecting_CNT) +
                     " (" + str(int(DataCNT.value * 100 / expecting_CNT)) + "%)", end='\r')
+
     return Data_List
 
     

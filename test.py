@@ -596,11 +596,12 @@ print("The filtered dictionary is : " + str(res))
 D = {}
 print(len(D))'''
 
-'''
-#delete the empty row
+
+'''#delete the empty row
 import csv
 from Index import *
 import os
+import json
 Data = []
 for spec_family in Species_Family_Name:
     for spec in Species_Name_Group[Species_Family_Name.index(spec_family)]:
@@ -608,21 +609,26 @@ for spec_family in Species_Family_Name:
         print(Save_File)
         print(spec)
         if os.path.exists(Save_File+ ".csv"):
-            with open(Save_File + ".csv", "r", newline='', errors = "ignore") as r:
-                    R = list(csv.reader(r))
-                    with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
-                        for read in R:
-                            if not len(read[0]) == 0:
-                                Data.append(read)
-                        File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-                        File_writer.writerows(Data)
-                        Data = []''' 
+            with open(Save_File + ".csv", "r", newline='', errors="ignore") as r:
+                with open("Crawl_Data\\Record_Num_each_species.txt", "r", newline='', errors="ignore", encoding='utf-8') as js:
+                    totalNum = json.load(js)
+                R = list(csv.reader(r))
+                print("Total: " + str(totalNum[spec]))
+                print("lens: " + str(len(R)))
+                with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
+                    for read in R:
+                        if (not len(read[0]) == 0) and (not read[2] in [data[2] for data in Data]):
+                            Data.append(read)
+                    print("will write {} data".format(len(Data)))
+                    File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    File_writer.writerows(Data)
+                    Data = []'''
                         
 
 
 
-
-'''# importing tkinter module 
+'''
+# importing tkinter module 
 import tkinter as tk
 from tkinter import *
 from tkinter.ttk import *
@@ -658,23 +664,63 @@ button.pack(pady=20)
 root.mainloop()'''
 
 
-from Save2File import *
-# --main--
+'''from Save2File import *
 if __name__ == '__main__':
-    # start timer
-    Start = time.time()
-    
-    if parse_type == 'parse_a_family':          
-        parse_family()
-    elif parse_type == 'parse_all':  
-        parse_all()
-    elif parse_type == 'parse_one':
-        Save2File(parse_family_name, parse_species_name, None, None)
-        print("\n---Finishing crawling {} ---".format(parse_family_name))
-    else:
-        print("!!!! No parse type define !!!!!")
+    print("something")
+    savefile(parse_type)'''
 
-    #End timer
-    End = time.time()
-    Time_interval = End - Start
-    print("---\nFinished crawling all the data---  Totally spend: {}m {}s".format(int(Time_interval/60), round(Time_interval % 60), 1))
+
+
+
+
+
+from tkinter import Button, Tk, HORIZONTAL
+
+from tkinter.ttk import Progressbar
+import time
+import threading
+import tkinter as tk
+
+
+def somefun(self):
+    for i in range(0, 100):
+        time.sleep(0.1)
+        self.progress.step(1)
+        self.label_text()
+        #print(self.var.get())
+
+class MonApp(Tk):
+    def __init__(self):
+        super().__init__()
+
+
+        self.btn = Button(self, text='Traitement', command=self.traitement)
+        self.btn.grid(row=0, column=0)
+        self.var = tk.IntVar(self)
+        self.progress = Progressbar(self, orient=HORIZONTAL, length=100, mode='determinate', maximum=100, variable=self.var)
+        self.label = tk.Label(self, text="0%")
+        self.label.grid(row=1, column=1)
+
+
+    def traitement(self):
+        def real_traitement():
+            self.progress.grid(row=1,column=0)
+            #6self.progress.start()
+            somefun(self)
+            self.progress.stop()
+            self.progress.grid_forget()
+
+            self.btn['state']='normal'
+        self.btn['state']='disabled'
+        threading.Thread(target=real_traitement).start()
+
+    def label_text(self):
+        self.label['text'] = str(self.var.get()) + "%"
+        #threading.Thread(target=label_text).start()
+
+
+
+if __name__ == '__main__':
+
+    app = MonApp()
+    app.mainloop()

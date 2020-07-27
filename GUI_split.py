@@ -13,6 +13,9 @@ import PySimpleGUI as PYGUI
 import gmplot
 import webbrowser
 from Index import *
+from Save2File import *
+import time
+import threading
 
   
 LARGEFONT =("Verdana", 35) 
@@ -365,7 +368,7 @@ class tkinterApp(tk.Tk):
         frame = self.frames[cont]
         print(frame._name)
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
-        tk.Tk.wm_geometry(self, "380x450")
+        tk.Tk.wm_geometry(self, MainPageGeometry)
         tk.Tk.iconbitmap(self, default=ico_image_path)
         frame.tkraise()
 
@@ -375,48 +378,49 @@ class tkinterApp(tk.Tk):
    
 class LoginPage(tk.Frame): 
     def __init__(self, parent, controller):  
-        tk.Frame.__init__(self, parent, bg="white")
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
+            
+            # label of frame Layout 2 
+            Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
+            AccountLabel = tk.Label(self, text="Account", bg="white")
+            PasswordLabel = tk.Label(self, text="Password", bg="white")
+            StatementLabel = tk.Label(self, text=copyright_text,
+                                        bg="white", fg = "gray", font = ("Arial", 8))
+            
+            # putting the grid in its place by using 
+            VarName = StringVar(self, value='')
+            VarPwd = StringVar(self, value='')
+            accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+            accountEntry = Entry(accountFrame, textvariable=VarName, relief=FLAT)
+            passwordFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+            passwordEntry = Entry(passwordFrame, textvariable=VarPwd, relief=FLAT)
+            
+            # button
+            Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
+                                activebackground = "green2", activeforeground = "white",
+                                relief='groove', pady = 0.5, padx =54,
+                                command = lambda : LoginButton(controller, VarName.get(), VarPwd.get())) 
         
-        # label of frame Layout 2 
-        Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
-        AccountLabel = tk.Label(self, text="Account", bg="white")
-        PasswordLabel = tk.Label(self, text="Password", bg="white")
-        StatementLabel = tk.Label(self, text=copyright_text,
-                                    bg="white", fg = "gray", font = ("Arial", 8))
-          
-        # putting the grid in its place by using 
-        VarName = StringVar(self, value='')
-        VarPwd = StringVar(self, value='')
-        accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
-        accountEntry = Entry(accountFrame, textvariable=VarName, relief=FLAT)
-        passwordFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
-        passwordEntry = Entry(passwordFrame, textvariable=VarPwd, relief=FLAT)
-        
-        # button
-        Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
-                            activebackground = "green2", activeforeground = "white",
-                            relief='groove', pady = 0.5, padx =54,
-                            command = lambda : LoginButton(controller, VarName.get(), VarPwd.get())) 
-      
-        # putting the button in its place by 
-        Loginlabel.pack(pady=20)
-        AccountLabel.pack()
-        accountFrame.pack()
-        accountEntry.pack()
-        PasswordLabel.pack()
-        passwordFrame.pack() 
-        passwordEntry.pack() 
-        Loginbutton.pack(pady=20)
-        StatementLabel.pack(pady=20)
-        
+            # putting the button in its place by 
+            Loginlabel.pack(pady=20)
+            AccountLabel.pack()
+            accountFrame.pack()
+            accountEntry.pack()
+            PasswordLabel.pack()
+            passwordFrame.pack() 
+            passwordEntry.pack() 
+            Loginbutton.pack(pady=20)
+            StatementLabel.pack(pady=20)
+            
 
-        # Check password and account and the ID
-        LoginlnputList = [VarName.get(), VarPwd.get()]
-        
-        # try to auto fill the account and password
-        [n, p] = self.Auto_Fill()
-        VarName.set(n)
-        VarPwd.set(p)
+            # Check password and account and the ID
+            LoginlnputList = [VarName.get(), VarPwd.get()]
+            
+            # try to auto fill the account and password
+            [n, p] = self.Auto_Fill()
+            VarName.set(n)
+            VarPwd.set(p)
 
     # @@ 注意空格，不小心放在init method裡面    
     # 嘗試自動填寫使用者名稱和密碼
@@ -435,112 +439,134 @@ class LoginPage(tk.Frame):
 
    
 # second window frame MainPage  
-class MainPage(tk.Frame): 
-      
+class MainPage(tk.Frame):   
     def __init__(self, parent, controller):   
-        tk.Frame.__init__(self, parent, bg="white")
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
 
-        # label frame
-        labelframe_font_size = 11
-        LabelFrame_font = ("Ink Free", labelframe_font_size, "bold")
-        LabelFrame_Canvas = LabelFrame(self)
-        LabelFrame_Canvas.pack()
+            # label frame
+            labelframe_font_size = 10
+            LabelFrame_font = ("Arial", labelframe_font_size, "bold")
+            LabelFrame_Canvas = LabelFrame(self)
+            LabelFrame_Canvas.pack()
 
-        ID_LabelFrame_bg = "white"
-        LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
-        LabelFrame_ID_Find.pack(fill="both", expand="yes")
-        Species_Find_LabelFrame_bg = "white"
-        LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
-        LabelFrame_Species_Find.pack(fill="both", expand="yes")
-        
+            ID_LabelFrame_bg = "white"
+            LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
+            LabelFrame_ID_Find.pack(fill="both", expand="yes")
+            Species_Find_LabelFrame_bg = "white"
+            LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            LabelFrame_Species_Find.pack(fill="both", expand="yes")
+            Save2file_LabelFrame_bg = "white"
+            LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
+            LabelFrame_Save2file.pack(fill="both", expand="yes")        
+            
 
-        # 設定圖片
-        # directory from where script was ran
-        canvas = Canvas(LabelFrame_Canvas,height=180, width=380)
-        image_path = Image_path + "\dragonfly_picture.gif"
-        canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
-        image = canvas.create_image(0, 0, anchor='nw', image=canvas.background)
-        
+            # 設定圖片
+            # directory from where script was ran
+            canvas = Canvas(LabelFrame_Canvas,height=180, width=380)
+            image_path = Image_path + "\dragonfly_picture.gif"
+            canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
+            image = canvas.create_image(0, 0, anchor='nw', image=canvas.background)
+            
 
-        # label
-        label_font_size = 10
-        label_font_style = ("Arial", label_font_size)
-        APIKEY_label = Label(LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
-        id_label = Label(LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
-        latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-        longitude_label = Label(LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-        Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
-
-
-        # Entry
-        global var_LAT, var_LNG, var_APIKEY
-        var_LAT = StringVar(LabelFrame_ID_Find)
-        var_LNG = StringVar(LabelFrame_ID_Find)
-        var_APIKEY = StringVar(LabelFrame_ID_Find)
-        APIKEY_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-        APIKEY = Entry(APIKEY_border, textvariable=var_APIKEY)
-        ID_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-        ID = Entry(ID_border)
-        LNG_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-        blank_LNG = Entry(LNG_border, textvariable=var_LNG)
-        LAT_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-        blank_LAT = Entry(LAT_border, textvariable=var_LAT)
-
-        #\ drop down menu
-        # species
-        global var_species
-        var_species = StringVar(LabelFrame_Species_Find)
-        var_species.set(Calopterygidae_Species[0])
-        self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
-
-        # family
-        global var_family
-        var_family = StringVar(LabelFrame_Species_Find)
-        var_family.set(Species_Family_Name[0])
-        self.Family_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_family, values=Species_Family_Name)
-        # bind to the <<ComboboxSelected>> event which will fire whenever the value of the combobox changes.
-        self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
+            # label
+            label_font_size = 10
+            label_font_style = ("Arial", label_font_size)
+            APIKEY_label = Label(LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
+            id_label = Label(LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
+            latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
+            longitude_label = Label(LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
+            Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            Save2file_label = Label(LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
 
 
-        # Button(self, text='Quit', command=self.destroy).grid(row=5, column=0, sticky=W, pady=4)
-        id_enter_button = Button(LabelFrame_ID_Find,
-                        text='ID Enter\b',
-                        justify = 'center',
-                        bg='gray80',
-                        command=lambda: IDEnterButton(ID.get()))
-                        # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
+            # Entry
+            global var_LAT, var_LNG, var_APIKEY
+            var_LAT = StringVar(LabelFrame_ID_Find)
+            var_LNG = StringVar(LabelFrame_ID_Find)
+            var_APIKEY = StringVar(LabelFrame_ID_Find)
+            APIKEY_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            APIKEY = Entry(APIKEY_border, textvariable=var_APIKEY)
+            ID_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            ID = Entry(ID_border)
+            LNG_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
+            blank_LNG = Entry(LNG_border, textvariable=var_LNG)
+            LAT_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
+            blank_LAT = Entry(LAT_border, textvariable=var_LAT)
 
 
-        species_find_button = Button(LabelFrame_Species_Find,
-                                    text='Find Species',
-                                    justify='center',
-                                    command=lambda:SpeciesFindButton(var_family.get(), var_species.get()))
+            #\ drop down menu
+            # species
+            global var_species
+            var_species = StringVar(LabelFrame_Species_Find)
+            var_species.set(Calopterygidae_Species[0])
+            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
 
-        # grid
-        canvas.grid(row = 0, column = 0, columnspan = 2)
-
-
-        APIKEY_label.grid(row=3)
-        id_label.grid(row=4)
-        latitude_label.grid(row=5)
-        longitude_label.grid(row=6)
-        Species_label.grid(row=7, columnspan=2)
-
-        APIKEY.grid(row=3, column=1)
-        APIKEY_border.grid(row=3, column=1)            
-        ID.grid(row=4, column=1)
-        ID_border.grid(row=4, column=1)
-        blank_LAT.grid(row=5, column=1)
-        LAT_border.grid(row=5, column=1)
-        blank_LNG.grid(row=6, column=1)
-        LNG_border.grid(row=6, column=1)
+            # family
+            global var_family
+            var_family = StringVar(LabelFrame_Species_Find)
+            var_family.set(Species_Family_Name[0])
+            self.Family_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_family, values=Species_Family_Name)
+            # bind to the <<ComboboxSelected>> event which will fire whenever the value of the combobox changes.
+            self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
 
-        self.Family_drop_down_menu.grid(row=8, column=0, padx=5)
-        self.Species_drop_down_menu.grid(row=8, column=1, padx=5)
+            # Button(self, text='Quit', command=self.destroy).grid(row=5, column=0, sticky=W, pady=4)
+            id_enter_button = Button(LabelFrame_ID_Find,
+                            text='ID Enter\b',
+                            justify = 'center',
+                            bg='gray80',
+                            command=lambda: IDEnterButton(ID.get()))
+                            # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
 
-        id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
-        species_find_button.grid(row=8, column=2, columnspan=1, padx = 5)
+
+            species_find_button = Button(LabelFrame_Species_Find,
+                                        text='Find Species',
+                                        justify='center',
+                                        command=lambda:SpeciesFindButton(var_family.get(), var_species.get()))
+
+            Save2file_button = Button(LabelFrame_Save2file,
+                                        text='Update',
+                                        justify='center',
+                                        command=self.Save2FileButton)                                   
+
+            # slider
+            self.Save2file_slider = Scale(LabelFrame_Save2file, from_=1, to=maxcpus,label="Crawling speed",
+                                        orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1,
+                                        length=250, sliderrelief=GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
+            #self.Save2file_slider.set(int(maxcpus / 2))
+            self.Save2file_slider.set(maxcpus)
+
+
+            # grid
+            canvas.grid(row=0, column=0, columnspan=2)
+            
+            APIKEY_label.grid(row=3)
+            id_label.grid(row=4)
+            latitude_label.grid(row=5)
+            longitude_label.grid(row=6)
+            Species_label.grid(row=7, columnspan=2)
+            Save2file_label.grid(row=9) 
+
+            APIKEY.grid(row=3, column=1)
+            APIKEY_border.grid(row=3, column=1)            
+            ID.grid(row=4, column=1)
+            ID_border.grid(row=4, column=1)
+            blank_LAT.grid(row=5, column=1)
+            LAT_border.grid(row=5, column=1)
+            blank_LNG.grid(row=6, column=1)
+            LNG_border.grid(row=6, column=1)
+
+
+            self.Family_drop_down_menu.grid(row=8, column=0, padx=5)
+            self.Species_drop_down_menu.grid(row=8, column=1, padx=5)
+
+            id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
+            species_find_button.grid(row=8, column=2, columnspan=1, padx=5)
+            Save2file_button.grid(row=10, column=3, columnspan=1, padx = 5)
+
+            self.Save2file_slider.grid(row=10, column=0, columnspan=2, padx=5)
+            
 
     # dont forget to add the 'event' as input args
     def changeCombobox(self, event):
@@ -550,6 +576,95 @@ class MainPage(tk.Frame):
         var_species.set(tmp[0]) #init the dropdown list in the first element
         print(var_family.get())
         print(self.Family_drop_down_menu.current())
+
+
+    def Save2FileSliderValue(self, event):
+        cpus = self.Save2file_slider.get()
+        print("crawling speed : {}".format(cpus))
+            
+    def pbLabel_text(self):
+        self.progressbar_label['text'] = str(self.pbVar.get()) + "%"
+
+
+    def INameLabel_text(self, speciesfamily, species):
+        self.Info_Name_label['text'] = '[Start Crawing] {}  {}'.format(speciesfamily, species)
+
+    def IFileNameLabel_text(self, filename):
+        self.Info_FileName_label['text'] = '[File Name]: {}'.format(filename) 
+
+    def IUpdateNumLabel_text(self, updateInfo):
+        self.Info_UpdateNum_label['text'] = updateInfo
+
+    def ICurrentNumLabel_text(self, currentNum):
+        self.Info_CurrentNum_label['text'] = '[Current total crawl]: {}'.format(currentNum)
+
+    def IStateLabel_text(self, state_text):
+        self.Info_State_label['text'] = state_text
+
+    def IFinishStateLabel_text(self, finish_text):
+        self.Info_FinishState_label['text'] = finish_text          
+        
+    
+    # very important!!! using thread makes the progressbar move outside the main thread
+    def start_button(self):
+        def start_multithread():
+            print("start")
+            savefile(self, parse_type)
+            self.progressbar.stop()
+            self.button_popup['state'] = 'normal'
+            self.progressbar_label['text'] = '100%'
+            self.progressbar['value'] = 100
+        self.button_popup['state'] = 'disabled'   
+        threading.Thread(target=start_multithread).start()
+
+    #pop up windows for progress
+    def popup(self):
+        NewWindow = tk.Toplevel(app)
+        NewWindow.title("Update data")
+        NewWindow.geometry(updateWinGeometry)
+
+        progressbarFrame = Frame(NewWindow)
+        progressbarFrame.pack(side=TOP)
+        ButtonFrame = Frame(NewWindow)
+        ButtonFrame.pack()
+
+        progressbar_label = Label(progressbarFrame, text="Progress")
+        progressbar_label.pack(side=TOP)
+        self.pbVar = IntVar(NewWindow)
+        self.progressbar = ttk.Progressbar(progressbarFrame, orient=HORIZONTAL, length=300, mode="determinate", variable=self.pbVar, maximum=100)
+        self.progressbar.pack(side=LEFT, pady=10)
+        self.progressbar_label = Label(progressbarFrame, text="0%")
+        self.progressbar_label.pack(side=RIGHT, padx=5)
+        
+        button_popup_label = Label(ButtonFrame, text="Ready to update?")
+        button_popup_label.pack()
+        self.button_popup = Button(ButtonFrame, text="start", command=self.start_button)
+        self.button_popup.pack(pady=2)
+
+
+        TextLabelFrame = LabelFrame(NewWindow, text="Info", padx=40)
+        TextLabelFrame.pack(pady=10)
+        self.Info_Name_label = Label(TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w')
+        self.Info_Name_label.pack()
+        self.Info_FileName_label = Label(TextLabelFrame, anchor='w')
+        self.Info_FileName_label.pack()
+        self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w')
+        self.Info_UpdateNum_label.pack()
+        self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w')
+        self.Info_CurrentNum_label.pack()        
+        self.Info_State_label = Label(TextLabelFrame, anchor='w')
+        self.Info_State_label.pack()
+        self.Info_FinishState_label = Label(TextLabelFrame, anchor='w')
+        self.Info_FinishState_label.pack()        
+
+         
+    # crawl data 
+    # read the flow from here to the top of the method in this class
+    def Save2FileButton(self):
+        self.popup()
+
+
+
     
 
 
@@ -559,7 +674,8 @@ class MainPage(tk.Frame):
 
 
 # Driver Code
-app = tkinterApp()
-app.geometry(Login_geometry)
-app.title(" Please Login")
-app.mainloop() 
+if __name__ == '__main__':
+    app = tkinterApp()
+    app.geometry(Login_geometry)
+    app.title(" Please Login")
+    app.mainloop() 

@@ -15,7 +15,9 @@ mypassword = "tim960622"
 ###################################################
 # Gui setting
 Login_geometry = "300x330" # Width x Height
-
+MainPageGeometry = "380x520"
+updateWinGeometry = "500x280"
+ 
 # PY GUI setting
 Table_scroll_num = 10 
 
@@ -110,7 +112,8 @@ CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "
 
 # mutiprocessing cpu number
 extra_cpu = 0
-cpus = extra_cpu + multiprocessing.cpu_count()
+maxcpus = extra_cpu + multiprocessing.cpu_count()
+cpus = maxcpus
 
 # do multiprocessing or not
 do_multiprocessing = True
