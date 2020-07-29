@@ -76,3 +76,47 @@ https://www.itread01.com/content/1549397542.html
 https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-set-font-of-tkinter-text-widget/
 
 
+
+[2020/07/27]
+1. to guit the git in the terminal using command :q
+
+2. impliment the multiprocessing crawling in the GUI by using "__inti__" == "__main__" 
+to avois breakdown of the program
+
+3.Finally impliement the progress bar that can working independently, by using multithread
+using progressbar.step(size) and progressbar.stop(), the progressbar['value'] do not work in multithred
+https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/ttk-Progressbar.html
+https://stackoverflow.com/questions/33768577/tkinter-gui-with-progress-bar
+
+4. add a Scale widget as slider bar to choose the cpu speed
+
+5. add a group of label to display the print in Save2File 
+
+6. remember if you are going to access the label or entry or ... in one page, which is a class,
+just make sure the label is in self. (self.labelName =Label(root, ....)), and then add the 
+method in that function for calling. Then you can access and change one widget attirbute without 
+using global or input args.
+
+7.Finally, finishing formating the google map info window 
+https://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html
+
+
+
+
+8. remember that the callback function in combobox or Scale widget need 'event' as args, or else, 
+it will not react
+https://stackoverflow.com/questions/40070478/bind-combobox-to-function
+
+9. all the page class are inherited from tk.Frame, thus, you simply mosify the Frame when defing the __init__ method
+https://stackoverflow.com/questions/34817328/creating-frames-in-tkinter
+
+10. the entry relief style are too few  that if you want a border , you need to add a frame outside of it 
+https://www.daniweb.com/programming/software-development/threads/243146/tkinter-entry-widget-border-color
+
+11. when the function of the widget required input args , just simply add "lambda:" 
+i.e. "command = lambda: your_function(input_args)"
+https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
+
+12. when I move the code from old GUi to new one, the picture in canvas dissapeared. Then I found that 
+I do not bind my canvas to the PhotoImage
+https://stackoverflow.com/questions/16846469/tkinter-canvas-image-is-not-displayed-in-class

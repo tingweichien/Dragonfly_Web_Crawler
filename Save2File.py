@@ -10,6 +10,7 @@
 
 from tkinter import filedialog
 from tkinter import *
+from tkinter import messagebox
 import csv
 import os.path
 from os import path
@@ -296,6 +297,24 @@ def parse_all(self):
                         return                              
             print("\n---Finishing crawling {} --- ".format(species_family_loop))
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))  
+
+
+
+def ReadFromFile(file):
+    ReadFileList = []
+    with open(file, 'r', newline="", errors='ignore') as r:
+        ReadFile = csv.reader(r)
+        if (os.path.exists(file) == False):
+            messagebox.showinfo("info", "No such file")
+        else:    
+            for line in ReadFile:
+                ReadFileList.append(
+                    DetailedTableInfo(line[2],line[3],line[4], line[6],line[7],line[8],line[9], line[5], line[10], line[11], line[0], line[1], line[12])
+                )
+            del ReadFileList[0:1]
+            if len(ReadFileList) == 0:
+                messagebox.showinfo("info", "No record")
+    return ReadFileList
 
 
 #########################################################################

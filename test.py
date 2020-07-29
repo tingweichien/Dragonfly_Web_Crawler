@@ -683,7 +683,7 @@ import tkinter as tk
 
 
 def somefun(self):
-    for i in range(0, 100):
+    for i in range(0, 80):
         time.sleep(0.1)
         self.progress.step(1)
         self.label_text()
@@ -707,9 +707,10 @@ class MonApp(Tk):
             self.progress.grid(row=1,column=0)
             #6self.progress.start()
             somefun(self)
+            self.var.set(100)
             self.progress.stop()
-            self.progress.grid_forget()
-
+            print('check')
+            #self.progress.grid_forget()
             self.btn['state']='normal'
         self.btn['state']='disabled'
         threading.Thread(target=real_traitement).start()

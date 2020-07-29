@@ -11,23 +11,35 @@ import multiprocessing
 myaccount = "簡庭威"
 mypassword = "tim960622"
 
+# auto save account and password file
+Login_path = os.getenv('temp')
+Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
+
 
 ###################################################
 # Gui setting
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x520"
-updateWinGeometry = "500x280"
+updateWinGeometry = "500x330"
  
 # PY GUI setting
 Table_scroll_num = 10 
 
 # map setting
 mapfilename = "map.html"
-map_plot_max_data_num = 150
+map_plot_max_data_num = 100
+info_box_template = """
+    <dl>
+    <dt><b>[User]</b></dt><dt>{User}</dt>
+    <dt><b>[Dates]</b></dt><dt>{Dates}</dt>
+    <dt><b>[Times]</b></dt><dt>{Times}</dt>
+    <dt><b>[Place]</b></dt><dt>{Place}</dt>
+    <dt><b>[Altitude]</b></dt><dt>{Altitude}</dt>
+    <dt><b>[Latitude]</b></dt><dt>{Latitude}</dt>
+    <dt><b>[Longitude]</b></dt><dt>{Longitude}</dt>
+    </dl>
+    """
 
-# initial map location
-Init_Map_LAT = 24.150924
-Init_Map_LNG = 120.650710
 
 # ico image path
 ico_image_path = 'image\\dragonfly_ico.ico'
@@ -136,6 +148,12 @@ folder_all_crawl_data = 'Crawl_Data\\'
 
 # json file path to record the total number of each species
 TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species.txt'
+
+# progress window
+# state the max frame for the LOAD gif
+GIFMAXFRAME = 80
+
+
 
 
 #####################################################################
