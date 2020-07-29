@@ -289,10 +289,10 @@ def parse_all(self):
                 folder = 'Crawl_Data\\' + Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Species_class_key[species_family_loop] + Species_key[species_loop] + '.csv'
                 file_check = path.exists(current_path + "\\" + File_name) # check the file exist or not
+                self.progressbar.step(100 / TotalSpeciesNumber)
+                self.pbLabel_text()
                 if (species_loop in Update) or (not file_check): # if the species is in the update list or the file doesn't exist
                     program_check = Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
-                    self.progressbar.step(100 / TotalSpeciesNumber)
-                    self.pbLabel_text()
                     if program_stop_check:
                         return                              
             print("\n---Finishing crawling {} --- ".format(species_family_loop))

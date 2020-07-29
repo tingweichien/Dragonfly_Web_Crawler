@@ -20,7 +20,7 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 # Gui setting
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x520"
-updateWinGeometry = "500x330"
+updateWinGeometry = "500x350"
  
 # PY GUI setting
 Table_scroll_num = 10 

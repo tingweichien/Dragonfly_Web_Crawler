@@ -10,7 +10,6 @@ import re
 from Index import *
 from multiprocessing import Process, Pool, Value, Lock
 from functools import partial
-import progressbar
 
 '''
 ErrorID = {

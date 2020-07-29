@@ -3,7 +3,6 @@
 import tkinter as tk 
 from tkinter import ttk
 from tkinter import *
-import PySimpleGUI as sg
 from Dragonfly import *
 from tkinter import messagebox
 from tkinter.messagebox import *
@@ -425,7 +424,7 @@ class MainPage(tk.Frame):
             self.pbVar.set(100)
             self.progressbar_label['text'] = '100%'
             self.progressbar.stop()
-            self.button_popup['state'] = 'normal'
+            self.button_popup['text'] = 'Finish'
             self.check = False
             
         self.button_popup['state'] = 'disabled'
@@ -467,17 +466,17 @@ class MainPage(tk.Frame):
         TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40)
         TextLabelFrame.pack(pady=10)
         self.Info_Name_label = Label(TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w')
-        self.Info_Name_label.pack()
+        self.Info_Name_label.pack(pady=3)
         self.Info_FileName_label = Label(TextLabelFrame, anchor='w')
-        self.Info_FileName_label.pack()
+        self.Info_FileName_label.pack(pady=3)
         self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w')
-        self.Info_UpdateNum_label.pack()
+        self.Info_UpdateNum_label.pack(pady=3)
         self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w')
-        self.Info_CurrentNum_label.pack()        
+        self.Info_CurrentNum_label.pack(pady=3)        
         self.Info_State_label = Label(TextLabelFrame, anchor='w')
-        self.Info_State_label.pack()
+        self.Info_State_label.pack(pady=3)
         self.Info_FinishState_label = Label(TextLabelFrame, anchor='w')
-        self.Info_FinishState_label.pack()        
+        self.Info_FinishState_label.pack(pady=3)        
 
          
     #\ crawl data 
@@ -625,9 +624,16 @@ class MainPage(tk.Frame):
             PYGUI.popup_animated(None)
             messagebox.showinfo("Info", "No data match the spec")
             return []
-            
-        gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13, apikey=self.var_APIKEY.get(),
-                                        title= map_list[0].Species.encode('unicode_escape').decode("utf-8"))
+
+        index = 0
+        for index in range(len(map_list)):
+            if (map_list[index].Latitude == "" and map_list[index].Longitude == ""):
+                index += 1
+            else:
+                break
+
+        gmp = gmplot.GoogleMapPlotter(float(map_list[index].Latitude), float(map_list[index].Longitude), 13, apikey=self.var_APIKEY.get(),
+                                        title= map_list[index].Species.encode('unicode_escape').decode("utf-8"))
 
         for index in map_list:
             if not(index.Latitude == "" or index.Longitude == ""):

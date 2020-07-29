@@ -10,10 +10,13 @@ Note
 像是<'XXX' = XX, 'ooo'= oo, .....>
 value = soup.find(.....).get('ooo')
 
-3.執行 pyinstaller -F -w --onefile.\XXXXXX.py 轉成 .exe檔
+3.執行 "pyinstaller -F -w --onefile .\XXXXXX.py" 將python檔案轉成 .exe檔
 -w是不要出現console
 --onefile是產生一個.exe檔
 記得要將.exe檔從dist中拉到目錄，如果你有連結檔按圖片的話
+
+4.打包轉換好的python檔案，成為一個安裝檔: NSIS
+https://www.youtube.com/watch?v=UZX5kH72Yx4
 
 -----------------------------------------------------------
 
