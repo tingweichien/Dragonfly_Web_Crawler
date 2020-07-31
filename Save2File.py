@@ -339,6 +339,7 @@ def savefile(self, parsetype):
         End = time.time()
         self.pbLabel_text()
         Time_interval = End - Start
-        self.IFinishStateLabel_text("--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
+        self.set_all_to_empty()
+        self.IUpdateNumLabel_text("--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
         print("\n--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
 

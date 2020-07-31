@@ -673,7 +673,7 @@ if __name__ == '__main__':
 
 
 
-
+'''
 from tkinter import Button, Tk, HORIZONTAL
 
 from tkinter.ttk import Progressbar
@@ -724,4 +724,76 @@ class MonApp(Tk):
 if __name__ == '__main__':
 
     app = MonApp()
-    app.mainloop()
+    app.mainloop()'''
+
+'''
+import PySimpleGUI as sg
+
+sg.theme('BluePurple')
+
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(15, 1), key='-OUTPUT-')],
+          [sg.Input(key='-IN-')],
+          [sg.Button('Show'), sg.Button('Exit')]]
+
+window = sg.Window('Pattern 2B', layout)
+
+while True:  # Event Loop
+    event, values = window.read()
+    print(event, values)
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Show':
+        # Update the "output" text element to be the value of "input" element
+        window['-OUTPUT-'].update(values['-IN-'])
+
+window.close()'''
+
+
+'''import gmplot
+import webbrowser
+from tkinter import *
+import tkinter as tk
+
+import os
+
+def plotmap():
+    gmp = gmplot.GoogleMapPlotter(24.28270434307802, 121.02747201919554, 14, apikey="")
+    gmp.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
+    gmp.marker(24.28270434307802, 121.02747201919554)
+    gmp.draw("map.html")
+
+    webbrowser.open('map.html')
+
+
+root = tk.Tk()
+b = tk.Button(root, text= "plot on map", command=plotmap)
+b.pack()
+root.mainloop()
+'''
+
+
+
+from tkinter import *
+from Index import *
+
+root = Tk()
+frame = Frame(root)
+frame.pack()
+
+bottomframe = Frame(root)
+bottomframe.pack( side = BOTTOM )
+
+redbutton = Button(frame, text="Red", fg="red")
+redbutton.pack( side = LEFT)
+
+greenbutton = Button(frame, text="green", fg="green")
+greenbutton.pack( side = LEFT )
+
+bluebutton = Button(frame, text="Blue", fg="blue")
+bluebutton.pack( side = RIGHT )
+
+ViewPWbuttonIMG = PhotoImage(file=Image_path + "\\view.png")
+blackbutton = Button(bottomframe, text="Black", fg="black", image=ViewPWbuttonIMG)
+blackbutton.pack( side = BOTTOM)
+
+root.mainloop()

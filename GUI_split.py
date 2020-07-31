@@ -9,13 +9,12 @@ from tkinter.messagebox import *
 import os
 import os.path
 import PySimpleGUI as PYGUI
-import gmplot
+from gmplot import *
 import webbrowser
 from Index import *
 from Save2File import *
 import time
 import threading
-
   
 LARGEFONT =("Verdana", 35) 
    
@@ -40,36 +39,37 @@ var_species = None
 class tkinterApp(tk.Tk): 
       
     # __init__ function for class tkinterApp  
-    def __init__(self, *args, **kwargs):  
-          
-        # __init__ function for class Tk 
-        tk.Tk.__init__(self, *args, **kwargs)
-        
-          
-        # creating a container 
-        container = tk.Frame(self)   
-        container.pack(side = "top", fill = "both", expand = True)  
-   
-        container.grid_rowconfigure(0, weight = 1) 
-        container.grid_columnconfigure(0, weight = 1) 
-   
-        # initializing frames to an empty array 
-        self.frames = {}   
-   
-        # iterating through a tuple consisting 
-        # of the different page layouts 
-        for F in (LoginPage, MainPage): 
-   
-            frame = F(container, self) 
-   
-            # initializing frame of that object from 
-            # LoginPage, MainPage respectively with  
-            # for loop 
-            self.frames[F] = frame  
-   
-            frame.grid(row = 0, column = 0, sticky ="nsew") 
-   
-        self.show_frame(LoginPage) 
+    def __init__(self, *args, **kwargs):
+        if __name__ == '__main__':
+            
+            # __init__ function for class Tk 
+            tk.Tk.__init__(self, *args, **kwargs)
+            
+            
+            # creating a container 
+            container = tk.Frame(self)   
+            container.pack(side = "top", fill = "both", expand = True)  
+    
+            container.grid_rowconfigure(0, weight = 1) 
+            container.grid_columnconfigure(0, weight = 1) 
+    
+            # initializing frames to an empty array 
+            self.frames = {}   
+    
+            # iterating through a tuple consisting 
+            # of the different page layouts 
+            for F in (LoginPage, MainPage): 
+    
+                frame = F(container, self) 
+    
+                # initializing frame of that object from 
+                # LoginPage, MainPage respectively with  
+                # for loop 
+                self.frames[F] = frame  
+    
+                frame.grid(row = 0, column = 0, sticky ="nsew") 
+    
+            self.show_frame(LoginPage) 
    
     # to display the current frame passed as 
     # parameter 
@@ -92,36 +92,52 @@ class LoginPage(tk.Frame):
             tk.Frame.__init__(self, parent, bg="white")
             
             # label of frame Layout 2 
-            Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
-            AccountLabel = tk.Label(self, text="Account", bg="white")
-            PasswordLabel = tk.Label(self, text="Password", bg="white")
-            StatementLabel = tk.Label(self, text=copyright_text,
+            self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
+            self.AccountLabel = tk.Label(self, text="Account", bg="white")
+            self.StatementLabel = tk.Label(self, text=copyright_text,
                                         bg="white", fg = "gray", font = ("Arial", 8))
             
             # putting the grid in its place by using 
             VarName = StringVar(self, value='')
             VarPwd = StringVar(self, value='')
-            accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
-            accountEntry = Entry(accountFrame, textvariable=VarName, relief=FLAT)
-            passwordFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
-            passwordEntry = Entry(passwordFrame, textvariable=VarPwd, relief=FLAT)
+            self.accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+            self.accountEntry = Entry(self.accountFrame, textvariable=VarName, relief=FLAT)
+            self.password_eyeFrame = Frame(self, bg='white')
+            self.passwordFrame =Frame(self.password_eyeFrame, bg="black", borderwidth = 1, relief = "sunken")
+            self.passwordEntry = Entry(self.passwordFrame, textvariable=VarPwd, relief=FLAT, show="*")
+            self.PasswordPadLabel = tk.Label(self.password_eyeFrame, bg="white")
+            self.PasswordLabel = tk.Label(self.password_eyeFrame, text="Password", bg="white")
             
+
             # button
-            Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
+            self.Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
                                 activebackground = "green2", activeforeground = "white",
                                 relief='groove', pady = 0.5, padx =54,
-                                command = lambda : self.LoginButton(controller, VarName.get(), VarPwd.get())) 
+                                command=lambda: self.LoginButton(controller, VarName.get(), VarPwd.get()))
+            self.ViewPWbuttonIMG = PhotoImage(file=Image_path + "\\view.png")
+            self.NotViewPWbuttonIMG = PhotoImage(file=Image_path + "\\viewhidden.png")
+
+            #photoimage = ViewPWbuttonIMG.subsample(3, 3)
+            self.viewcheck = BooleanVar(self.password_eyeFrame, True)
+            self.ViewPWbutton = Button(self.password_eyeFrame, text="view", command=self.ViewPWButtonfunc, bg='white', relief=FLAT, image=self.ViewPWbuttonIMG)
         
             # putting the button in its place by 
-            Loginlabel.pack(pady=20)
-            AccountLabel.pack()
-            accountFrame.pack()
-            accountEntry.pack()
-            PasswordLabel.pack()
-            passwordFrame.pack() 
-            passwordEntry.pack() 
-            Loginbutton.pack(pady=20)
-            StatementLabel.pack(pady=20)
+            self.Loginlabel.pack(pady=20)
+            self.AccountLabel.pack()
+            self.accountFrame.pack()
+            self.accountEntry.pack()
+
+
+            self.password_eyeFrame.pack()
+            self.PasswordLabel.pack(side=TOP)
+            self.PasswordPadLabel.pack(side=LEFT, padx=14)
+            self.ViewPWbutton.pack(side=RIGHT)
+            self.passwordFrame.pack(side=RIGHT)
+            self.passwordEntry.pack() 
+            
+            self.Loginbutton.pack(pady=20)
+            self.StatementLabel.pack(pady=20)
+
             
 
             # Check password and account and the ID
@@ -171,7 +187,15 @@ class LoginPage(tk.Frame):
             with open(Login_Filename, 'w') as fp:
                 fp.write(','.join((Account, Password)))
 
-
+    def ViewPWButtonfunc(self):
+        if self.viewcheck.get() == True:
+            self.passwordEntry.config(show="")
+            self.ViewPWbutton.config(image=self.NotViewPWbuttonIMG)
+            self.viewcheck.set(False)
+        else:
+            self.passwordEntry.config(show="*")
+            self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
+            self.viewcheck.set(True)
 
    
 
@@ -238,7 +262,7 @@ class MainPage(tk.Frame):
             global var_species
             var_species = StringVar(LabelFrame_Species_Find)
             var_species.set(Calopterygidae_Species[0])
-            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
+            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=12, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
 
             # family
             global var_family
@@ -273,7 +297,7 @@ class MainPage(tk.Frame):
                                         command=self.Save2FileButton)                                   
 
             # slider
-            self.Save2file_slider = Scale(LabelFrame_Save2file, from_=1, to=maxcpus,label="Crawling speed",
+            self.Save2file_slider = Scale(LabelFrame_Save2file, from_=1, to=maxcpus, label="Crawling speed",
                                         orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1,
                                         length=250, sliderrelief=GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
             #self.Save2file_slider.set(int(maxcpus / 2))
@@ -396,8 +420,15 @@ class MainPage(tk.Frame):
         self.Info_State_label['text'] = state_text
 
     def IFinishStateLabel_text(self, finish_text):
-        self.Info_FinishState_label['text'] = finish_text          
-        
+        self.Info_FinishState_label['text'] = finish_text
+
+    def set_all_to_empty(self):
+        self.Info_FinishState_label['text'] = ""
+        self.Info_State_label['text'] = ""
+        self.Info_CurrentNum_label['text'] = ""
+        self.Info_UpdateNum_label['text'] = ""
+        self.Info_FileName_label['text'] = ""
+        self.Info_Name_label['text'] = ""
     
     def UpdateGIF(self, index):
         if self.check == True :
@@ -410,7 +441,6 @@ class MainPage(tk.Frame):
             #self.progressbarFrame.after(100, self.UpdateGIF,(index, True))
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
         else:
-            print("stop")
             self.loading_label.config(image=self.Load_image[10])
             return
 
@@ -484,11 +514,15 @@ class MainPage(tk.Frame):
     def Save2FileButton(self):
         self.popup()
 
+
+
+
     #\ Table
     # bad since the flexibility of the option are limited
     # this coded in PySimpleGUI library
+
     def New_table(self, map_result_list):
-        global var_species, var_family
+        global var_species, var_family, map_plot_max_data_num
         Data = [
             [index.Place,
             index.Dates + "-" + index.Times,
@@ -500,7 +534,7 @@ class MainPage(tk.Frame):
 
         layout = [
             [
-            PYGUI.Text("--" + str(var_species.get()) + "--", text_color="black"),
+            PYGUI.Text("-- " + str(var_species.get()) + " --", text_color="black",font=("Ststem", 14)),
                 ],
             [
             PYGUI.Table(Data,
@@ -513,7 +547,9 @@ class MainPage(tk.Frame):
             [
             PYGUI.Text("Select the user", auto_size_text=True, justification="center"),
             PYGUI.Text("\tSelect the method", auto_size_text = True, justification="center"),
-            PYGUI.Text("Select the place", auto_size_text = True, justification="center"),
+            PYGUI.Text("Select the place", auto_size_text=True, justification="center"),
+            PYGUI.Text("\tlimit", auto_size_text=True, justification="center"),
+            PYGUI.Input(default_text='100',key='-IN-',size = (5,2),justification='center')
                 ],
             [
             PYGUI.Listbox(values=list({User_List.User for User_List in map_result_list}),
@@ -530,7 +566,7 @@ class MainPage(tk.Frame):
                 auto_size_text=True,
                 select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
                 key='Place_select'),
-            PYGUI.Button(button_text='Show on map')      
+            PYGUI.Button(button_text='Show on map',size=(12,3))      
                 ],
             [
             PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
@@ -550,38 +586,41 @@ class MainPage(tk.Frame):
                 ]  
         ]
         
-        window = PYGUI.Window("Show Species info", layout=layout)
+        self.window = PYGUI.Window("Show Species info", layout=layout)
 
          # Event Loop
         while True:             
-            event, values = window.Read()
+            event, values = self.window.Read()
             if event in (None, 'Exit'):
+                PYGUI.popup_animated(None) 
                 break
-            if event == 'Show on map':
-                PYGUI.popup_animated(Image_path + "\Loading.gif", grab_anywhere=True) 
-                Spec_DATA = self.Show_on_map(map_result_list)
-                PYGUI.popup_animated(None)             
-                window['Spec_Table'].update(values=[[index.Place,
+            elif event == PYGUI.WIN_CLOSED or event == 'Quit':
+                PYGUI.popup_animated(None) 
+                break
+            elif event == 'Show on map':
+                map_plot_max_data_num = int(values['-IN-'])
+                Spec_DATA = self.Show_on_map(map_result_list)         
+                self.window['Spec_Table'].update(values=[[index.Place,
                                                     index.Dates + "-" + index.Times,
                                                     index.User,
                                                     index.Latitude,
                                                     index.Longitude,
                                                     index.Altitude] for index in Spec_DATA],
                                             visible=True)
-                window['Spec_Table_Label'].update(visible=True)                                        
+                self.window['Spec_Table_Label'].update(visible=True)                                        
             elif event == 'User_select':
                 self.User_select_value = values['User_select']
             elif event == 'Place_select':
                 self.Place_select_value = values['Place_select']
             elif event == 'or':
                 self.Map_spec_method_or_and = 'or'
-                window['or'].update(button_color=("black","green"))
-                window['and'].update(button_color=("black","white"))
+                self.window['or'].update(button_color=("black","green"))
+                self.window['and'].update(button_color=("black","white"))
             elif event == 'and':
                 self.Map_spec_method_or_and = 'and'
-                window['and'].update(button_color=("black","green"))
-                window['or'].update(button_color=("black","white"))
-        window.Close()
+                self.window['and'].update(button_color=("black","green"))
+                self.window['or'].update(button_color=("black","white"))
+        self.window.Close()
 
     #\ map
     # https://github.com/gmplot/gmplot/blob/master/gmplot/google_map_plotter.py
@@ -593,6 +632,8 @@ class MainPage(tk.Frame):
         map_file_path = os.path.realpath(mapfilename)
         # specify by selected item
         for tmp in input_map_list:
+            PYGUI.PopupAnimated(PYGUI.DEFAULT_BASE64_LOADING_GIF, background_color="white", time_between_frames=1)
+
             if (len(self.Place_select_value) > 0):
                 if (len(self.User_select_value) > 0):
                     if (self.Map_spec_method_or_and == 'or'):
@@ -616,26 +657,33 @@ class MainPage(tk.Frame):
                     map_list = input_map_list
                     break
 
-
         # the gmplot have some problem on plotting too many data
         if (len(map_list) > map_plot_max_data_num):
-            del map_list[0: len(map_list) - map_plot_max_data_num]
+            #del map_list[0: len(map_list) - map_plot_max_data_num]
+            limit_map_list = map_list[0: map_plot_max_data_num]
         elif (len(map_list) == 0):  # make sure the map data is not empty
             PYGUI.popup_animated(None)
             messagebox.showinfo("Info", "No data match the spec")
             return []
+        else:
+            limit_map_list = map_list
 
+
+        # LOOP until finding the non empty LAT and LNG
         index = 0
-        for index in range(len(map_list)):
-            if (map_list[index].Latitude == "" and map_list[index].Longitude == ""):
+        for index in range(len(limit_map_list)):
+            if (limit_map_list[index].Latitude == "" and limit_map_list[index].Longitude == ""):
                 index += 1
             else:
                 break
 
-        gmp = gmplot.GoogleMapPlotter(float(map_list[index].Latitude), float(map_list[index].Longitude), 13, apikey=self.var_APIKEY.get(),
-                                        title= map_list[index].Species.encode('unicode_escape').decode("utf-8"))
+        gmp = gmplot.GoogleMapPlotter(float(limit_map_list[index].Latitude), float(limit_map_list[index].Longitude), 13, apikey=self.var_APIKEY.get(),
+                                        title= limit_map_list[index].Species.encode('utf-8'))
+        gmp.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
 
-        for index in map_list:
+
+        for index in limit_map_list:
+            PYGUI.PopupAnimated(PYGUI.DEFAULT_BASE64_LOADING_GIF,background_color="white", time_between_frames=1)
             if not(index.Latitude == "" or index.Longitude == ""):
                 #context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude
                 tmp_dict = {"User": index.User, "Dates": index.Dates, "Times": index.Times, "Place": index.Place,
@@ -647,7 +695,8 @@ class MainPage(tk.Frame):
                             info_window=context.encode('unicode_escape').decode("utf-8"))
                 gmp.draw(map_file_path)
         webbrowser.open(map_file_path)
-        return map_list
+        PYGUI.PopupAnimated(None)
+        return limit_map_list
 
 
 

@@ -6,8 +6,8 @@ import tkinter as tk
 from tkinter import ttk
 action = ""
 
-#action = "print_font"
-action = "print_color"
+action = "print_font"
+#action = "print_color"
 #action = "print_relief"
 
 if action == "print_font":
