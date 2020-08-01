@@ -1,4 +1,10 @@
 from tkinter import *
+try:
+    # for Python2
+    import Tkinter as tk
+except ImportError:
+    # for Python3
+    import tkinter as tk
 
 class simplifyTableInfo:
     def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User):
@@ -66,4 +72,33 @@ class Table:
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, list[i][j])
 
+
+# since tk doesnt have tooltip so use this thied party Method
+# reference: https://www.daniweb.com/programming/software-development/code/484591/a-tooltip-class-for-tkinter
+class CreateToolTip(object):
+    '''
+    create a tooltip for a given widget
+    '''
+    def __init__(self, widget, text='widget info'):
+        self.widget = widget
+        self.text = text
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.close)
+    def enter(self, event=None):
+        x = y = 0
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() - 23  #use minus to make the infobox shown above the cursor
+        # creates a toplevel window
+        self.tw = tk.Toplevel(self.widget)
+        # Leaves only the label and removes the app window
+        self.tw.wm_overrideredirect(True)
+        self.tw.wm_geometry("+%d+%d" % (x, y))
+        label = tk.Label(self.tw, text=self.text, justify='left',
+                       background='white', relief='solid', borderwidth=1,
+                       font=("times", "10", "normal"))
+        label.pack(ipadx=1)
+    def close(self, event=None):
+        if self.tw:
+            self.tw.destroy()
         

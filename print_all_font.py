@@ -6,9 +6,9 @@ import tkinter as tk
 from tkinter import ttk
 action = ""
 
-action = "print_font"
+#action = "print_font"
 #action = "print_color"
-#action = "print_relief"
+action = "print_relief"
 
 if action == "print_font":
     font_type_list = [
@@ -335,11 +335,11 @@ elif action == "print_color":
 elif action == "print_relief":
     root = Tk()
 
-    B1 = tk.Entry(root, text ="FLAT", relief=FLAT, foreground = "blue")
-    B2 = tk.Entry(root, text ="RAISED", relief=RAISED,insertbackground = "red")
-    B3 = tk.Entry(root, text ="SUNKEN", relief=SUNKEN ,  selectbackground = "green")
-    B4 = tk.Entry(root, text ="GROOVE", relief=GROOVE )
-    B5 = tk.Entry(root, text ="RIDGE", relief=RIDGE )
+    B1 = tk.Label(root, text ="FLAT", relief=FLAT)
+    B2 = tk.Label(root, text ="RAISED", relief=RAISED)
+    B3 = tk.Label(root, text ="SUNKEN", relief=SUNKEN)
+    B4 = tk.Label(root, text ="GROOVE", relief=GROOVE )
+    B5 = tk.Label(root, text ="RIDGE", relief=RIDGE )
 
     B1.pack(pady = 10)
     B2.pack(pady = 10)

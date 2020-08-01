@@ -82,7 +82,6 @@ class tkinterApp(tk.Tk):
         tk.Tk.iconbitmap(self, default=ico_image_path)
         frame.tkraise()
 
-
     
 # first window frame LoginPage 
    
@@ -119,7 +118,7 @@ class LoginPage(tk.Frame):
 
             #photoimage = ViewPWbuttonIMG.subsample(3, 3)
             self.viewcheck = BooleanVar(self.password_eyeFrame, True)
-            self.ViewPWbutton = Button(self.password_eyeFrame, text="view", command=self.ViewPWButtonfunc, bg='white', relief=FLAT, image=self.ViewPWbuttonIMG)
+            self.ViewPWbutton = Button(self.password_eyeFrame, text="view", command=self.ViewPWButtonfunc, bg='white',activebackground="white" ,relief=FLAT, image=self.ViewPWbuttonIMG)
         
             # putting the button in its place by 
             self.Loginlabel.pack(pady=20)
@@ -171,8 +170,7 @@ class LoginPage(tk.Frame):
         if (len(string) > 0):
             messagebox.showwarning('Warning!!!', string + "should not be empty!!!!")
         return len(string)
-
-    
+  
     #\ Login action
     def LoginButton(self, controller, Account, Password):
         global Login_Response, Login_state, Username 
@@ -198,8 +196,6 @@ class LoginPage(tk.Frame):
             self.viewcheck.set(True)
 
    
-
-
    
 # second window frame MainPage  
 class MainPage(tk.Frame):   
@@ -249,6 +245,7 @@ class MainPage(tk.Frame):
             self.var_APIKEY = StringVar(LabelFrame_ID_Find)
             APIKEY_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             APIKEY = Entry(APIKEY_border, textvariable=self.var_APIKEY)
+            APIKEY_TLTP = CreateToolTip(APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
             ID_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             ID = Entry(ID_border)
             LNG_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
@@ -262,7 +259,7 @@ class MainPage(tk.Frame):
             global var_species
             var_species = StringVar(LabelFrame_Species_Find)
             var_species.set(Calopterygidae_Species[0])
-            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=12, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
+            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=14, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
 
             # family
             global var_family
@@ -273,7 +270,8 @@ class MainPage(tk.Frame):
 
             #\ check box
             self.VarDatacheckbox = BooleanVar(LabelFrame_Species_Find)
-            self.Datacheckbox = Checkbutton(LabelFrame_Species_Find, text="SQL", variable = self.VarDatacheckbox, bg="white")
+            self.Datacheckbox = Checkbutton(LabelFrame_Species_Find, text="SQL", variable=self.VarDatacheckbox, bg="white")
+            DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
 
 
 
@@ -324,8 +322,8 @@ class MainPage(tk.Frame):
             LNG_border.grid(row=6, column=1)
 
 
-            self.Family_drop_down_menu.grid(row=8, column=0, padx=5)
-            self.Species_drop_down_menu.grid(row=8, column=1, padx=5)
+            self.Family_drop_down_menu.grid(row=8, column=0, padx=3)
+            self.Species_drop_down_menu.grid(row=8, column=1, padx=3)
             self.Datacheckbox.grid(row=8, column=2, padx=3)
 
             id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
@@ -368,8 +366,6 @@ class MainPage(tk.Frame):
             if (msg):
                 self.Show_on_map([_ID_find_result])
 
-
-
     # \ Species find to plot info inthe table and plot on the map
     def SpeciesFindButton(self, var_family, var_species):
         if self.VarDatacheckbox.get() == True:
@@ -383,8 +379,6 @@ class MainPage(tk.Frame):
         else:
             self.New_table(map_result_list) 
 
-
-
     # dont forget to add the 'event' as input args
     def changeCombobox(self, event):
         global current_dropdown_index, var_species, var_family
@@ -394,8 +388,7 @@ class MainPage(tk.Frame):
         print(var_family.get())
         print(self.Family_drop_down_menu.current())
 
-
-    #
+    # specify the crawling speed
     def Save2FileSliderValue(self, event):
         cpus = self.Save2file_slider.get()
         print("crawling speed : {}".format(cpus))
@@ -515,12 +508,9 @@ class MainPage(tk.Frame):
         self.popup()
 
 
-
-
     #\ Table
     # bad since the flexibility of the option are limited
     # this coded in PySimpleGUI library
-
     def New_table(self, map_result_list):
         global var_species, var_family, map_plot_max_data_num
         Data = [
@@ -532,6 +522,10 @@ class MainPage(tk.Frame):
             index.Altitude] for index in map_result_list
         ]
 
+        rowcolor = []
+        for i in list(range(1, len(Data), 2)):
+            rowcolor.append([i, "gray88"])
+
         layout = [
             [
             PYGUI.Text("-- " + str(var_species.get()) + " --", text_color="black",font=("Ststem", 14)),
@@ -542,6 +536,9 @@ class MainPage(tk.Frame):
                                     "Latitude", "Longitude", "Altitude"],
                     justification="center",
                     num_rows=Table_scroll_num,
+                    background_color="white",
+                    text_color="black",
+                    row_colors=rowcolor,
                     display_row_numbers=True)
                 ],
             [
@@ -549,21 +546,23 @@ class MainPage(tk.Frame):
             PYGUI.Text("\tSelect the method", auto_size_text = True, justification="center"),
             PYGUI.Text("Select the place", auto_size_text=True, justification="center"),
             PYGUI.Text("\tlimit", auto_size_text=True, justification="center"),
-            PYGUI.Input(default_text='100',key='-IN-',size = (5,2),justification='center')
+            PYGUI.Input(default_text='100',key='-IN-', size = (5,2), justification='center', tooltip='Limit the maximum of the plotting data')
                 ],
             [
             PYGUI.Listbox(values=list({User_List.User for User_List in map_result_list}),
                 enable_events=True,
-                size=(None, 5),
+                size=(15, 5),
                 auto_size_text=True,
+                pad=(2,2),
                 select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
                 key='User_select'),
             PYGUI.Button(button_text="or",size=(5,2)), # widthxheight
             PYGUI.Button(button_text="and",size=(5,2)),
             PYGUI.Listbox(values=list({Place_List.Place for Place_List in map_result_list}),
                 enable_events=True,
-                size=(None, 5),
+                size=(25, 5),
                 auto_size_text=True,
+                pad=(4,4),
                 select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
                 key='Place_select'),
             PYGUI.Button(button_text='Show on map',size=(12,3))      
@@ -582,11 +581,12 @@ class MainPage(tk.Frame):
                     visible=False,
                     num_rows=5,
                     key='Spec_Table',
-                    col_widths = 40)
+                    pad=(2,2),
+                    size=(150 ,None))
                 ]  
         ]
         
-        self.window = PYGUI.Window("Show Species info", layout=layout)
+        self.window = PYGUI.Window("Show Species info", layout=layout,resizable=True,)
 
          # Event Loop
         while True:             
@@ -670,15 +670,27 @@ class MainPage(tk.Frame):
 
 
         # LOOP until finding the non empty LAT and LNG
+        # and check after looping, the resultant list is emty or not
         index = 0
         for index in range(len(limit_map_list)):
             if (limit_map_list[index].Latitude == "" and limit_map_list[index].Longitude == ""):
-                index += 1
+                if index < len(limit_map_list)-1:
+                    index += 1
+                else:
+                    messagebox.showinfo("info","All the record have no latitude and longitutde information")
+                    return 
             else:
                 break
+        
+        #since ID find will find plenty of species in one record so modify the title
+        if limit_map_list[index].Species == "" and limit_map_list[index].SpeciesFamily == "":
+            Title = "map"
+        else:
+            Title = Species_class_key[limit_map_list[index].SpeciesFamily] + Species_key[limit_map_list[index].Species]
 
         gmp = gmplot.GoogleMapPlotter(float(limit_map_list[index].Latitude), float(limit_map_list[index].Longitude), 13, apikey=self.var_APIKEY.get(),
-                                        title= limit_map_list[index].Species.encode('utf-8'))
+                                        title=Title)
+                                        #title= limit_map_list[index].Species.encode('unicode_escape').decode("utf-8"))
         gmp.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
 
 

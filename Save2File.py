@@ -302,11 +302,9 @@ def parse_all(self):
 
 def ReadFromFile(file):
     ReadFileList = []
-    with open(file, 'r', newline="", errors='ignore') as r:
-        ReadFile = csv.reader(r)
-        if (os.path.exists(file) == False):
-            messagebox.showinfo("info", "No such file")
-        else:    
+    if (os.path.exists(file) == True):
+        with open(file, 'r', newline="", errors='ignore') as r:
+            ReadFile = csv.reader(r)
             for line in ReadFile:
                 ReadFileList.append(
                     DetailedTableInfo(line[2],line[3],line[4], line[6],line[7],line[8],line[9], line[5], line[10], line[11], line[0], line[1], line[12])

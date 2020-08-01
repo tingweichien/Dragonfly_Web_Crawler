@@ -249,7 +249,7 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
             map_result.append(Date_Time.split('\\u3000')[1])  # Time
             map_result.append(re.findall(r'(?<=\\u6d77\\u3000\\u62d4 ).+(?=\\u7d00)', map_script)[0]) # Altitude
             map_result.append(re.findall(r'(?<=\\u7d00\\u9304\\u8005 ).+(?=<)', map_script)[0].encode('utf-8').decode('unicode_escape'))  #Recorder
-            map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], "", species_input, '-'))
+            map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], family_input, species_input, '-'))
             map_result.clear()
 
     return map_result_List
