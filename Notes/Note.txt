@@ -105,8 +105,6 @@ using global or input args.
 https://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html
 
 
-
-
 8. remember that the callback function in combobox or Scale widget need 'event' as args, or else, 
 it will not react
 https://stackoverflow.com/questions/40070478/bind-combobox-to-function
@@ -124,3 +122,23 @@ https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-co
 12. when I move the code from old GUi to new one, the picture in canvas dissapeared. Then I found that 
 I do not bind my canvas to the PhotoImage
 https://stackoverflow.com/questions/16846469/tkinter-canvas-image-is-not-displayed-in-class
+
+
+[2020/08/03]
+1. use checkbox to select if you want to plot the data from databae to the map.
+
+2. add the hidden password function
+
+3. fix the error if there is no internet connection
+
+4. few days age, I failed to convert python file to exe file, due to the marker in gmplot 
+can't be found. Therefore, I use batch method to auto install the libraries and execute the 
+python file by just click the run.bat file . Although it works, it is quite stupid 
+
+5. Finally, someone help me on the issue of pyinstaller in github by using hook to hook the gmplot
+so here is the thing : 
+    (1) add the folder "hooks" and put "hooks-gmplot.py" inside.-->Replace gmplot to which you want to hook
+    (2) Inside the hoo.py write: "from PyInstaller.utils.hooks import collect_data_files
+                                    datas = collect_data_files('gmplot')" -->Replace gmplot to which you want to hook
+        remember not to write C:\python\.....\gmplot , it will raise error of invalid input 
+    (3) In CMD type : pyinstaller -F GUI_split.py --icon=.\image\dragonfly_ico.ico --addtional-hooks-dir=hooks --clean (clean can be optional)

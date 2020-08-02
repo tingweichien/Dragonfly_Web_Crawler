@@ -6,6 +6,7 @@ except ImportError:
     # for Python3
     import tkinter as tk
 
+# Data class for the simplify imfomation
 class simplifyTableInfo:
     def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User):
         self.IdNumber = IdNumber
@@ -28,8 +29,7 @@ class simplifyTableInfo:
                 '  [Place]: ' + self.Place,
                 '  [User]:' + self.User)
 
-
-
+# Data class for DetailedTable infomation
 class DetailedTableInfo(simplifyTableInfo):
     def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User, Latitude, Longitude, SpeciesFamily ,Species, Description):
         super(DetailedTableInfo, self).__init__(IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User)
@@ -59,8 +59,6 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Species]: ' + self.Species +
                 '  [SpeciesFamily]: ' + self.SpeciesFamily +
                 '  [Description]: ' + self.Description)        
-
-
 
 # table class for tk GUI
 # reference : https://www.geeksforgeeks.org/create-table-using-tkinter/

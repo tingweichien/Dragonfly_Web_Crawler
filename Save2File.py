@@ -25,6 +25,7 @@ import json
 
 TotalSpeciesNumber = 0
 
+# read data from csv file 
 def Read_check_File(File_name):
     oldData = []
     oldData_len = 0
@@ -45,7 +46,7 @@ def Read_check_File(File_name):
     return [oldData, oldData_len, oldID, file_check, file_size]
       
 
-
+#write data to csv file
 def Write2File(File_name, folder, file_check, file_size, CSV_Head, Data, oldData):
     #auto make the directories
     newDir = current_path + "\\" + folder
@@ -69,13 +70,13 @@ def Write2File(File_name, folder, file_check, file_size, CSV_Head, Data, oldData
             print('\n[write type]: Insert')
 
 
-
+# write species number to json file
 def writeTotalNum2Json(inputDict, filepath):
     #with open(folder_all_crawl_data + 'Record_Num_each_species.txt', 'w') as outputfile:
     with open(filepath, 'w', encoding='utf-8') as outputfile: 
         json.dump(inputDict, outputfile, ensure_ascii=False, indent = 4)
 
-
+# read json file
 def ReadTotalNum2Json(filepath):
     global TotalSpeciesNumber
     try:
@@ -86,7 +87,7 @@ def ReadTotalNum2Json(filepath):
     except:
         return []
 
-
+# check if there is any species need to be update by comparing the new species number in the web with old Snumber from json file
 def checkUpdateSpecies(NewNumberData, filepath):
     Update = []
     OldNumberData = ReadTotalNum2Json(filepath)
@@ -97,7 +98,7 @@ def checkUpdateSpecies(NewNumberData, filepath):
                 Update.append(key)
     return Update
 
-
+# remove the empty data and duplicate data in csv database
 def removeEmpty():
     Data = []
     for spec_family in Species_Family_Name:
@@ -122,7 +123,7 @@ def removeEmpty():
                         Data = []  
 
 
-
+# main program 
 def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_total_num_Dict, File_name, folder):
     if __name__ == 'Save2File':
     #if __name__ == '__main__':
@@ -299,7 +300,7 @@ def parse_all(self):
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))  
 
 
-
+# read the file from csv database 
 def ReadFromFile(file):
     ReadFileList = []
     if (os.path.exists(file) == True):
@@ -316,6 +317,7 @@ def ReadFromFile(file):
 
 
 #########################################################################
+# select the parsing type : all family or one
 def savefile(self, parsetype):
     # --main--
     #if __name__ == '__main__':

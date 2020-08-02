@@ -772,6 +772,8 @@ root.mainloop()
 '''
 
 
+'''
+#create a tooltip for a given widget
 
 try:
     # for Python2
@@ -780,9 +782,8 @@ except ImportError:
     # for Python3
     import tkinter as tk
 class CreateToolTip(object):
-    '''
-    create a tooltip for a given widget
-    '''
+    
+
     def __init__(self, widget, text='widget info'):
         self.widget = widget
         self.text = text
@@ -814,4 +815,12 @@ if __name__ == '__main__':
     btn2 = tk.Button(root, text="button 2")
     btn2.pack(padx=10, pady=5)
     button2_ttp = CreateToolTip(btn2, "mouse is over button 2")
-    root.mainloop()
+    root.mainloop()'''
+
+
+'''def func(*arg):
+    print(arg[1])
+
+
+func(1,2,3,4)'''
+

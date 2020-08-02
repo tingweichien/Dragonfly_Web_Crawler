@@ -37,18 +37,21 @@ def Login_Web(Input_account, Input_password):
         'password' : Input_password,
     }
     Login_state = True
+    try:
+        r = requests.get(Login_url)
+    except:
+        return [None, None, None]
+    else:
+        #\ 執行登入
+        Login_Response = session.post(Login_url, headers=headers, data=data)
 
-    #\ 執行登入
-    Login_Response = session.post(Login_url, headers=headers, data=data)
-
-    #\確認是否成功登入
-    soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
-    script = soup_login_ckeck.find("script").extract() # find the alert
-    alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n  
-    if (len(alert) > 0):
-       Login_state = False # to show the error that the password or account might be wrong
-
-    return [session, Login_Response, Login_state]
+        #\確認是否成功登入
+        soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
+        script = soup_login_ckeck.find("script").extract() # find the alert
+        alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n  
+        if (len(alert) > 0):
+            Login_state = False # to show the error that the password or account might be wrong
+        return [session, Login_Response, Login_state]
       
 
 

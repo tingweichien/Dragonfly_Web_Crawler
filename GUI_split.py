@@ -178,12 +178,15 @@ class LoginPage(tk.Frame):
         if (Login_state == False):    
             main.title("蜻蜓資料庫經緯度查詢 --請登入--")
             messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
+        elif Login_Response == None and Login_state == None:
+            messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
         else:   
             Username = Account
             controller.show_frame(MainPage)
             # and write the account and password to the Login_Filename
             with open(Login_Filename, 'w') as fp:
                 fp.write(','.join((Account, Password)))
+                
 
     def ViewPWButtonfunc(self):
         if self.viewcheck.get() == True:
@@ -195,7 +198,6 @@ class LoginPage(tk.Frame):
             self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
             self.viewcheck.set(True)
 
-   
    
 # second window frame MainPage  
 class MainPage(tk.Frame):   
