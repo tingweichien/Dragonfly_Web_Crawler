@@ -46,37 +46,37 @@ def Read_check_File(File_name):
     return [oldData, oldData_len, oldID, file_check, file_size]
       
 
-#write data to csv file
+#\ write data to csv file
 def Write2File(File_name, folder, file_check, file_size, CSV_Head, Data, oldData):
-    #auto make the directories
+    #\ auto make the directories
     newDir = current_path + "\\" + folder
     if (not os.path.isdir(newDir)):
         os.mkdir(newDir)
 
-    # 'a' stands for append, which can append the new data to old one
+    #\ 'a' stands for append, which can append the new data to old one
     with open(File_name, mode='w', newline='', errors = "ignore") as Save_File:
         File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         # init , for there is no file exists or the file is empty
         if ((not file_check) or (file_size == 0)):
             File_writer.writerow(CSV_Head)
             File_writer.writerows(Data)
-            print("\n[write type]: First write")
+            #print("\n[write type]: First write")
 
-        # for inserting the data into the old one    
+        #\ for inserting the data into the old one    
         else:
             for i in range(0, len(Data)):
                 oldData.insert(i+1, Data[i])
             File_writer.writerows(oldData)
-            print('\n[write type]: Insert')
+            #print('\n[write type]: Insert')
 
 
-# write species number to json file
+#\ write species number to json file
 def writeTotalNum2Json(inputDict, filepath):
     #with open(folder_all_crawl_data + 'Record_Num_each_species.txt', 'w') as outputfile:
     with open(filepath, 'w', encoding='utf-8') as outputfile: 
         json.dump(inputDict, outputfile, ensure_ascii=False, indent = 4)
 
-# read json file
+#\ read json file
 def ReadTotalNum2Json(filepath):
     global TotalSpeciesNumber
     try:
@@ -87,7 +87,7 @@ def ReadTotalNum2Json(filepath):
     except:
         return []
 
-# check if there is any species need to be update by comparing the new species number in the web with old Snumber from json file
+#\ check if there is any species need to be update by comparing the new species number in the web with old Snumber from json file
 def checkUpdateSpecies(NewNumberData, filepath):
     Update = []
     OldNumberData = ReadTotalNum2Json(filepath)
@@ -98,32 +98,32 @@ def checkUpdateSpecies(NewNumberData, filepath):
                 Update.append(key)
     return Update
 
-# remove the empty data and duplicate data in csv database
+#\ remove the empty data and duplicate data in csv database
 def removeEmpty():
     Data = []
     for spec_family in Species_Family_Name:
         for spec in Species_Name_Group[Species_Family_Name.index(spec_family)]:
             Save_File = "Crawl_Data\\" + Species_class_key[spec_family] + "\\" + Species_class_key[spec_family] + Species_key[spec]
-            print(Save_File)
-            print(spec)
+            #print(Save_File)
+            #print(spec)
             if os.path.exists(Save_File+ ".csv"):
                 with open(Save_File + ".csv", "r", newline='', errors="ignore") as r:
                     with open("Crawl_Data\\Record_Num_each_species.txt", "r", newline='', errors="ignore", encoding='utf-8') as js:
                         totalNum = json.load(js)
                     R = list(csv.reader(r))
-                    print("Total: " + str(totalNum[spec]))
-                    print("lens: " + str(len(R)))
+                    #print("Total: " + str(totalNum[spec]))
+                    #print("lens: " + str(len(R)))
                     with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
                         for read in R:
                             if (not len(read[0]) == 0) and (not read[2] in [data[2] for data in Data]):
                                 Data.append(read)
-                        print("will write {} data\n".format(len(Data)))
+                        #print("will write {} data\n".format(len(Data)))
                         File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                         File_writer.writerows(Data)
                         Data = []  
 
 
-# main program 
+#\ main program 
 def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_total_num_Dict, File_name, folder):
     if __name__ == 'Save2File':
     #if __name__ == '__main__':
@@ -135,9 +135,9 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         oldData = []
         global DataCNT, TotalCount, limit_cnt
 
-        print("\n--Start crawling-- " + Input_species_famliy + " " + Input_species)
+        #print("\n--Start crawling-- " + Input_species_famliy + " " + Input_species)
         self.INameLabel_text(Input_species_famliy, Input_species)
-        print("[File name]: " + File_name)
+        #print("[File name]: " + File_name)
         self.IFileNameLabel_text(File_name)
         
         # <timing>
@@ -160,10 +160,10 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         # choose to do the multiprocessing or not
         if do_multiprocessing :
             expecting_CNT = Total_num - oldData_len  # get the total number of data need to be update ot crawl
-            print("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
+            #print("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
             self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
             if expecting_CNT <= 0:
-                print("No Data need to update~")
+                #print("No Data need to update~")
                 self.IStateLabel_text("No Data need to update~")
                 return False
             expecting_page = int(expecting_CNT / data_per_page)  # since it starts form page 0
@@ -178,18 +178,18 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
             with DataCNT_lock:
                 TotalCount += DataCNT.value
                 DataCNT.value = 0    
-            print("[current total crawl]: {} data".format(TotalCount))
+            #print("[current total crawl]: {} data".format(TotalCount))
             self.ICurrentNumLabel_text(TotalCount)
 
-            # check if the total counts over the limit
+            #\ check if the total counts over the limit
             if TotalCount <= limit_cnt:
                 if not (len(returnList.get()) == 0) :
                     DataTmpList = reduce(add, returnList.get())
                 else:
-                    print("No Data need to update\n")
+                    #print("No Data need to update\n")
                     return False
             else:
-                print("!!!Meet the limit for data counts!!!!\n")
+                #print("!!!Meet the limit for data counts!!!!\n")
                 self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
                 pool.terminate()
                 return True  #End the program
@@ -216,22 +216,22 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
                     Data_tmp.Description
                     ])
         if len(Data) == 0:
-            print("No Data need to update")
+            #print("No Data need to update")
             self.IStateLabel_text("No Data need to update")
             return False
 
-        #write the data to file
+        #\ write the data to file
         Write2File(File_name, folder, file_check, file_size, CSV_Head, Data, oldData)            
 
         if do_multiprocessing :
-            # make sure whe main is finished, subfunctions still keep rolling on             
+            #\ make sure whe main is finished, subfunctions still keep rolling on             
             pool.close()
             pool.join()
             
-        # <timing>
+        #\ <timing>
         end = time.time()
         derivation = end - start
-        print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
+        #print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
         self.IStateLabel_text('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
 
 
@@ -271,7 +271,7 @@ def parse_all(self):
     Update = checkUpdateSpecies(Species_total_num_Dict, TotalNumberOfSpecies_filepath)
     writeTotalNum2Json(Species_total_num_Dict, TotalNumberOfSpecies_filepath)
     self.ICurrentNumLabel_text(0)
-    # if there is no json file at the first time
+    #\ if there is no json file at the first time
     if len(Update) == 0:
         for species_family_loop in Species_Family_Name:
             for species_loop in Species_Name_Group[Species_Family_Name.index(species_family_loop)]:
@@ -282,7 +282,7 @@ def parse_all(self):
                 self.pbLabel_text()
                 if program_stop_check:
                     return
-            print("\n---Finishing crawling {} --- ".format(species_family_loop))
+            #print("\n---Finishing crawling {} --- ".format(species_family_loop))
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))            
     else:
         for species_family_loop in Species_Family_Name:
@@ -296,7 +296,7 @@ def parse_all(self):
                     program_check = Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     if program_stop_check:
                         return                              
-            print("\n---Finishing crawling {} --- ".format(species_family_loop))
+            #print("\n---Finishing crawling {} --- ".format(species_family_loop))
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))  
 
 
@@ -317,7 +317,7 @@ def ReadFromFile(file):
 
 
 #########################################################################
-# select the parsing type : all family or one
+#\ select the parsing type : all family or one
 def savefile(self, parsetype):
     # --main--
     #if __name__ == '__main__':
@@ -331,15 +331,15 @@ def savefile(self, parsetype):
             parse_all(self)
         elif parsetype == 'parse_one':
             Save2File(self,parse_family_name, parse_species_name, None, None)
-            print("\n---Finishing crawling {} ---".format(parse_family_name))
+            #print("\n---Finishing crawling {} ---".format(parse_family_name))
         else:
             print("!!!! No parse type define !!!!!")
 
-        #End timer
+        #\ End timer
         End = time.time()
         self.pbLabel_text()
         Time_interval = End - Start
         self.set_all_to_empty()
         self.IUpdateNumLabel_text("--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
-        print("\n--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
+        #print("\n--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
 

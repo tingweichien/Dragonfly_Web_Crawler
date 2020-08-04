@@ -179,9 +179,9 @@ def DataCrawler(Login_Response, Input_ID):
         response_Detailed_discriptions2 = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
         soup2 = BeautifulSoup(response_Detailed_discriptions2.text, 'html.parser')
         Longitude = soup2.find(id = 'R_LNG').get('value')
-        print('經度 : ' + Longitude)
+        #print('經度 : ' + Longitude)
         Lateral = soup2.find(id = 'R_LAT').get('value')
-        print('緯度 : ' + Lateral)
+        #print('緯度 : ' + Lateral)
         ID_find_result = DetailedTableInfo(id,
                                             soup2.find(id ='日期').get('value'),
                                             soup2.find(id='時間').get('value'),
@@ -219,7 +219,7 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
     '''
 
     target_url = general_url + map_info_url + Species_class_key[family_input] + Species_key[species_input]
-    print(target_url)
+    #print(target_url)
     map_response = session.post(target_url, headers=headers)
 
 
@@ -292,7 +292,7 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
             # 3.if it count over the the limit count  
             id = tmp_List[0].text
             if (len(id) == 0) or (int(id) == oldID) or (DataCNT == Limit_CNT):
-                print(' --Finish crawl--' + ' crawl to page: '+ str(page) + ", ID: " + id + ", count: " + str(DataCNT))
+                #print(' --Finish crawl--' + ' crawl to page: '+ str(page) + ", ID: " + id + ", count: " + str(DataCNT))
                 return [Data_List, page]
             
             response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
@@ -304,9 +304,9 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                                                 Web_rawl_Species_name,
                                                 soup2.find(id='R_MEMO').get('value')))
             DataCNT += 1
-            print("Current finished datas >> " +
-                    str(DataCNT) + " /" + str(Total_num) +
-                    " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
+            # print("Current finished datas >> " +
+            #         str(DataCNT) + " /" + str(Total_num) +
+            #         " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
             
         page += 1                                            
     

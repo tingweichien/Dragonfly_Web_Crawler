@@ -16,7 +16,7 @@ from Dragonfly import *
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
-from tkinter import ttk 
+from tkinter import ttk
 from tkinter.messagebox import *
 import os
 import os.path
@@ -34,7 +34,7 @@ InputArgumentsLabel = ["Account", "Password"]
 Login_path = os.getenv('temp')
 Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 
-current_dropdown_index = 0 
+current_dropdown_index = 0
 Login_Response = 0
 Login_state = False
 
@@ -78,7 +78,7 @@ def IDEnterButton():
 
     # Check if the user enter the info properly
     LoginInput_Empty_Or_Not = Check(LoginlnputList)
-    
+
     #login and ID Check
     if (Login_state == False):
         messagebox.showwarning('Warning!!!','Please Login first')
@@ -99,9 +99,9 @@ def IDEnterButton():
                 _ID_find_result.Longitude = 'No Data'
                 _ID_find_result.Latitude = 'No Data'
                 map_key = False
-            
+
         blank_LNG.delete(0, END)
-        blank_LAT.delete(0, END)    
+        blank_LAT.delete(0, END)
         blank_LNG.insert(0, _ID_find_result.Longitude)
         blank_LAT.insert(0, _ID_find_result.Latitude)
         if (map_key):
@@ -116,9 +116,9 @@ def IDEnterButton():
 ###################################################################################
 #\ Login action
 def LoginButton():
-    global Login_Response, Login_state 
+    global Login_Response, Login_state
     [session, Login_Response, Login_state] = Login_Web(account.get(), password.get())
-    if (Login_state == False):    
+    if (Login_state == False):
         main.title("蜻蜓資料庫經緯度查詢 --請登入--")
         messagebox.showwarning('Warning!!!', InputArgumentsLabel[0] + " or " + InputArgumentsLabel[1] + " might be incorrect!!!!")  #incorrect account or password
     else:
@@ -144,9 +144,9 @@ def SpeciesFindButton(*args):
         return
     else:
         New_table(map_result_list)
-        
 
-        
+
+
 
 ############################################################
 #\ map
@@ -196,10 +196,10 @@ def Show_on_map(input_map_list):
         PYGUI.popup_animated(None)
         messagebox.showinfo("Info", "No data match the spec")
         return []
-        
+
     gmp = gmplot.GoogleMapPlotter(float(map_list[0].Latitude), float(map_list[0].Longitude), 13)
     for index in map_list:
-        context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude          
+        context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude
         gmp.marker(float(index.Latitude), float(index.Longitude),
                     color="red",
                     label= index.Place.encode('unicode_escape').decode("utf-8"),
@@ -257,7 +257,7 @@ def New_table(map_result_list):
             auto_size_text=True,
             select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
             key='Place_select'),
-        PYGUI.Button(button_text='Show on map')      
+        PYGUI.Button(button_text='Show on map')
             ],
         [
         PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
@@ -274,20 +274,20 @@ def New_table(map_result_list):
                 num_rows=5,
                 key='Spec_Table',
                 col_widths = 40)
-            ]  
+            ]
     ]
-    
+
     window = PYGUI.Window("Show Species info", layout=layout)
 
     # Event Loop
-    while True:             
+    while True:
         event, values = window.Read()
         if event in (None, 'Exit'):
             break
         if event == 'Show on map':
             PYGUI.popup_animated(Image_path + "\Loading.gif")
             Spec_DATA = Show_on_map(map_result_list)
-            PYGUI.popup_animated(None)             
+            PYGUI.popup_animated(None)
             window['Spec_Table'].update(values=[[index.Place,
                                                 index.Dates + "-" + index.Times,
                                                 index.User,
@@ -295,7 +295,7 @@ def New_table(map_result_list):
                                                 index.Longitude,
                                                 index.Altitude] for index in Spec_DATA],
                                         visible=True)
-            window['Spec_Table_Label'].update(visible=True)                                        
+            window['Spec_Table_Label'].update(visible=True)
         elif event == 'User_select':
             User_select_value = values['User_select']
         elif event == 'Place_select':
@@ -314,7 +314,7 @@ def New_table(map_result_list):
 
 #############################################################
 #\ dropdown list
-def Family_drop_down_menu_callback(*args): 
+def Family_drop_down_menu_callback(*args):
     global current_dropdown_index
     current_dropdown_index = Family_drop_down_menu.current()
     tmp = Species_Name_Group[current_dropdown_index]
@@ -324,7 +324,7 @@ def Family_drop_down_menu_callback(*args):
     print (Family_drop_down_menu.current())
 
 
-   
+
 
 
 
@@ -344,9 +344,9 @@ labelframe_font_size = 11
 LabelFrame_Canvas = LabelFrame(main)
 LabelFrame_Canvas.pack()
 LabelFrame_Login = LabelFrame(main, text='Login', font=("Ink Free", labelframe_font_size, "bold"))
-LabelFrame_Login.pack(fill="both", expand="yes")  
+LabelFrame_Login.pack(fill="both", expand="yes")
 LabelFrame_ID_Find = LabelFrame(main, text='ID Find', font=("Ink Free", labelframe_font_size, "bold"))
-LabelFrame_ID_Find.pack(fill="both", expand="yes")  
+LabelFrame_ID_Find.pack(fill="both", expand="yes")
 LabelFrame_Species_Find = LabelFrame(main, text='Species Find', font=("Ink Free", labelframe_font_size, "bold"))
 LabelFrame_Species_Find.pack(fill="both", expand="yes")
 LabelFrame_CopyRight = LabelFrame(main)
@@ -396,13 +396,13 @@ Family_drop_down_menu.bind("<<ComboboxSelected>>", Family_drop_down_menu_callbac
 var_species = StringVar(LabelFrame_Species_Find)
 var_species.set(Calopterygidae_Species[0])
 Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_species, values=Species_Name_Group[current_dropdown_index])
-#Species_drop_down_menu.bind("<<ComboboxSelected>>", Species_drop_down_menu_callback)   # As soon as the dropdown list been selected, the table will automatically pop up  
+#Species_drop_down_menu.bind("<<ComboboxSelected>>", Species_drop_down_menu_callback)   # As soon as the dropdown list been selected, the table will automatically pop up
 
 
 # try to auto fill the account and password
 [n, p] = Auto_Fill()
 VarName.set(n)
-VarPwd.set(p)   
+VarPwd.set(p)
 
 # Check password and account and the ID
 LoginlnputList = [account.get(), password.get()]

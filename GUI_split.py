@@ -1,6 +1,6 @@
 # use the split Windows
 
-import tkinter as tk 
+import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from Dragonfly import *
@@ -15,14 +15,14 @@ from Index import *
 from Save2File import *
 import time
 import threading
-  
-LARGEFONT =("Verdana", 35) 
-   
+
+LARGEFONT =("Verdana", 35)
+
 Username = ''
 
 ##################################################################
 #\ arguement
-current_dropdown_index = 0 
+current_dropdown_index = 0
 Login_Response = 0
 Login_state = False
 
@@ -30,73 +30,73 @@ Login_state = False
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
 var_species = None
-      
+
 
 
 
 ################################################################
-# change page 
-class tkinterApp(tk.Tk): 
-      
-    # __init__ function for class tkinterApp  
+# change page
+class tkinterApp(tk.Tk):
+
+    # __init__ function for class tkinterApp
     def __init__(self, *args, **kwargs):
         if __name__ == '__main__':
-            
-            # __init__ function for class Tk 
+
+            # __init__ function for class Tk
             tk.Tk.__init__(self, *args, **kwargs)
-            
-            
-            # creating a container 
-            container = tk.Frame(self)   
-            container.pack(side = "top", fill = "both", expand = True)  
-    
-            container.grid_rowconfigure(0, weight = 1) 
-            container.grid_columnconfigure(0, weight = 1) 
-    
-            # initializing frames to an empty array 
-            self.frames = {}   
-    
-            # iterating through a tuple consisting 
-            # of the different page layouts 
-            for F in (LoginPage, MainPage): 
-    
-                frame = F(container, self) 
-    
-                # initializing frame of that object from 
-                # LoginPage, MainPage respectively with  
-                # for loop 
-                self.frames[F] = frame  
-    
-                frame.grid(row = 0, column = 0, sticky ="nsew") 
-    
-            self.show_frame(LoginPage) 
-   
-    # to display the current frame passed as 
-    # parameter 
+
+
+            # creating a container
+            container = tk.Frame(self)
+            container.pack(side = "top", fill = "both", expand = True)
+
+            container.grid_rowconfigure(0, weight = 1)
+            container.grid_columnconfigure(0, weight = 1)
+
+            # initializing frames to an empty array
+            self.frames = {}
+
+            # iterating through a tuple consisting
+            # of the different page layouts
+            for F in (LoginPage, MainPage):
+
+                frame = F(container, self)
+
+                # initializing frame of that object from
+                # LoginPage, MainPage respectively with
+                # for loop
+                self.frames[F] = frame
+
+                frame.grid(row = 0, column = 0, sticky ="nsew")
+
+            self.show_frame(LoginPage)
+
+    # to display the current frame passed as
+    # parameter
     def show_frame(self, cont):
-        global Username 
+        global Username
         frame = self.frames[cont]
-        print(frame._name)
+        #print(frame._name)
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
         tk.Tk.wm_geometry(self, MainPageGeometry)
         tk.Tk.iconbitmap(self, default=ico_image_path)
         frame.tkraise()
 
-    
-# first window frame LoginPage 
-   
-class LoginPage(tk.Frame): 
-    def __init__(self, parent, controller):  
+
+# first window frame LoginPage
+
+class LoginPage(tk.Frame):
+    def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
-            
-            # label of frame Layout 2 
+
+            # label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
             self.AccountLabel = tk.Label(self, text="Account", bg="white")
             self.StatementLabel = tk.Label(self, text=copyright_text,
                                         bg="white", fg = "gray", font = ("Arial", 8))
-            
-            # putting the grid in its place by using 
+
+            # putting the grid in its place by using
             VarName = StringVar(self, value='')
             VarPwd = StringVar(self, value='')
             self.accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
@@ -106,7 +106,7 @@ class LoginPage(tk.Frame):
             self.passwordEntry = Entry(self.passwordFrame, textvariable=VarPwd, relief=FLAT, show="*")
             self.PasswordPadLabel = tk.Label(self.password_eyeFrame, bg="white")
             self.PasswordLabel = tk.Label(self.password_eyeFrame, text="Password", bg="white")
-            
+
 
             # button
             self.Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
@@ -119,8 +119,8 @@ class LoginPage(tk.Frame):
             #photoimage = ViewPWbuttonIMG.subsample(3, 3)
             self.viewcheck = BooleanVar(self.password_eyeFrame, True)
             self.ViewPWbutton = Button(self.password_eyeFrame, text="view", command=self.ViewPWButtonfunc, bg='white',activebackground="white" ,relief=FLAT, image=self.ViewPWbuttonIMG)
-        
-            # putting the button in its place by 
+
+            # putting the button in its place by
             self.Loginlabel.pack(pady=20)
             self.AccountLabel.pack()
             self.accountFrame.pack()
@@ -132,22 +132,22 @@ class LoginPage(tk.Frame):
             self.PasswordPadLabel.pack(side=LEFT, padx=14)
             self.ViewPWbutton.pack(side=RIGHT)
             self.passwordFrame.pack(side=RIGHT)
-            self.passwordEntry.pack() 
-            
+            self.passwordEntry.pack()
+
             self.Loginbutton.pack(pady=20)
             self.StatementLabel.pack(pady=20)
 
-            
+
 
             # Check password and account and the ID
             self.LoginlnputList = [VarName.get(), VarPwd.get()]
-            
+
             # try to auto fill the account and password
             [n, p] = self.Auto_Fill()
             VarName.set(n)
             VarPwd.set(p)
 
-    # @@ 注意空格，不小心放在init method裡面    
+    # @@ 注意空格，不小心放在init method裡面
     # 嘗試自動填寫使用者名稱和密碼
     def Auto_Fill(self):
         try:
@@ -156,7 +156,7 @@ class LoginPage(tk.Frame):
                 return [n, p]
         except:
             return ['', '']
-            
+
 
     # Check if the user have entered the info (account and password) or not
     def Check(self):
@@ -170,23 +170,23 @@ class LoginPage(tk.Frame):
         if (len(string) > 0):
             messagebox.showwarning('Warning!!!', string + "should not be empty!!!!")
         return len(string)
-  
+
     #\ Login action
     def LoginButton(self, controller, Account, Password):
-        global Login_Response, Login_state, Username 
+        global Login_Response, Login_state, Username
         [session, Login_Response, Login_state] = Login_Web(Account, Password)
-        if (Login_state == False):    
+        if (Login_state == False):
             main.title("蜻蜓資料庫經緯度查詢 --請登入--")
             messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
         elif Login_Response == None and Login_state == None:
             messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
-        else:   
+        else:
             Username = Account
             controller.show_frame(MainPage)
             # and write the account and password to the Login_Filename
             with open(Login_Filename, 'w') as fp:
                 fp.write(','.join((Account, Password)))
-                
+
 
     def ViewPWButtonfunc(self):
         if self.viewcheck.get() == True:
@@ -198,10 +198,10 @@ class LoginPage(tk.Frame):
             self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
             self.viewcheck.set(True)
 
-   
-# second window frame MainPage  
-class MainPage(tk.Frame):   
-    def __init__(self, parent, controller):   
+
+# second window frame MainPage
+class MainPage(tk.Frame):
+    def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
 
@@ -219,8 +219,8 @@ class MainPage(tk.Frame):
             LabelFrame_Species_Find.pack(fill="both", expand="yes")
             Save2file_LabelFrame_bg = "white"
             LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
-            LabelFrame_Save2file.pack(fill="both", expand="yes")        
-            
+            LabelFrame_Save2file.pack(fill="both", expand="yes")
+
 
             # 設定圖片
             # directory from where script was ran
@@ -228,7 +228,7 @@ class MainPage(tk.Frame):
             image_path = Image_path + "\dragonfly_picture.gif"
             canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
             image = canvas.create_image(0, 0, anchor='nw', image=canvas.background)
-            
+
 
             # label
             label_font_size = 10
@@ -294,7 +294,7 @@ class MainPage(tk.Frame):
             Save2file_button = Button(LabelFrame_Save2file,
                                         text='Update',
                                         justify='center',
-                                        command=self.Save2FileButton)                                   
+                                        command=self.Save2FileButton)
 
             # slider
             self.Save2file_slider = Scale(LabelFrame_Save2file, from_=1, to=maxcpus, label="Crawling speed",
@@ -306,16 +306,16 @@ class MainPage(tk.Frame):
 
             # grid
             canvas.grid(row=0, column=0, columnspan=2)
-            
+
             APIKEY_label.grid(row=3)
             id_label.grid(row=4)
             latitude_label.grid(row=5)
             longitude_label.grid(row=6)
             Species_label.grid(row=7, columnspan=2)
-            Save2file_label.grid(row=9) 
+            Save2file_label.grid(row=9)
 
             APIKEY.grid(row=3, column=1)
-            APIKEY_border.grid(row=3, column=1)            
+            APIKEY_border.grid(row=3, column=1)
             ID.grid(row=4, column=1)
             ID_border.grid(row=4, column=1)
             blank_LAT.grid(row=5, column=1)
@@ -379,7 +379,7 @@ class MainPage(tk.Frame):
             messagebox.showinfo("Infomation", "The selected species does not have any record")
             return
         else:
-            self.New_table(map_result_list) 
+            self.New_table(map_result_list)
 
     # dont forget to add the 'event' as input args
     def changeCombobox(self, event):
@@ -387,14 +387,14 @@ class MainPage(tk.Frame):
         tmp = Species_Name_Group[self.Family_drop_down_menu.current()]
         self.Species_drop_down_menu['value'] = tmp
         var_species.set(tmp[0]) #init the dropdown list in the first element
-        print(var_family.get())
-        print(self.Family_drop_down_menu.current())
+        #print(var_family.get())
+        #print(self.Family_drop_down_menu.current())
 
     # specify the crawling speed
     def Save2FileSliderValue(self, event):
         cpus = self.Save2file_slider.get()
-        print("crawling speed : {}".format(cpus))
-            
+        #print("crawling speed : {}".format(cpus))
+
     def pbLabel_text(self):
         self.progressbar_label['text'] = str(self.pbVar.get()) + "%"
 
@@ -403,7 +403,7 @@ class MainPage(tk.Frame):
         self.Info_Name_label['text'] = '[Start Crawing] {}  {}'.format(speciesfamily, species)
 
     def IFileNameLabel_text(self, filename):
-        self.Info_FileName_label['text'] = '[File Name]: {}'.format(filename) 
+        self.Info_FileName_label['text'] = '[File Name]: {}'.format(filename)
 
     def IUpdateNumLabel_text(self, updateInfo):
         self.Info_UpdateNum_label['text'] = updateInfo
@@ -424,14 +424,14 @@ class MainPage(tk.Frame):
         self.Info_UpdateNum_label['text'] = ""
         self.Info_FileName_label['text'] = ""
         self.Info_Name_label['text'] = ""
-    
+
     def UpdateGIF(self, index):
         if self.check == True :
             if index < GIFMAXFRAME-1:
                 index += 1
             elif index == GIFMAXFRAME-1:
                 index = 0
-            frame = self.Load_image[index] 
+            frame = self.Load_image[index]
             self.loading_label.config(image=frame)
             #self.progressbarFrame.after(100, self.UpdateGIF,(index, True))
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
@@ -451,7 +451,7 @@ class MainPage(tk.Frame):
             self.progressbar.stop()
             self.button_popup['text'] = 'Finish'
             self.check = False
-            
+
         self.button_popup['state'] = 'disabled'
         UpdateGIF_thread = threading.Thread(target=self.UpdateGIF, args=(0,)).start()
         threading.Thread(target=start_multithread).start()
@@ -481,7 +481,7 @@ class MainPage(tk.Frame):
         self.progressbar.pack(side=LEFT, pady=10)
         self.progressbar_label = Label(self.progressbarFrame, text="0%")
         self.progressbar_label.pack(side=RIGHT, padx=5)
-        
+
         button_popup_label = Label(self.ButtonFrame, text="Ready to update?")
         button_popup_label.pack()
         self.button_popup = Button(self.ButtonFrame, text="start", command=self.start_button)
@@ -497,14 +497,14 @@ class MainPage(tk.Frame):
         self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w')
         self.Info_UpdateNum_label.pack(pady=3)
         self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w')
-        self.Info_CurrentNum_label.pack(pady=3)        
+        self.Info_CurrentNum_label.pack(pady=3)
         self.Info_State_label = Label(TextLabelFrame, anchor='w')
         self.Info_State_label.pack(pady=3)
         self.Info_FinishState_label = Label(TextLabelFrame, anchor='w')
-        self.Info_FinishState_label.pack(pady=3)        
+        self.Info_FinishState_label.pack(pady=3)
 
-         
-    #\ crawl data 
+
+    #\ crawl data
     # read the flow from here to the top of the method in this class
     def Save2FileButton(self):
         self.popup()
@@ -567,7 +567,7 @@ class MainPage(tk.Frame):
                 pad=(4,4),
                 select_mode=PYGUI.LISTBOX_SELECT_MODE_MULTIPLE,
                 key='Place_select'),
-            PYGUI.Button(button_text='Show on map',size=(12,3))      
+            PYGUI.Button(button_text='Show on map',size=(12,3))
                 ],
             [
             PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
@@ -585,23 +585,23 @@ class MainPage(tk.Frame):
                     key='Spec_Table',
                     pad=(2,2),
                     size=(150 ,None))
-                ]  
+                ]
         ]
-        
+
         self.window = PYGUI.Window("Show Species info", layout=layout,resizable=True,)
 
          # Event Loop
-        while True:             
+        while True:
             event, values = self.window.Read()
             if event in (None, 'Exit'):
-                PYGUI.popup_animated(None) 
+                PYGUI.popup_animated(None)
                 break
             elif event == PYGUI.WIN_CLOSED or event == 'Quit':
-                PYGUI.popup_animated(None) 
+                PYGUI.popup_animated(None)
                 break
             elif event == 'Show on map':
                 map_plot_max_data_num = int(values['-IN-'])
-                Spec_DATA = self.Show_on_map(map_result_list)         
+                Spec_DATA = self.Show_on_map(map_result_list)
                 self.window['Spec_Table'].update(values=[[index.Place,
                                                     index.Dates + "-" + index.Times,
                                                     index.User,
@@ -609,7 +609,7 @@ class MainPage(tk.Frame):
                                                     index.Longitude,
                                                     index.Altitude] for index in Spec_DATA],
                                             visible=True)
-                self.window['Spec_Table_Label'].update(visible=True)                                        
+                self.window['Spec_Table_Label'].update(visible=True)
             elif event == 'User_select':
                 self.User_select_value = values['User_select']
             elif event == 'Place_select':
@@ -680,10 +680,10 @@ class MainPage(tk.Frame):
                     index += 1
                 else:
                     messagebox.showinfo("info","All the record have no latitude and longitutde information")
-                    return 
+                    return
             else:
                 break
-        
+
         #since ID find will find plenty of species in one record so modify the title
         if limit_map_list[index].Species == "" and limit_map_list[index].SpeciesFamily == "":
             Title = "map"
@@ -702,7 +702,7 @@ class MainPage(tk.Frame):
                 #context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude
                 tmp_dict = {"User": index.User, "Dates": index.Dates, "Times": index.Times, "Place": index.Place,
                             "Altitude": index.Altitude, "Latitude": index.Latitude, "Longitude": index.Longitude}
-                context =  info_box_template.format(**tmp_dict) 
+                context =  info_box_template.format(**tmp_dict)
                 gmp.marker(float(index.Latitude), float(index.Longitude),
                             color="red",
                             label= index.Place.encode('unicode_escape').decode("utf-8"),
@@ -714,7 +714,7 @@ class MainPage(tk.Frame):
 
 
 
-    
+
 
 
 
@@ -727,4 +727,4 @@ if __name__ == '__main__':
     app = tkinterApp()
     app.geometry(Login_geometry)
     app.title(" Please Login")
-    app.mainloop() 
+    app.mainloop()
