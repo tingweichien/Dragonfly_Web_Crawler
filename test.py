@@ -33,7 +33,7 @@ layout = [
     [sg.Text("test",relief=sg.RELIEF_SUNKEN)],
     [sg.Table(data2, headings=["col1", "col2", "col3", "col4"],
     visible=False,
-    num_rows=3)],   
+    num_rows=3)],
     ]
 
 window = sg.Window("Scroll Test", layout=layout)
@@ -42,28 +42,28 @@ window.read()'''
 
 
 '''
-from tkinter import *  
-  
-top = Tk()  
-top.geometry("300x200")  
-  
-labelframe1 = LabelFrame(top, text="Positive Comments")  
-labelframe1.pack(fill="both", expand="yes")  
-  
-toplabel = Label(labelframe1, text="Place to put the positive comments")  
-toplabel.pack()  
-  
-labelframe2 = LabelFrame(top, text = "Negative Comments")  
-labelframe2.pack(fill="both", expand = "yes")  
-  
-bottomlabel = Label(labelframe2,text = "Place to put the negative comments")  
-bottomlabel.pack()  
-  
-top.mainloop()  
+from tkinter import *
+
+top = Tk()
+top.geometry("300x200")
+
+labelframe1 = LabelFrame(top, text="Positive Comments")
+labelframe1.pack(fill="both", expand="yes")
+
+toplabel = Label(labelframe1, text="Place to put the positive comments")
+toplabel.pack()
+
+labelframe2 = LabelFrame(top, text = "Negative Comments")
+labelframe2.pack(fill="both", expand = "yes")
+
+bottomlabel = Label(labelframe2,text = "Place to put the negative comments")
+bottomlabel.pack()
+
+top.mainloop()
 
 '''
 '''
-import time 
+import time
 for i in range(0, 100):
     print(">> " + str(i), end='\r')
     time.sleep(0.1)
@@ -71,26 +71,26 @@ for i in range(0, 100):
 '''
 
 '''
-# import gmplot package 
+# import gmplot package
 import gmplot
 import os
 import webbrowser
 from Index import *
-  
-# GoogleMapPlotter return Map object 
-# Pass the center latitude and 
-# center longitude 
-gmap1 = gmplot.GoogleMapPlotter(30.3164945, 
+
+# GoogleMapPlotter return Map object
+# Pass the center latitude and
+# center longitude
+gmap1 = gmplot.GoogleMapPlotter(30.3164945,
                                 78.03219179999999, 13)#Zoom
 
-for i in range(0, 892):                            
+for i in range(0, 892):
     gmap1.marker(30.3164945, 78.03219179999999+i*0.5,
                     color='cornflowerblue',
                     title="test",
                     label="test-label",
                     info_window="info_window")
-                                      
-  
+
+
 # Pass the absolute path
 path = os.path.realpath(mapfilename)
 gmap1.draw(path)
@@ -155,13 +155,13 @@ fig.add_layer(marker_layer)
 fig
 '''
 
-'''import tkinter as tk 
+'''import tkinter as tk
 from tkinter import ttk
 from tkinter import *
-import PySimpleGUI as sg   
-  
-LARGEFONT =("Verdana", 35) 
-   
+import PySimpleGUI as sg
+
+LARGEFONT =("Verdana", 35)
+
 
 
 def Logincheck(controller, Account, Password):
@@ -173,61 +173,61 @@ def Logincheck(controller, Account, Password):
 
 
 
-class tkinterApp(tk.Tk): 
-      
-    # __init__ function for class tkinterApp  
-    def __init__(self, *args, **kwargs):  
-          
-        # __init__ function for class Tk 
-        tk.Tk.__init__(self, *args, **kwargs) 
-          
-        # creating a container 
-        container = tk.Frame(self)   
-        container.pack(side = "top", fill = "both", expand = True)  
-   
-        container.grid_rowconfigure(0, weight = 1) 
-        container.grid_columnconfigure(0, weight = 1) 
-   
-        # initializing frames to an empty array 
-        self.frames = {}   
-   
-        # iterating through a tuple consisting 
-        # of the different page layouts 
-        for F in (LoginPage, Page1, Page2): 
-   
-            frame = F(container, self) 
-   
-            # initializing frame of that object from 
-            # LoginPage, page1, page2 respectively with  
-            # for loop 
-            self.frames[F] = frame  
-   
-            frame.grid(row = 0, column = 0, sticky ="nsew") 
-   
-        self.show_frame(LoginPage) 
-   
-    # to display the current frame passed as 
-    # parameter 
+class tkinterApp(tk.Tk):
+
+    # __init__ function for class tkinterApp
+    def __init__(self, *args, **kwargs):
+
+        # __init__ function for class Tk
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        # creating a container
+        container = tk.Frame(self)
+        container.pack(side = "top", fill = "both", expand = True)
+
+        container.grid_rowconfigure(0, weight = 1)
+        container.grid_columnconfigure(0, weight = 1)
+
+        # initializing frames to an empty array
+        self.frames = {}
+
+        # iterating through a tuple consisting
+        # of the different page layouts
+        for F in (LoginPage, Page1, Page2):
+
+            frame = F(container, self)
+
+            # initializing frame of that object from
+            # LoginPage, page1, page2 respectively with
+            # for loop
+            self.frames[F] = frame
+
+            frame.grid(row = 0, column = 0, sticky ="nsew")
+
+        self.show_frame(LoginPage)
+
+    # to display the current frame passed as
+    # parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
-   
-# first window frame LoginPage 
-   
-class LoginPage(tk.Frame): 
-    def __init__(self, parent, controller):  
+
+# first window frame LoginPage
+
+class LoginPage(tk.Frame):
+    def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="white")
-        
-        # label of frame Layout 2 
+
+        # label of frame Layout 2
         Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
         AccountLabel = tk.Label(self, text="Account", bg="white")
         PasswordLabel = tk.Label(self, text="Password", bg="white")
         StatementLabel = tk.Label(self, text="Developed by Ting Wei Chien\n 2020/7/26",
                                     bg="white", fg = "gray", font = ("Arial", 8))
-          
-        # putting the grid in its place by using 
-        # grid 
-        #label.grid(row = 0, column = 4, padx = 10, pady = 10)  
+
+        # putting the grid in its place by using
+        # grid
+        #label.grid(row = 0, column = 4, padx = 10, pady = 10)
 
         VarName = StringVar(self, value='')
         VarPwd = StringVar(self, value='')
@@ -236,93 +236,93 @@ class LoginPage(tk.Frame):
         passwordFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
         passwordEntry = Entry(passwordFrame, textvariable = VarPwd, relief=FLAT)
 
-        
+
         Loginbutton = Button(self, text ="Login",font=("Arial", 9, "bold"), bg="lime green", fg='white', relief='groove', pady = 0.5, padx =54,
         #command = lambda : controller.show_frame(Page1, 'LoginPage'))
-        command = lambda : Logincheck(controller, VarName.get(), VarPwd.get())) 
-      
-        # putting the button in its place by 
+        command = lambda : Logincheck(controller, VarName.get(), VarPwd.get()))
+
+        # putting the button in its place by
         # using grid
         Loginlabel.pack(pady=10)
         AccountLabel.pack()
         accountFrame.pack()
         accountEntry.pack()
         PasswordLabel.pack()
-        passwordFrame.pack() 
-        passwordEntry.pack() 
+        passwordFrame.pack()
+        passwordEntry.pack()
         Loginbutton.pack(pady=10)
         StatementLabel.pack(pady = 20)
 
-   
-           
 
 
 
 
-   
-# second window frame page1  
-class Page1(tk.Frame): 
-      
-    def __init__(self, parent, controller): 
-          
-        tk.Frame.__init__(self, parent) 
-        label = ttk.Label(self, text ="Page 1", font = LARGEFONT) 
-        label.grid(row = 0, column = 4, padx = 10, pady = 10) 
-   
-        # button to show frame 2 with text 
-        # layout2 
-        button1 = ttk.Button(self, text ="LoginPage", 
-                            command = lambda : controller.show_frame(LoginPage)) 
-      
-        # putting the button in its place  
-        # by using grid 
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10) 
-   
-        # button to show frame 2 with text 
-        # layout2 
-        button2 = ttk.Button(self, text ="Page 2", 
-                            command = lambda : controller.show_frame(Page2)) 
-      
-        # putting the button in its place by  
-        # using grid 
+
+
+
+# second window frame page1
+class Page1(tk.Frame):
+
+    def __init__(self, parent, controller):
+
+        tk.Frame.__init__(self, parent)
+        label = ttk.Label(self, text ="Page 1", font = LARGEFONT)
+        label.grid(row = 0, column = 4, padx = 10, pady = 10)
+
+        # button to show frame 2 with text
+        # layout2
+        button1 = ttk.Button(self, text ="LoginPage",
+                            command = lambda : controller.show_frame(LoginPage))
+
+        # putting the button in its place
+        # by using grid
+        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+
+        # button to show frame 2 with text
+        # layout2
+        button2 = ttk.Button(self, text ="Page 2",
+                            command = lambda : controller.show_frame(Page2))
+
+        # putting the button in its place by
+        # using grid
         button2.grid(row=2, column=1, padx=10, pady=10)
 
         #for i in range(1, 10000):
             #sg.OneLineProgressMeter('My Meter', i+1, 10000,'Optional message', "something to show", orientation='h',)
-   
-   
-   
-   
-# third window frame page2 
-class Page2(tk.Frame):  
-    def __init__(self, parent, controller): 
-        tk.Frame.__init__(self, parent) 
-        label = ttk.Label(self, text ="Page 2", font = LARGEFONT) 
-        label.grid(row = 0, column = 4, padx = 10, pady = 10) 
-   
-        # button to show frame 2 with text 
-        # layout2 
-        button1 = ttk.Button(self, text ="Page 1", 
-                            command = lambda : controller.show_frame(Page1)) 
-      
-        # putting the button in its place by  
-        # using grid 
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10) 
-   
-        # button to show frame 3 with text 
-        # layout3 
-        button2 = ttk.Button(self, text ="LoginPage", 
-                            command = lambda : controller.show_frame(LoginPage)) 
-      
-        # putting the button in its place by 
-        # using grid 
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10) 
-   
-   
+
+
+
+
+# third window frame page2
+class Page2(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = ttk.Label(self, text ="Page 2", font = LARGEFONT)
+        label.grid(row = 0, column = 4, padx = 10, pady = 10)
+
+        # button to show frame 2 with text
+        # layout2
+        button1 = ttk.Button(self, text ="Page 1",
+                            command = lambda : controller.show_frame(Page1))
+
+        # putting the button in its place by
+        # using grid
+        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+
+        # button to show frame 3 with text
+        # layout3
+        button2 = ttk.Button(self, text ="LoginPage",
+                            command = lambda : controller.show_frame(LoginPage))
+
+        # putting the button in its place by
+        # using grid
+        button2.grid(row = 2, column = 1, padx = 10, pady = 10)
+
+
 # Driver Code
 app = tkinterApp()
 app.title("Login")
-app.mainloop() 
+app.mainloop()
 '''
 
 '''
@@ -406,7 +406,7 @@ def analyze_data(args, args2):
 
 
 def start_main():
-    
+
         #
         # initialize a cross-process counter and the input lists
         #
@@ -416,8 +416,8 @@ def start_main():
         inputs = [i, I]
         args2 = 100
         #
-        # create the pool of workers, ensuring each one receives the counter 
-        # as it starts. 
+        # create the pool of workers, ensuring each one receives the counter
+        # as it starts.
         #
         p = Pool(4)
         func = partial(analyze_data, args2)
@@ -432,7 +432,7 @@ def start_main():
 if __name__ == '__main__':
     print('start')
     start_main()
-    print('END')  
+    print('END')
 '''
 
 '''
@@ -464,8 +464,8 @@ if base_url != "https://morvanzhou.github.io/":
     restricted_crawl = True
 else:
     restricted_crawl = False
-        
-        
+
+
 seen = set()
 unseen = set([base_url])
 
@@ -495,11 +495,11 @@ async def main(loop):
             tasks = [loop.create_task(crawl(url, session)) for url in unseen]
             finished, unfinished = await asyncio.wait(tasks)
             htmls = [f.result() for f in finished]
-            
+
             print('\nDistributed Parsing...')
             parse_jobs = [pool.apply_async(parse, args=(html,)) for html in htmls]
             results = [j.get() for j in parse_jobs]
-            
+
             print('\nAnalysing...')
             seen.update(unseen)
             unseen.clear()
@@ -544,7 +544,7 @@ data['people'].append({
 
 with open('data_test.txt', 'w') as outputfile:
     json.dump(data, outputfile, ensure_ascii=False, indent=4)
-    
+
 with open('data_test.txt', 'r', errors='ignore') as Readfile:
     readData = json.load(Readfile)
     print(readData)
@@ -573,24 +573,24 @@ l = []
 l.append([1, 2])
 print(l)
 
-# Python3 code to demonstrate 
-# Extracting specifix keys from dictionary 
-# Using dictionary comprehension + items() 
-  
-# initializing dictionary 
-test_dict = {'nikhil' : 1, "akash" : 2, 'akshat' : 3, 'manjeet' : 4} 
-  
-# printing original list 
-print("The original dictionary : " + str(test_dict)) 
-  
-# Using dictionary comprehension + items() 
+# Python3 code to demonstrate
+# Extracting specifix keys from dictionary
+# Using dictionary comprehension + items()
+
+# initializing dictionary
+test_dict = {'nikhil' : 1, "akash" : 2, 'akshat' : 3, 'manjeet' : 4}
+
+# printing original list
+print("The original dictionary : " + str(test_dict))
+
+# Using dictionary comprehension + items()
 # Extracting specifix keys from dictionary
 want = ['akshat', 'nikhil']
-res = {key: test_dict[key] for key in test_dict.keys() 
+res = {key: test_dict[key] for key in test_dict.keys()
                                & set(want)}
-print(test_dict.keys())                                
-  
-# print result 
+print(test_dict.keys())
+
+# print result
 print("The filtered dictionary is : " + str(res))
 
 D = {}
@@ -623,12 +623,12 @@ for spec_family in Species_Family_Name:
                     File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                     File_writer.writerows(Data)
                     Data = []'''
-                        
+
 
 
 
 '''
-# importing tkinter module 
+# importing tkinter module
 import tkinter as tk
 from tkinter import *
 from tkinter.ttk import *
@@ -782,7 +782,7 @@ except ImportError:
     # for Python3
     import tkinter as tk
 class CreateToolTip(object):
-    
+
 
     def __init__(self, widget, text='widget info'):
         self.widget = widget

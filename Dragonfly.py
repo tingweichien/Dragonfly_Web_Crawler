@@ -48,11 +48,11 @@ def Login_Web(Input_account, Input_password):
         #\確認是否成功登入
         soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
         script = soup_login_ckeck.find("script").extract() # find the alert
-        alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n  
+        alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
         if (len(alert) > 0):
             Login_state = False # to show the error that the password or account might be wrong
         return [session, Login_Response, Login_state]
-      
+
 
 
 ###################################################################
@@ -62,7 +62,7 @@ def DataCrawler(Login_Response, Input_ID):
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
     }
     '''
-    
+
     #\ Login account and password
     '''
     data = {
@@ -71,8 +71,8 @@ def DataCrawler(Login_Response, Input_ID):
     }
     '''
 
-    
-    
+
+
     #\ 執行登入
     '''
     session = requests.Session()
@@ -83,7 +83,7 @@ def DataCrawler(Login_Response, Input_ID):
     #\ 執行進入"蜓種觀察資料查詢作業"
     All_Observation_Data_response = session.post(All_Observation_Data_url, headers=headers)
 
-    
+
     #\ 下一頁
     '''
     page = 1
@@ -91,7 +91,7 @@ def DataCrawler(Login_Response, Input_ID):
     #print(response_next_page.text)
     '''
 
-    
+
     #\ 執行點入簡述
     # request url = http://dragonfly.idv.tw/dragonfly/view_data.php?id=65431
     '''
@@ -101,7 +101,7 @@ def DataCrawler(Login_Response, Input_ID):
     '''
 
 
-    
+
     #\ 執行詳述
     # request url = http://dragonfly.idv.tw/dragonfly/read_data.php?id=65431
     '''
@@ -114,7 +114,7 @@ def DataCrawler(Login_Response, Input_ID):
     print('緯度 : ' + Lateral)
     '''
 
-    
+
     #\ 嘗試非自己可以看的詳細內容
     '''
     id = 65430
@@ -148,7 +148,7 @@ def DataCrawler(Login_Response, Input_ID):
                 tmp_List.clear()
                 break
             tmp_List.append(All_Observation_Data_response_Data.text)
-            
+
     for obj in Data_List:
         print(obj, sep =' ')
     '''
@@ -158,7 +158,7 @@ def DataCrawler(Login_Response, Input_ID):
     #\確認是否成功登入
     soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
     script = soup_login_ckeck.find("script").extract() # find the alert
-    alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n  
+    alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
     if (len(alert) > 0):
         return [ErrorID["Login_error"], ErrorID["Login_error"]] # to show the error that the password or account might be wrong
     '''
@@ -175,7 +175,7 @@ def DataCrawler(Login_Response, Input_ID):
         overflow = True
         ID_find_result = []
     else:
-        #\ 執行 
+        #\ 執行
         response_Detailed_discriptions2 = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
         soup2 = BeautifulSoup(response_Detailed_discriptions2.text, 'html.parser')
         Longitude = soup2.find(id = 'R_LNG').get('value')
@@ -196,7 +196,7 @@ def DataCrawler(Login_Response, Input_ID):
                                             "",
                                             soup2.find(id='R_MEMO').get('value'))
 
-    return [ID_find_result, overflow, Max_ID_Num]  
+    return [ID_find_result, overflow, Max_ID_Num]
 
 
 
@@ -243,7 +243,7 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
     if (len(split_all_to_one_DetailedInfo) > 1):    #'{"markers":[]}@@@@@@@@' --> this is what zero result will be
         for map_script in split_all_to_one_DetailedInfo:
             #!!!! the return of the re.findall or re.split is a list type, so access the member in the list, add XXXX[0]
-            map_result.append(re.findall(r'(?<=latitude\":).+(?=,\"longitude\")', map_script)[0])    # latitude     
+            map_result.append(re.findall(r'(?<=latitude\":).+(?=,\"longitude\")', map_script)[0])    # latitude
             map_result.append(re.findall(r'(?<=longitude\":).+(?=,\"title\")', map_script)[0])    # longitude
             map_result.append(re.findall(r'(?<=title\":\").+(?=\()', map_script)[0].encode('utf-8').decode('unicode_escape'))  # title ,actually is place
             content = re.findall(r'(?<=content\":\").+(?=<)',map_script)[0]
@@ -272,7 +272,7 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
     id = 0
     Data_List = []
     tmp_List = []
-        
+
     while True:
         Species_all_record_data = session.post( general_url +
                                                 species_all_record_data_first_url +
@@ -280,7 +280,7 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                                                 species_all_record_data_species_url +
                                                 Species_class_key[Web_rawl_Species_family_name] +
                                                 Species_key[Web_rawl_Species_name],
-                                                headers=headers)    
+                                                headers=headers)
 
         soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
         for Species_all_record_data_Data_Set in soup.find_all(id='theRow'):
@@ -289,12 +289,12 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
             # End condition
             # 1.no data in next page
             # 2.for update to find unti the old data by inspecting its ID
-            # 3.if it count over the the limit count  
+            # 3.if it count over the the limit count
             id = tmp_List[0].text
             if (len(id) == 0) or (int(id) == oldID) or (DataCNT == Limit_CNT):
                 #print(' --Finish crawl--' + ' crawl to page: '+ str(page) + ", ID: " + id + ", count: " + str(DataCNT))
                 return [Data_List, page]
-            
+
             response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
             soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
             Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
@@ -307,10 +307,10 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
             # print("Current finished datas >> " +
             #         str(DataCNT) + " /" + str(Total_num) +
             #         " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
-            
-        page += 1                                            
-    
-    
+
+        page += 1
+
+
 ###########################################################
 #\ multiprocessing ver
 # init pool
@@ -331,15 +331,15 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_n
                                             species_all_record_data_species_url +
                                             Species_class_key[Web_rawl_Species_family_name] +
                                             Species_key[Web_rawl_Species_name],
-                                            headers=headers  )    
+                                            headers=headers  )
 
     soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
     Row_Data = soup.find_all(id='theRow')
     if page == expecting_page:
         del Row_Data[renmaind_data_Last_page:]
-        
+
     for Species_all_record_data_Data_Set in Row_Data:
-        tmp_List = Species_all_record_data_Data_Set.find_all('td')  
+        tmp_List = Species_all_record_data_Data_Set.find_all('td')
         id = tmp_List[0].text
         response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
         soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
@@ -358,11 +358,11 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_n
 
     return Data_List
 
-    
 
 
 
- ################################################################   
+
+ ################################################################
 #\ find the total data of the species
 #\ using the webdriver in this method, actually you can use webdriver in login also
 #\ input  : None
@@ -377,9 +377,9 @@ def Find_species_total_data():
     # 關閉瀏覽器跳出訊息
     # 不開啟實體瀏覽器背景執行
     if not popup_chrome_web:
-        options.add_argument("--headless")  
+        options.add_argument("--headless")
         options.add_argument('--disable-gpu')
-    
+
     driver = webdriver.Chrome(executable_path=ChromeDriverPath, chrome_options = options)
     driver.get(webdriver_Login_url)
     driver.find_element_by_name("account").send_keys(myaccount)

@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 
 
-# establish the connection 
+# establish the connection
 def create_connection(host_name, user_name, user_password):
     connection = None
     try:
@@ -14,7 +14,7 @@ def create_connection(host_name, user_name, user_password):
         print("connect to MySQL DB successful")
     except Error as e:
         print(f"The error'{e}' occurred")
-    
+
     return connection
 
 # create the database
@@ -36,7 +36,7 @@ def create_table(connection, query):
         print("Query executed successfully")
     except Error as e:
         print(f"The error '{e}' occurred")
-        
+
 
 #insert
 def insert_data(connection, query, values):
@@ -55,22 +55,22 @@ def read_data(connection, query):
 
 create_users_table ="""
 CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT, 
-  name TEXT NOT NULL, 
-  age INT, 
-  gender TEXT, 
-  nationality TEXT, 
+  id INT AUTO_INCREMENT,
+  name TEXT NOT NULL,
+  age INT,
+  gender TEXT,
+  nationality TEXT,
   PRIMARY KEY (id)
 ) ENGINE = InnoDB
 """
 
 create_posts_table = """
 CREATE TABLE IF NOT EXISTS posts (
-  id INT AUTO_INCREMENT, 
-  title TEXT NOT NULL, 
-  description TEXT NOT NULL, 
-  user_id INTEGER NOT NULL, 
-  FOREIGN KEY fk_user_id (user_id) REFERENCES users(id), 
+  id INT AUTO_INCREMENT,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY fk_user_id (user_id) REFERENCES users(id),
   PRIMARY KEY (id)
 ) ENGINE = InnoDB
 """

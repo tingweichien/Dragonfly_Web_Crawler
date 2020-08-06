@@ -21,9 +21,9 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x520"
 updateWinGeometry = "500x350"
- 
+
 # PY GUI setting
-Table_scroll_num = 10 
+Table_scroll_num = 10
 
 # map setting
 mapfilename = "map.html"
@@ -51,7 +51,7 @@ copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
 
 ###################################################
 #\ request url
-# general ur 
+# general ur
 general_url = 'http://dragonfly.idv.tw/dragonfly/'
 
 # 登入
@@ -165,13 +165,13 @@ Calopterygidae_Species = [
                 "綠翅珈蟌",
                 "中華珈蟌南臺亞種",
                 "中華珈蟌指名亞種"]
-Chlorocyphidae_Species = [  
+Chlorocyphidae_Species = [
                 # 鼓蟌科
                 "脊紋鼓蟌",
                 "簾格鼓蟌",
                 "棋紋鼓蟌",
                 "朱環鼓蟌"]
-Coenagrionidae_Species = [  
+Coenagrionidae_Species = [
                 # 細蟌科
                 "針尾細蟌",
                 "白粉細蟌",
@@ -192,35 +192,35 @@ Coenagrionidae_Species = [
                 "瘦面細蟌",
                 "弓背細蟌",
                 "丹頂細蟌"]
-Euphaeidae_Species = [                  
+Euphaeidae_Species = [
                 # 幽蟌科
                 "短尾幽蟌",
                 "短腹幽蟌"]
-Lestidae_Species = [   
+Lestidae_Species = [
                 # 絲蟌科
                 "青紋絲蟌",
                 "鑲紋絲蟌",
                 "隱紋絲蟌",
                 "長痣絲蟌"]
-Megapodagrionidae_Species = [                  
+Megapodagrionidae_Species = [
                 # 蹣蟌科
                 "芽痣蹣蟌"]
-Platycnemididae_Species =[                  
+Platycnemididae_Species =[
                 # 琵蟌科
                 "美姿琵蟌",
                 "青黑琵蟌",
                 "黃尾琵蟌",
                 "環紋琵蟌",
                 "脛蹼琵蟌"]
-Protoneuridae_Species = [                
+Protoneuridae_Species = [
                 # 樸蟌科
                 "朱背樸蟌",
                 "烏齒樸蟌"]
-Synlestidae_Species = [                
+Synlestidae_Species = [
                 # 洵蟌科
                 "黃腹洵蟌",
                 "黃肩洵蟌"]
-Aeshnidae_Species = [    
+Aeshnidae_Species = [
                 # 晏蜓科
                 "泰雅晏蜓",
                 "碧翠晏蜓",
@@ -264,7 +264,7 @@ Corduliidae_Species = [
                 "天王弓蜓",
                 "黃尾弓蜓",
                 "臺灣弓蜓"]
-Gomphidae_Species = [                
+Gomphidae_Species = [
                 # 春蜓科
                 "國姓春蜓",
                 "長唇春蜓",
@@ -288,7 +288,7 @@ Gomphidae_Species = [
                 "球角春蜓",
                 "錘角春蜓",
                 "南山春蜓"]
-Libellulidae_Species = [      
+Libellulidae_Species = [
                 # 蜻蜓科
                 "粗腰蜻蜓",
                 "八仙蜻蜓",
@@ -413,7 +413,7 @@ Species_key = {
     "丹頂細蟌": "19",
     # 幽蟌科
     "短尾幽蟌": "01",
-    "短腹幽蟌": "02",        
+    "短腹幽蟌": "02",
     # 絲蟌科
     "青紋絲蟌": "01",
     "鑲紋絲蟌": "02",
@@ -432,7 +432,7 @@ Species_key = {
     "烏齒樸蟌": "02",
     # 洵蟌科
     "黃腹洵蟌": "01",
-    "黃肩洵蟌": "02",    
+    "黃肩洵蟌": "02",
     # 晏蜓科
     "泰雅晏蜓": "01",
     "碧翠晏蜓": "02",
@@ -458,7 +458,7 @@ Species_key = {
     "源埡晏蜓": "22",
     "刃鋏晏蜓": "23",
     "鉤鋏晏蜓": "24",
-    "短鋏晏蜓": "25",      
+    "短鋏晏蜓": "25",
     # 勾蜓科
     "無霸勾蜓": "01",
     "短痣勾蜓": "02",
@@ -473,7 +473,7 @@ Species_key = {
     "耀沂弓蜓": "05",
     "天王弓蜓": "06",
     "黃尾弓蜓": "07",
-    "臺灣弓蜓": "08",    
+    "臺灣弓蜓": "08",
     # 春蜓科
     "國姓春蜓": "01",
     "長唇春蜓": "02",

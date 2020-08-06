@@ -17,9 +17,9 @@ class simplifyTableInfo:
         self.Place = Place
         self.Altitude = Altitude
         self.User = User
-    
+
     def __str__(self):
-        
+
         return ('\n[IdNumber]: ' + self.IdNumber +
                 '  [Dates]: ' + self.Dates +
                 '  [Times]: ' + self.Times +
@@ -45,7 +45,7 @@ class DetailedTableInfo(simplifyTableInfo):
                 '\t[Longitude]: ' + self.Longitude +
                 '\t[Species]: ' + self.Species +
                 '\t[Description]: ' + self.Description)
-        '''     
+        '''
         print(  '\n[IdNumber]: ' + self.IdNumber +
                 '  [Dates]: ' + self.Dates +
                 '  [Times]: ' + self.Times +
@@ -58,7 +58,7 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Longitude]: ' + self.Longitude +
                 '  [Species]: ' + self.Species +
                 '  [SpeciesFamily]: ' + self.SpeciesFamily +
-                '  [Description]: ' + self.Description)        
+                '  [Description]: ' + self.Description)
 
 # table class for tk GUI
 # reference : https://www.geeksforgeeks.org/create-table-using-tkinter/
@@ -99,4 +99,4 @@ class CreateToolTip(object):
     def close(self, event=None):
         if self.tw:
             self.tw.destroy()
-        
+

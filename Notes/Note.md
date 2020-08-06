@@ -103,7 +103,6 @@ using global or input args.
 7. Finally, finishing formating the google map info window
 <https://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html>
 
-
 8. remember that the callback function in combobox or Scale widget need 'event' as args, or else,
 it will not react
 <https://stackoverflow.com/questions/40070478/bind-combobox-to-function>
@@ -151,14 +150,11 @@ I also see the library that show my error and will hook the gmplot in the future
 
     (4)reference: <https://github.com/pyinstaller/pyinstaller-hooks-contrib/issues/20>
 
-
-
 ## [2020/08/04]
 
-1. The connection to the MyAQL in VScode have some problem :
+1. Fix the problem for copnnecting to MySQL server
+    (1) The connection to the MyAQL in VScode have some problem :
     ```Client does not support authentication protocol requested by server; consider upgrading MySQL client```
-    so to fix the error, type
-    ```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'``` Where root as your user localhost as your URL and password as your password
-    In my case, I put "timweiwei" as the username, "xxxxxxxx" as password and my "Dragonfly_db"
-    as localhost
-    reference:<https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/50131831#50131831>
+    (2) So to fix the error, type
+    ```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'``` Where root as your user localhost as your URL and password as your password. In my case, I put "timweiwei" as the username, "xxxxxxxx" as password and my "Dragonfly_db"as localhost.
+    (3) Reference:<https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/50131831#50131831>

@@ -15,6 +15,7 @@ from Index import *
 from Save2File import *
 import time
 import threading
+from multiprocessing import Process, Value, Pool
 
 LARGEFONT =("Verdana", 35)
 
@@ -32,9 +33,6 @@ var_family = None
 var_species = None
 
 
-
-
-################################################################
 # change page
 class tkinterApp(tk.Tk):
 
@@ -517,7 +515,8 @@ class MainPage(tk.Frame):
         global var_species, var_family, map_plot_max_data_num
         Data = [
             [index.Place,
-            index.Dates + "-" + index.Times,
+            index.Dates,
+            index.Times,
             index.User,
             index.Latitude,
             index.Longitude,
@@ -534,7 +533,7 @@ class MainPage(tk.Frame):
                 ],
             [
             PYGUI.Table(Data,
-                    headings=["Place", "Date-Time", "Recorder",
+                    headings=["Place", "Date", "Time", "Recorder",
                                     "Latitude", "Longitude", "Altitude"],
                     justification="center",
                     num_rows=Table_scroll_num,
@@ -548,7 +547,7 @@ class MainPage(tk.Frame):
             PYGUI.Text("\tSelect the method", auto_size_text = True, justification="center"),
             PYGUI.Text("Select the place", auto_size_text=True, justification="center"),
             PYGUI.Text("\tlimit", auto_size_text=True, justification="center"),
-            PYGUI.Input(default_text='100',key='-IN-', size = (5,2), justification='center', tooltip='Limit the maximum of the plotting data')
+            PYGUI.Input(default_text='100', key='-IN-', size=(5, 2), justification='center', enable_events=True, tooltip='Limit the maximum of the plotting data')
                 ],
             [
             PYGUI.Listbox(values=list({User_List.User for User_List in map_result_list}),
@@ -573,8 +572,8 @@ class MainPage(tk.Frame):
             PYGUI.Text("Result after choosing the specs", auto_size_text=True, justification="center", visible=False, key="Spec_Table_Label")
                 ],
             [
-            PYGUI.Table(values=[[" "," "," "," "," "," "]],
-                    headings=["Place", "Date-Time", "Recorder",
+            PYGUI.Table(values=[[" "," "," "," "," "," "," "]],
+                    headings=["Place", "Date", "Time", "Recorder",
                                     "Latitude", "Longitude", "Altitude"],
                     justification="center",
                     display_row_numbers=True,
@@ -603,7 +602,8 @@ class MainPage(tk.Frame):
                 map_plot_max_data_num = int(values['-IN-'])
                 Spec_DATA = self.Show_on_map(map_result_list)
                 self.window['Spec_Table'].update(values=[[index.Place,
-                                                    index.Dates + "-" + index.Times,
+                                                    index.Dates,
+                                                    index.Times,
                                                     index.User,
                                                     index.Latitude,
                                                     index.Longitude,
@@ -621,7 +621,10 @@ class MainPage(tk.Frame):
             elif event == 'and':
                 self.Map_spec_method_or_and = 'and'
                 self.window['and'].update(button_color=("black","green"))
-                self.window['or'].update(button_color=("black","white"))
+                self.window['or'].update(button_color=("black", "white"))
+            elif event == '-IN-':
+                if int(values['-IN-']) <= 0:
+                    messagebox.showwarning('Warning!!!', 'Please set the positive integer value')
         self.window.Close()
 
     #\ map
@@ -629,9 +632,17 @@ class MainPage(tk.Frame):
     # https://stackoverflow.com/questions/40905703/how-to-open-an-html-file-in-the-browser-from-python/40905794
     # https://stackoverflow.com/questions/55515627/pysimplegui-call-a-function-when-pressing-button
     # marker title has some problem
+
+    #\ show result on map
     def Show_on_map(self, input_map_list):
         map_list = []
         map_file_path = os.path.realpath(mapfilename)
+
+        #\ check the limit number
+        if map_plot_max_data_num <= 0:
+            messagebox.showwarning('Warning!!!', 'The limit number should be positive integer')
+            return []
+
         # specify by selected item
         for tmp in input_map_list:
             PYGUI.PopupAnimated(PYGUI.DEFAULT_BASE64_LOADING_GIF, background_color="white", time_between_frames=1)
@@ -689,27 +700,32 @@ class MainPage(tk.Frame):
             Title = "map"
         else:
             Title = Species_class_key[limit_map_list[index].SpeciesFamily] + Species_key[limit_map_list[index].Species]
-
         gmp = gmplot.GoogleMapPlotter(float(limit_map_list[index].Latitude), float(limit_map_list[index].Longitude), 13, apikey=self.var_APIKEY.get(),
                                         title=Title)
                                         #title= limit_map_list[index].Species.encode('unicode_escape').decode("utf-8"))
-        gmp.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
+        try:
+            for index in limit_map_list:
+                PYGUI.PopupAnimated(PYGUI.DEFAULT_BASE64_LOADING_GIF,background_color="white", time_between_frames=1)
+                if not(index.Latitude == "" or index.Longitude == ""):
+                    tmp_dict = {"User": index.User,
+                                "Dates": index.Dates,
+                                "Times": index.Times,
+                                "Place": index.Place,
+                                "Altitude": index.Altitude,
+                                "Latitude": index.Latitude,
+                                "Longitude": index.Longitude}
+                    context =  info_box_template.format(**tmp_dict)
+                    gmp.marker(float(index.Latitude), float(index.Longitude),
+                                color="red",
+                                label= index.Place.encode('unicode_escape').decode("utf-8"),
+                                info_window=context.encode('unicode_escape').decode("utf-8"))
+                    gmp.draw(map_file_path)
+            webbrowser.open(map_file_path)
+            PYGUI.PopupAnimated(None)
+        except:
+            PYGUI.PopupAnimated(None)
+            messagebox.showinfo("info", "try to reduce the limit number")
 
-
-        for index in limit_map_list:
-            PYGUI.PopupAnimated(PYGUI.DEFAULT_BASE64_LOADING_GIF,background_color="white", time_between_frames=1)
-            if not(index.Latitude == "" or index.Longitude == ""):
-                #context = index.User + " / " + index.Dates + " / " + index.Times + " / " + index.Place + " / "  + index.Altitude + "m / " + index.Latitude + ", "  + index.Longitude
-                tmp_dict = {"User": index.User, "Dates": index.Dates, "Times": index.Times, "Place": index.Place,
-                            "Altitude": index.Altitude, "Latitude": index.Latitude, "Longitude": index.Longitude}
-                context =  info_box_template.format(**tmp_dict)
-                gmp.marker(float(index.Latitude), float(index.Longitude),
-                            color="red",
-                            label= index.Place.encode('unicode_escape').decode("utf-8"),
-                            info_window=context.encode('unicode_escape').decode("utf-8"))
-                gmp.draw(map_file_path)
-        webbrowser.open(map_file_path)
-        PYGUI.PopupAnimated(None)
         return limit_map_list
 
 
