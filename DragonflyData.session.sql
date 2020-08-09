@@ -1,0 +1,1 @@
+SELECT DATE_FORMAT("2009-09-04",' %Y, %m, %d')

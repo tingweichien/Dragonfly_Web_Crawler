@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import DataClass
 from DataClass import *
 import re
-from Index import *
+import Index
 from multiprocessing import Process, Pool, Value, Lock
 from functools import partial
 
@@ -38,12 +38,12 @@ def Login_Web(Input_account, Input_password):
     }
     Login_state = True
     try:
-        r = requests.get(Login_url)
+        r = requests.get(Index.Login_url)
     except:
         return [None, None, None]
     else:
         #\ 執行登入
-        Login_Response = session.post(Login_url, headers=headers, data=data)
+        Login_Response = session.post(Index.Login_url, headers=Index.headers, data=data)
 
         #\確認是否成功登入
         soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
@@ -81,7 +81,7 @@ def DataCrawler(Login_Response, Input_ID):
 
 
     #\ 執行進入"蜓種觀察資料查詢作業"
-    All_Observation_Data_response = session.post(All_Observation_Data_url, headers=headers)
+    All_Observation_Data_response = session.post(Index.All_Observation_Data_url, headers=Index.headers)
 
 
     #\ 下一頁
@@ -176,7 +176,7 @@ def DataCrawler(Login_Response, Input_ID):
         ID_find_result = []
     else:
         #\ 執行
-        response_Detailed_discriptions2 = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
+        response_Detailed_discriptions2 = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_Detailed_discriptions2.text, 'html.parser')
         Longitude = soup2.find(id = 'R_LNG').get('value')
         #print('經度 : ' + Longitude)
@@ -218,9 +218,9 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
     species_input = '白痣珈蟌'
     '''
 
-    target_url = general_url + map_info_url + Species_class_key[family_input] + Species_key[species_input]
+    target_url = Index.general_url + Index.map_info_url + Index.Species_class_key[family_input] + Index.Species_key[species_input]
     #print(target_url)
-    map_response = session.post(target_url, headers=headers)
+    map_response = session.post(target_url, headers=Index.headers)
 
 
 
@@ -274,13 +274,13 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
     tmp_List = []
 
     while True:
-        Species_all_record_data = session.post( general_url +
-                                                species_all_record_data_first_url +
-                                                species_all_record_data_page_url + str(page) +
-                                                species_all_record_data_species_url +
-                                                Species_class_key[Web_rawl_Species_family_name] +
-                                                Species_key[Web_rawl_Species_name],
-                                                headers=headers)
+        Species_all_record_data = session.post( Index.general_url +
+                                                Index.species_all_record_data_first_url +
+                                                Index.species_all_record_data_page_url + str(page) +
+                                                Index.species_all_record_data_species_url +
+                                                Index.Species_class_key[Web_rawl_Species_family_name] +
+                                                Index.Species_key[Web_rawl_Species_name],
+                                                headers=Index.headers)
 
         soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
         for Species_all_record_data_Data_Set in soup.find_all(id='theRow'):
@@ -295,7 +295,7 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                 #print(' --Finish crawl--' + ' crawl to page: '+ str(page) + ", ID: " + id + ", count: " + str(DataCNT))
                 return [Data_List, page]
 
-            response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
+            response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
             soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
             Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
                                                 soup2.find(id='R_LAT').get('value'),
@@ -304,9 +304,9 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
                                                 Web_rawl_Species_name,
                                                 soup2.find(id='R_MEMO').get('value')))
             DataCNT += 1
-            # print("Current finished datas >> " +
-            #         str(DataCNT) + " /" + str(Total_num) +
-            #         " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
+            print("Current finished datas >> " +
+                    str(DataCNT) + " /" + str(Total_num) +
+                    " (" + str(int(DataCNT * 100 / Total_num)) + "%)", end='\r')
 
         page += 1
 
@@ -320,28 +320,28 @@ def init(args):
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, expecting_CNT, expecting_page, renmaind_data_Last_page, page):
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, expecting_CNT, expecting_page, remain_data_Last_page, page):
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT
     tmp_List = []
     Data_List = []
-    Species_all_record_data = session.post( general_url +
-                                            species_all_record_data_first_url +
-                                            species_all_record_data_page_url + str(page) +
-                                            species_all_record_data_species_url +
-                                            Species_class_key[Web_rawl_Species_family_name] +
-                                            Species_key[Web_rawl_Species_name],
-                                            headers=headers  )
+    Species_all_record_data = session.post( Index.general_url +
+                                            Index.species_all_record_data_first_url +
+                                            Index.species_all_record_data_page_url + str(page) +
+                                            Index.species_all_record_data_species_url +
+                                            Index.Species_class_key[Web_rawl_Species_family_name] +
+                                            Index.Species_key[Web_rawl_Species_name],
+                                            headers=Index.headers  )
 
     soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
     Row_Data = soup.find_all(id='theRow')
     if page == expecting_page:
-        del Row_Data[renmaind_data_Last_page:]
+        del Row_Data[remain_data_Last_page:]
 
     for Species_all_record_data_Data_Set in Row_Data:
         tmp_List = Species_all_record_data_Data_Set.find_all('td')
         id = tmp_List[0].text
-        response_DetailedInfo = session.post(general_url + Detailed_discriptions_url + id, headers=headers)
+        response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
         Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
                                             soup2.find(id='R_LAT').get('value'),
@@ -376,16 +376,16 @@ def Find_species_total_data():
     options = Options()
     # 關閉瀏覽器跳出訊息
     # 不開啟實體瀏覽器背景執行
-    if not popup_chrome_web:
+    if not Index.popup_chrome_web:
         options.add_argument("--headless")
         options.add_argument('--disable-gpu')
 
-    driver = webdriver.Chrome(executable_path=ChromeDriverPath, chrome_options = options)
-    driver.get(webdriver_Login_url)
-    driver.find_element_by_name("account").send_keys(myaccount)
-    driver.find_element_by_name("password").send_keys(mypassword)
+    driver = webdriver.Chrome(executable_path=Index.ChromeDriverPath, chrome_options = options)
+    driver.get(Index.webdriver_Login_url)
+    driver.find_element_by_name("account").send_keys(Index.myaccount)
+    driver.find_element_by_name("password").send_keys(Index.mypassword)
     driver.find_element_by_name("login").click()
-    driver.get(general_url + total_num_species_url) # "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
+    driver.get(Index.general_url + Index.total_num_species_url) # "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
     labe_list = driver.find_elements_by_tag_name("label")
     labe_list_text = [label_tmp.text for label_tmp in labe_list]
     td_list = driver.find_elements_by_tag_name("td")
@@ -398,7 +398,7 @@ def Find_species_total_data():
             number = td_list_text[(td_list_text.index(td_list_text_tmp)) + 1]
             if number == ' ' :
                 number = '0'
-            Dictionary[td_list_text_tmp.split('.')[1]] = number
+            Dictionary[td_list_text_tmp.split('.')[1].strip()] = number
     driver.quit()
 
     return Dictionary

@@ -8,8 +8,11 @@ import multiprocessing
 
 ##################################################
 # my account and password
-myaccount = "簡庭威"
-mypassword = "tim960622"
+# myaccount = "簡庭威"
+# mypassword = "tim960622"
+myaccount =  None
+mypassword = None
+
 
 # auto save account and password file
 Login_path = os.getenv('temp')
@@ -119,7 +122,7 @@ popup_chrome_web = False
 ChromeDriverPath = r".\\chromedriver.exe"
 
 # csv title
-CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "Dictrict", "Place", "Altitude", "Latitude", "Longitude", "Description"]
+CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "District", "Place", "Altitude", "Latitude", "Longitude", "Description"]
 
 
 # mutiprocessing cpu number
@@ -136,8 +139,8 @@ data_per_page = 10
 # determine how you want to parse the data
 # 'parse_a_family' 'parse_all' 'parse_one'
 parse_type = 'parse_all'
-parse_family_name = "幽蟌科"
-parse_species_name = "短腹幽蟌"
+parse_one_family_name = "幽蟌科"
+parse_one_species_name = "短腹幽蟌"
 
 
 # limit the count for each time looping
@@ -557,3 +560,11 @@ Species_key = {
     "灰影蜻蜓": "57",
     "纖腰蜻蜓": "58"
 }
+
+#\ Species_key keys to list
+#\ This will be an ordered list of species name that can be used to count for index
+#\ will be used in database
+Species_key_keys_list = Species_key.keys()
+
+#\ Species_key value to list
+Species_key_values_list = Species_key.values()
