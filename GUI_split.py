@@ -592,7 +592,7 @@ class MainPage(tk.Frame):
          # Event Loop
         while True:
             event, values = self.window.Read()
-            if event in (None, 'Exit'):
+            if event == None:
                 PYGUI.popup_animated(None)
                 break
             elif event == PYGUI.WIN_CLOSED or event == 'Quit':

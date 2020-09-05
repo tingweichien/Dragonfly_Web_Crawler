@@ -1,34 +1,36 @@
 #\ Put the info and parameter in here
 
-# import
+##################################################
+#\ import
 from fake_useragent import UserAgent
 import os
 from multiprocessing import Process
 import multiprocessing
 
 ##################################################
-# my account and password
-# myaccount = "簡庭威"
-# mypassword = "tim960622"
+##\
+#\ my account and password
+#\ myaccount = "簡庭威"
+#\ mypassword = "tim960622"
 myaccount =  None
 mypassword = None
 
 
-# auto save account and password file
+#\ auto save account and password file
 Login_path = os.getenv('temp')
 Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 
 
 ###################################################
-# Gui setting
+##\ Gui setting
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x520"
 updateWinGeometry = "500x350"
 
-# PY GUI setting
+#\ PY GUI setting
 Table_scroll_num = 10
 
-# map setting
+#\ map setting
 mapfilename = "map.html"
 map_plot_max_data_num = 100
 info_box_template = """
@@ -44,55 +46,55 @@ info_box_template = """
     """
 
 
-# ico image path
+#\ ico image path
 ico_image_path = 'image\\dragonfly_ico.ico'
 
-# statement in the login page
+#\ statement in the login page
 copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
 
 
 
 ###################################################
-#\ request url
-# general ur
+##\ request url
+#\ general ur
 general_url = 'http://dragonfly.idv.tw/dragonfly/'
 
-# 登入
+#\ 登入
 #Login_url = 'http://dragonfly.idv.tw/dragonfly/login.php'
 Login_url = general_url + 'login.php'
 
-#Login_url for webdriver
+#\ Login_url for webdriver
 webdriver_Login_url = general_url + 'index.php'
 
-# 蜓種觀察資料查詢作業
-#All_Observation_Data_url = 'http://dragonfly.idv.tw/dragonfly/rec_list_view.php'
+#\ 蜓種觀察資料查詢作業
+#\ All_Observation_Data_url = 'http://dragonfly.idv.tw/dragonfly/rec_list_view.php'
 All_Observation_Data_url = general_url + 'rec_list_view.php'
 
-# Next page url
+#\ Next page url
 Next_page_url = general_url + '?pageNum_rs_dragonfly_record='
 
-# 執行簡述 url
+#\ 執行簡述 url
 Brief_discriptions_url = 'view_data.php?id='
 
-# 執行詳述 url
-# http://dragonfly.idv.tw/dragonfly/read_data.php?id=64774
+#\ 執行詳述 url
+#\ http://dragonfly.idv.tw/dragonfly/read_data.php?id=64774
 Detailed_discriptions_url = 'read_data.php?id='
 
-# 地圖 url
+#\ 地圖 url
 map_info_url = 'tokei.php?kind_key='
 
-# 蜓轉相關資料一覽 url
-# http://dragonfly.idv.tw/dragonfly/rec_list_view_for_key.php?pageNum_rs_dragonfly_record=0&type=total_kind&kind=Chlorocyphidae01
+#\ 蜓轉相關資料一覽 url
+#\ http://dragonfly.idv.tw/dragonfly/rec_list_view_for_key.php?pageNum_rs_dragonfly_record=0&type=total_kind&kind=Chlorocyphidae01
 species_all_record_data_first_url = 'rec_list_view_for_key.php'
 species_all_record_data_page_url = '?pageNum_rs_dragonfly_record='
 species_all_record_data_species_url = '&type=total_kind&kind='
 
-# total number of the species url
-# "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
+#\ total number of the species url
+#\ "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
 total_num_species_url = "kind_total_records.php"
 
 
-# Header
+#\ Header
 '''
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
@@ -106,61 +108,61 @@ headers = {
 }
 
 
-# file path
+#\ file path
 current_path = os.getcwd()
 
-# image path
+#\ image path
 Image_path = current_path + "\image"
 
-# webdriver to crawl the total number of the record
+#\ webdriver to crawl the total number of the record
 popup_chrome_web = False
 
 
 ##----crawl dtat to csv----
 
-# chrome driver path
+#\ chrome driver path
 ChromeDriverPath = r".\\chromedriver.exe"
 
-# csv title
+#\ csv title
 CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "District", "Place", "Altitude", "Latitude", "Longitude", "Description"]
 
 
-# mutiprocessing cpu number
+#\ mutiprocessing cpu number
 extra_cpu = 0
 maxcpus = extra_cpu + multiprocessing.cpu_count()
 cpus = maxcpus
 
-# do multiprocessing or not
+#\ do multiprocessing or not
 do_multiprocessing = True
 
-# state how many row data in one page
+#\ state how many row data in one page
 data_per_page = 10
 
-# determine how you want to parse the data
-# 'parse_a_family' 'parse_all' 'parse_one'
+#\ determine how you want to parse the data
+#\ 'parse_a_family' 'parse_all' 'parse_one'
 parse_type = 'parse_all'
 parse_one_family_name = "幽蟌科"
 parse_one_species_name = "短腹幽蟌"
 
 
-# limit the count for each time looping
+#\ limit the count for each time looping
 limit_cnt = 5000
 
-# first folder for crawling data
+#\ first folder for crawling data
 folder_all_crawl_data = 'Crawl_Data\\'
 
-# json file path to record the total number of each species
-TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species.txt'
+#\ json file path to record the total number of each species
+TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species.json'
 
-# progress window
-# state the max frame for the LOAD gif
+#\ progress window
+#\ state the max frame for the LOAD gif
 GIFMAXFRAME = 80
 
 
 
 
 #####################################################################
-# Species name
+##\ Species name
 Calopterygidae_Species = [
                 # 珈蟌科
                 "白痣珈蟌",
@@ -353,18 +355,18 @@ Libellulidae_Species = [
                 "纖腰蜻蜓"]
 
 
-# these are shown for the dropdown list
-Species_Family_Name = ["珈蟌科", "鼓蟌科", "細蟌科", "幽蟌科", "絲蟌科", "蹣蟌科", "琵蟌科",
-                "樸蟌科", "洵蟌科", "晏蜓科", "勾蜓科", "弓蜓科", "春蜓科", "蜻蜓科"]
+#\ these are shown for the dropdown list
+Species_Name_Group_Damselfly = [Calopterygidae_Species, Chlorocyphidae_Species, Coenagrionidae_Species,
+                                Euphaeidae_Species, Lestidae_Species, Megapodagrionidae_Species, Platycnemididae_Species,
+                                Protoneuridae_Species, Synlestidae_Species]
+Species_Name_Group_Dragonfly = [Aeshnidae_Species, Cordulegastridae_Species,
+                                Corduliidae_Species, Gomphidae_Species, Libellulidae_Species]
 
-Species_Name_Group = [Calopterygidae_Species, Chlorocyphidae_Species, Coenagrionidae_Species,
-                    Euphaeidae_Species, Lestidae_Species, Megapodagrionidae_Species, Platycnemididae_Species,
-                    Protoneuridae_Species, Synlestidae_Species, Aeshnidae_Species, Cordulegastridae_Species,
-                    Corduliidae_Species, Gomphidae_Species, Libellulidae_Species]
+Species_Name_Group = Species_Name_Group_Damselfly + Species_Name_Group_Dragonfly
+Species_Name_Group_size = [len(num) for num in Species_Name_Group]
 
-
-# state the family(科) dictionary
-Species_class_key = {
+#\ state the family(科) dictionary
+Species_class_key_damselfly = {
     "珈蟌科": "Calopterygidae",
     "鼓蟌科": "Chlorocyphidae",
     "細蟌科": "Coenagrionidae",
@@ -374,6 +376,8 @@ Species_class_key = {
     "琵蟌科": "Platycnemididae",
     "樸蟌科": "Protoneuridae",
     "洵蟌科": "Synlestidae",
+}
+Species_class_key_dragonfly = {
     "晏蜓科": "Aeshnidae",
     "勾蜓科": "Cordulegastridae",
     "弓蜓科": "Corduliidae",
@@ -381,7 +385,12 @@ Species_class_key = {
     "蜻蜓科": "Libellulidae"
 }
 
-# state the Species(科) dictionary
+Species_class_key = {**Species_class_key_damselfly, **Species_class_key_dragonfly}
+Species_Family_Name = list(Species_class_key.keys())
+Species_Family_Name_E = list(Species_class_key.values())
+
+
+#\ state the Species(科) dictionary
 Species_key = {
     # 珈蟌科
     "白痣珈蟌": "01",
@@ -561,10 +570,48 @@ Species_key = {
     "纖腰蜻蜓": "58"
 }
 
+#\ species key in fullname dictionary
+SFNE_name = []
+for counts, n in enumerate(Species_Name_Group_size):
+    SFNE_name = SFNE_name + [Species_Family_Name_E[counts]]*n
+
+#\ Chinese to English
+Species_key_fullname_C2E={k:SFNE_name[count]+v for count, (k,v) in enumerate(Species_key.items())}
+#\ Eng to CN
+Species_key_fullname_E2C = {k:v for v,k in Species_key_fullname_C2E.items()}
+
 #\ Species_key keys to list
 #\ This will be an ordered list of species name that can be used to count for index
 #\ will be used in database
-Species_key_keys_list = Species_key.keys()
+Species_key_keys_list = list(Species_key.keys())
 
 #\ Species_key value to list
-Species_key_values_list = Species_key.values()
+Species_key_values_list = list(Species_key.values())
+
+
+#\ specify the category of the dragonfly
+species_Order = "蜻蛉目"
+species_Order_E = "Odonata"
+species_SubOrder = ["均翅亞目", "不均翅亞目"]
+species_SubOrder_E = ["Zygoptera(damsefly)", "Anisozygoptera(dragonfly)"]
+
+
+##############################################################################
+##\ This is the params for the map plot in pyechart
+#\ simplified to tradition Dict
+s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'};
+t2s = {v : k for k, v in s2t.items()}
+
+#\ simplified to tradition function
+s2tFunc = lambda x : [t2s[i] for i in x]
+
+#\ the file to plot
+pyecharts_psc_html = ".\pyecharts_result\pyecharts_psc.html"
+
+##############################################################################
+##\ Database
+#\ personal info
+username = "timweiwei"
+hostaddress = "127.0.0.1"
+password = "tim960622"
+DB_name =  'Dragonfly_DB'
