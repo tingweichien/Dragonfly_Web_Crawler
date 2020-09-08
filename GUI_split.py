@@ -16,6 +16,7 @@ from Save2File import *
 import time
 import threading
 from multiprocessing import Process, Value, Pool
+import gmplot
 
 
 LARGEFONT =("Verdana", 35)
@@ -81,6 +82,13 @@ class tkinterApp(tk.Tk):
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
         frame.tkraise()
 
+    #\ define the action when mouse hover on the button
+    def B_HoverOn(self, event, color):
+        event.widget['background'] = color
+    def BHoverOn(self, w, colorList:list):
+        w.bind("<Leave>", lambda event, color=colorList[0]: self.B_HoverOn(event, color))
+        w.bind("<Enter>", lambda event, color=colorList[1]: self.B_HoverOn(event, color))
+
 
 # first window frame LoginPage
 
@@ -107,24 +115,46 @@ class LoginPage(tk.Frame):
             self.PasswordLabel = tk.Label(self.password_eyeFrame, text="Password", bg="white")
 
 
-            # button
-            self.Loginbutton = Button(self, text="Login", font=("Arial", 9, "bold"), bg="lime green", fg='white',
-                                activebackground = "green2", activeforeground = "white",
-                                relief='groove', pady = 0.5, padx =54,
-                                command=lambda: self.LoginButton(controller))
+            #\ --Button--
+            #\ log in
+            self.Loginbutton = Button(self,
+                                    text="Login",
+                                    font=("Arial", 9, "bold"),
+                                    bg="lime green",
+                                    fg='white',
+                                    activebackground = "green2",
+                                    activeforeground = "white",
+                                    relief='groove',
+                                    pady = 0.5,
+                                    padx =54,
+                                    command=lambda: self.LoginButtonFunc(controller))
+            #\ bind the button with mouse hover to change the background color
+            controller.BHoverOn(self.Loginbutton,["lime green", "green2"])
+
+
+            #\ view password
             self.ViewPWbuttonIMG = PhotoImage(file=Index.Image_path + "\\view.png")
+            self.ViewPWbutton = Button(self.password_eyeFrame,
+                                        text="view",
+                                        command=self.ViewPWButtonfunc,
+                                        bg='white',
+                                        activebackground="white",
+                                        relief=FLAT,
+                                        image=self.ViewPWbuttonIMG)
+            controller.BHoverOn(self.ViewPWbutton, ["white", "grey87"])
+
+            #\ --Image--
             self.NotViewPWbuttonIMG = PhotoImage(file=Index.Image_path + "\\viewhidden.png")
-
             #photoimage = ViewPWbuttonIMG.subsample(3, 3)
-            self.viewcheck = BooleanVar(self.password_eyeFrame, True)
-            self.ViewPWbutton = Button(self.password_eyeFrame, text="view", command=self.ViewPWButtonfunc, bg='white',activebackground="white" ,relief=FLAT, image=self.ViewPWbuttonIMG)
 
-            # putting the button in its place by
+            #\ --checkbox--
+            self.viewcheck = BooleanVar(self.password_eyeFrame, True)
+
+            #\ --Putting the button in its place by--
             self.Loginlabel.pack(pady=20)
             self.AccountLabel.pack()
             self.accountFrame.pack()
             self.accountEntry.pack()
-
 
             self.password_eyeFrame.pack()
             self.PasswordLabel.pack(side=TOP)
@@ -136,13 +166,14 @@ class LoginPage(tk.Frame):
             self.Loginbutton.pack(pady=20)
             self.StatementLabel.pack(pady=20)
 
-            # try to auto fill the account and password
+            # --try to auto fill the account and password--
             [n, p] = self.Auto_Fill()
             self.VarName.set(n)
             self.VarPwd.set(p)
 
-    # @@ 注意空格，不小心放在init method裡面
-    # 嘗試自動填寫使用者名稱和密碼
+
+    #\ @@ 注意空格，不小心放在init method裡面
+    #\ 嘗試自動填寫使用者名稱和密碼
     def Auto_Fill(self):
         try:
             with open(Index.Login_Filename) as fp:
@@ -166,7 +197,7 @@ class LoginPage(tk.Frame):
         return len(string)
 
     #\ Login action
-    def LoginButton(self, controller):
+    def LoginButtonFunc(self, controller):
         global Login_Response, Login_state, Username
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
@@ -206,129 +237,133 @@ class MainPage(tk.Frame):
             # label frame
             labelframe_font_size = 10
             LabelFrame_font = ("Arial", labelframe_font_size, "bold")
-            LabelFrame_Canvas = LabelFrame(self)
-            LabelFrame_Canvas.pack()
+            self.LabelFrame_Canvas = LabelFrame(self)
+            self.LabelFrame_Canvas.pack()
 
             ID_LabelFrame_bg = "white"
-            LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
-            LabelFrame_ID_Find.pack(fill="both", expand="yes")
+            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
+            self.LabelFrame_ID_Find.pack(fill="both", expand="yes")
             Species_Find_LabelFrame_bg = "white"
-            LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
-            LabelFrame_Species_Find.pack(fill="both", expand="yes")
+            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
             Save2file_LabelFrame_bg = "white"
-            LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
-            LabelFrame_Save2file.pack(fill="both", expand="yes")
+            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
+            self.LabelFrame_Save2file.pack(fill="both", expand="yes")
 
 
-            # 設定圖片
-            # directory from where script was ran
-            canvas = Canvas(LabelFrame_Canvas,height=180, width=380)
-            image_path = Index.Image_path + "\dragonfly_picture.gif"
-            canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
-            image = canvas.create_image(0, 0, anchor='nw', image=canvas.background)
+            #\ 設定圖片
+            #\ directory from where script was ran
+            self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
+            self.image_path = Index.Image_path + "\dragonfly_picture.gif"
+            self.canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
+            self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
 
 
-            # label
+            #\ label
             label_font_size = 10
             label_font_style = ("Arial", label_font_size)
-            APIKEY_label = Label(LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
-            id_label = Label(LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
-            latitude_label = Label(LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-            longitude_label = Label(LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-            Species_label = Label(LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
-            Save2file_label = Label(LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
+            self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.id_label = Label(self.LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.latitude_label = Label(self.LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.longitude_label = Label(self.LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
 
 
-            # Entry
-            self.var_LAT = StringVar(LabelFrame_ID_Find)
-            self.var_LNG = StringVar(LabelFrame_ID_Find)
-            self.var_APIKEY = StringVar(LabelFrame_ID_Find)
-            APIKEY_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-            APIKEY = Entry(APIKEY_border, textvariable=self.var_APIKEY)
-            APIKEY_TLTP = CreateToolTip(APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
-            ID_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-            ID = Entry(ID_border)
-            LNG_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-            blank_LNG = Entry(LNG_border, textvariable=self.var_LNG)
-            LAT_border = Frame(LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-            blank_LAT = Entry(LAT_border, textvariable=self.var_LAT)
+            #\ Entry
+            self.var_LAT = StringVar(self.LabelFrame_ID_Find)
+            self.var_LNG = StringVar(self.LabelFrame_ID_Find)
+            self.var_APIKEY = StringVar(self.LabelFrame_ID_Find)
+            self.APIKEY_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            self.APIKEY = Entry(self.APIKEY_border, textvariable=self.var_APIKEY)
+            self.APIKEY_TLTP = CreateToolTip(self.APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
+            self.ID_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            self.ID = Entry(self.ID_border)
+            self.LNG_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
+            self.blank_LNG = Entry(self.LNG_border, textvariable=self.var_LNG)
+            self.LAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
+            self.blank_LAT = Entry(self.LAT_border, textvariable=self.var_LAT)
 
 
             #\ drop down menu
             # species
             global var_species
-            var_species = StringVar(LabelFrame_Species_Find)
+            var_species = StringVar(self.LabelFrame_Species_Find)
             var_species.set(Index.Calopterygidae_Species[0])
-            self.Species_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
+            self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
 
             # family
             global var_family
-            var_family = StringVar(LabelFrame_Species_Find)
+            var_family = StringVar(self.LabelFrame_Species_Find)
             var_family.set(Index.Species_Family_Name[0])
-            self.Family_drop_down_menu = ttk.Combobox(LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
+            self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
             self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
             #\ check box
-            self.VarDatacheckbox = BooleanVar(LabelFrame_Species_Find)
-            self.Datacheckbox = Checkbutton(LabelFrame_Species_Find, text="SQL", variable=self.VarDatacheckbox, bg="white")
-            DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
+            self.VarDatacheckbox = BooleanVar(self.LabelFrame_Species_Find)
+            self.Datacheckbox = Checkbutton(self.LabelFrame_Species_Find, text="SQL", variable=self.VarDatacheckbox, bg="white")
+            self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
 
 
 
-            # Button(self, text='Quit', command=self.destroy).grid(row=5, column=0, sticky=W, pady=4)
-            id_enter_button = Button(LabelFrame_ID_Find,
+            #\ Button(self, text='Quit', command=self.destroy).grid(row=5, column=0, sticky=W, pady=4)
+            self.id_enter_button = Button(self.LabelFrame_ID_Find,
                             text='ID Enter\b',
                             justify = 'center',
                             bg='gray80',
                             command=lambda: self.IDEnterButton(ID.get()))
                             # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
+            controller.BHoverOn(self.id_enter_button, ['gray80','gray70'])
 
-
-            species_find_button = Button(LabelFrame_Species_Find,
+            self.species_find_button = Button(self.LabelFrame_Species_Find,
                                         text='Find Species',
                                         justify='center',
+                                        bg='gray80',
                                         command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
+            controller.BHoverOn(self.species_find_button, ['gray80','gray70'])
 
-            Save2file_button = Button(LabelFrame_Save2file,
+            self.Save2file_button = Button(self.LabelFrame_Save2file,
                                         text='Update',
                                         justify='center',
+                                        bg='gray80',
                                         command=self.Save2FileButton)
+            controller.BHoverOn(self.Save2file_button, ['gray80','gray70'])
 
-            # slider
-            self.Save2file_slider = Scale(LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
+            #\ Slider
+            self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
                                         orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1,
                                         length=250, sliderrelief=GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
             #self.Save2file_slider.set(int(maxcpus / 2))
             self.Save2file_slider.set(Index.maxcpus)
 
 
-            # grid
-            canvas.grid(row=0, column=0, columnspan=2)
+            #\ grid
+            self.canvas.grid(row=0, column=0, columnspan=2)
 
-            APIKEY_label.grid(row=3)
-            id_label.grid(row=4)
-            latitude_label.grid(row=5)
-            longitude_label.grid(row=6)
-            Species_label.grid(row=7, columnspan=2)
-            Save2file_label.grid(row=9)
+            self.APIKEY_label.grid(row=3)
+            self.id_label.grid(row=4)
+            self.latitude_label.grid(row=5)
+            self.longitude_label.grid(row=6)
+            self.Species_label.grid(row=7, columnspan=2)
+            self.Save2file_label.grid(row=9)
 
-            APIKEY.grid(row=3, column=1)
-            APIKEY_border.grid(row=3, column=1)
-            ID.grid(row=4, column=1)
-            ID_border.grid(row=4, column=1)
-            blank_LAT.grid(row=5, column=1)
-            LAT_border.grid(row=5, column=1)
-            blank_LNG.grid(row=6, column=1)
-            LNG_border.grid(row=6, column=1)
+            self.APIKEY.grid(row=3, column=1)
+            self.APIKEY_border.grid(row=3, column=1)
+            self.ID.grid(row=4, column=1)
+            self.ID_border.grid(row=4, column=1)
+            self.blank_LAT.grid(row=5, column=1)
+            self.LAT_border.grid(row=5, column=1)
+            self.blank_LNG.grid(row=6, column=1)
+            self.LNG_border.grid(row=6, column=1)
 
 
             self.Family_drop_down_menu.grid(row=8, column=0, padx=3)
             self.Species_drop_down_menu.grid(row=8, column=1, padx=3)
             self.Datacheckbox.grid(row=8, column=2, padx=3)
 
-            id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
-            species_find_button.grid(row=8, column=3, columnspan=1, padx=5)
-            Save2file_button.grid(row=10, column=3, columnspan=1, padx = 5)
+            self.id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
+            self.species_find_button.grid(row=8, column=3, columnspan=1, padx=5)
+            self.Save2file_button.grid(row=10, column=3, columnspan=1, padx = 5)
 
             self.Save2file_slider.grid(row=10, column=0, columnspan=2, padx=5)
 

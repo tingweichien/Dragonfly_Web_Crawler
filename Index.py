@@ -8,8 +8,6 @@ import multiprocessing
 
 ##################################################
 # my account and password
-# myaccount = "簡庭威"
-# mypassword = "tim960622"
 myaccount =  None
 mypassword = None
 
