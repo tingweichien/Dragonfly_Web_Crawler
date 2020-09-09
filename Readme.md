@@ -4,7 +4,7 @@
   <a data-flickr-embed="true" href="https://www.flickr.com/photos/129776788@N07/35048782976/" title="細胸珈蟌 Mnais tenuis Oguma, 1913"><img src="https://live.staticflickr.com/4195/35048782976_2b2158c72e_m.jpg" width="240" height="160" alt="細胸珈蟌 Mnais tenuis Oguma, 1913"></a>
   <a data-flickr-embed="true" href="https://www.flickr.com/photos/129776788@N07/19957114339/" title="描金晏蜓Polycanthagyna melanictera  /    Blue-faced Hawker"><img src="https://live.staticflickr.com/3743/19957114339_c0afcd6379_m.jpg" width="240" height="160" alt="描金晏蜓Polycanthagyna melanictera  /    Blue-faced Hawker"></a>
   <a data-flickr-embed="true" href="https://www.flickr.com/photos/129776788@N07/28792877864/in/album-72157668821797981/" title="夜遊蜻蜓 Tholymis tillarga (Fabircius, 1798)"><img src="https://live.staticflickr.com/8190/28792877864_f17df5b10d_m.jpg" width="240" height="160" alt="夜遊蜻蜓 Tholymis tillarga (Fabircius, 1798)"></a>
-  <a data-flickr-embed="true" href="https://www.flickr.com/photos/129776788@N07/35953780864/in/album-72157666635304714/" title="1 無霸勾蜓Anotogaster klossii Fraser, 1919"><img src="https://live.staticflickr.com/4391/35953780864_7a971429f3_m.jpg" width="240" height="160" alt="1 無霸勾蜓Anotogaster klossii Fraser, 1919"></a>
+
 </p>
 
 </p>
@@ -27,7 +27,7 @@
 
 ## 1. Introduce
 
-- Crawl the data from recording sytem, doing data processing and save it to the MySQL
+- Crawl the data from recording system, doing data processing and save it to the MySQL
 - Print the data into google map
 - Develop the GUI by ***Tkinter*** and ***PySimpleGUI***
 - Plot the charts by ***matplotlib*** and ***pyecharts***
