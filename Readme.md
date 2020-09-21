@@ -27,14 +27,23 @@
 
 ## 1. Introduce
 
-- Crawl the data from recording system, doing data processing and save it to the MySQL
-- Print the data into google map
-- Develop the GUI by ***Tkinter*** and ***PySimpleGUI***
-- Plot the charts by ***matplotlib*** and ***pyecharts***
+- Crawl the data from recording system, doing data processing and save it to the MySQL database.
+- Print the data on google map.
+- Develop the GUI by ***Tkinter*** and ***PySimpleGUI***.
+- Plot the charts by ***matplotlib*** and ***pyecharts***.
 
 ---
 
-## 2. Include Library
+## 2. Installation
+
+- Execute the ```GUI_split.exe``` to run the program.
+![start](./image/program_result_picture/start.png)
+
+- Open ```GUI_split.py``` and debug it.
+
+---
+
+## 3. Include Library
 
 - Web Crawler:
   - **requests**
@@ -65,11 +74,23 @@
 
 ---
 
-## 3. Function
+## 4. File function
 
+|File|Function|
+|--|--|
+|GUI_split.exe |The executive file for the program|
+|GUI_split.py|The main GUI file|
+|GUI_split.spec|File specify for pyinstaller|
+|Dragonfly.py|For web crawler|
+|DataClass.py|The class declaration for the data|
+|Database.py|Write or read from the MySQL database|
+|Save2File.py|Save(Write) or read the data to or from CSV file|
+|Index.py|The file to store variable for setting|
+|hook.py <br> .hooks\     |The links for the libraries to hooks to do ptinstaller|
+|.Crawl_Data\ <br> .Crawl_Data_clea\ | The data crawl from the web store in csv|
 ---
 
-## 4. Demonstration
+## 5. Demonstration
 
 #### (1) ***Overview***
 
