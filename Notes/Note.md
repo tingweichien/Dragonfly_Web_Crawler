@@ -410,6 +410,7 @@ reference :
 
 * tab
     * -- timeline
+
       * -- grid
         * -- map0
         * -- bar0
@@ -422,8 +423,27 @@ reference :
         * line_multiA
     * -- table0
 
-8. referece :
+1. referece :
 
    (1) <https://www.kesci.com/home/project/5eb7958f366f4d002d783d4a>
    (2) <https://gallery.pyecharts.org/#/Geo/geo_chart_countries_js>
    (3) <https://pyecharts.org/#/zh-cn/render_images>
+
+## [2020/11/15]
+
+1. Merge the branch ```Plot``` to the master
+
+2. The ```.gitignore``` will ignore the ```Craw_data_clean``` after merging , so I am not able to merge them together
+(1) Therefore I reset the current commit, delete the content in the gitigore and recommit again
+
+(2) The following step shows how to do that, but one problem is that I wil not able to merge then after reset, it will do a new commit instead.
+
+```
+$ git commit -m "Something terribly misguided" # (0: Your Accident)
+$ git reset HEAD~                              # (1)
+<< edit files as necessary >>                  # (2)
+$ git add .                                    # (3)
+$ git commit -c ORIG_HEAD                      # (4)
+```
+
+(4) reference: <https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git>
