@@ -53,7 +53,7 @@ pyinstaller -F -w  --icon=XXXX.ico .\XXXXXX.py
 所以我改成值節傳一頁資訊進去，因為這樣就只需要將每個頁面的url傳進去當參數
 <https://morvanzhou.github.io/tutorials/data-manipulation/scraping/4-01-distributed-scraping/>
 
-2. 在住程式要加__init__ = __main__
+2. 在住程式要加 \"__init\__" = \"__main\__"
 
 3. session 是可以當參數傳遞的，也就是說如果我想要將登入動作做一次就好了，那就將登入function的session return並且在下一個韓世忠當參數傳入，
 這樣那個函式就會是登入過的seesion
@@ -83,7 +83,7 @@ pyinstaller -F -w  --icon=XXXX.ico .\XXXXXX.py
 
 1. to guit the git in the terminal using command :q
 
-2. impliment the multiprocessing crawling in the GUI by using "__inti__" == "__main__"
+2. impliment the multiprocessing crawling in the GUI by using \"__inti\_\_" == \"__main\_\_"
 to avois breakdown of the program
 
 3. Finally impliement the progress bar that can working independently, by using multithread
@@ -158,3 +158,272 @@ I also see the library that show my error and will hook the gmplot in the future
     (2) So to fix the error, type
     ```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'``` Where root as your user localhost as your URL and password as your password. In my case, I put "timweiwei" as the username, "xxxxxxxx" as password and my "Dragonfly_db"as localhost.
     (3) Reference:<https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/50131831#50131831>
+
+## [2020/08/10]
+
+1. Fix the error that used my password not the password from which enter by user
+
+2. make new .csv data file since the import to the google map with empty latitude or  longitude  will cause distortion of the position location
+
+3. finally build up the MySQL database and insert the data into it
+    ![20200810](https://i.imgur.com/Im38Y5e.png)
+    reference:
+    (1)<https://www.maxlist.xyz/2018/09/23/python_mysql/>
+    (2)<https://realpython.com/python-sql-libraries/>
+
+## [2020/08/14]
+
+1. please remember to use ```#%%``` to do the cell running test
+
+## [2020/08/17]
+
+1. problem of showing chinese in matplotlib
+    (1) check the font type in matplotlib
+
+    ```python
+    from matplotlib import font_manager
+    font_set = {f.name for f in font_manager.fontManager.ttflist}
+    for f in font_set:
+        print(f)
+    ```
+
+    (2) check the font support for the chinese in MS website
+        <https://docs.microsoft.com/en-us/typography/fonts/windows_10_font_list>
+    (3)reference: <https://stackoverflow.com/questions/25561009/how-do-you-i-use-mandarin-characters-in-matplotlib>
+
+2. slect specific data in list of dictionary
+
+    ``` python
+    list(filter(lambda res: res["YEAR(Dates)"] == check_year, result))
+    ```
+
+    reference:<https://stackoverflow.com/questions/8653516/python-list-of-dictionaries-search>
+
+## [2020/08/19]
+
+1. successfully solved the normal distribution problem and plot the figure showing the record times in each month seperated by each year.
+![20200819](https://i.imgur.com/o27lGxy.png)
+
+2. the histogram function in numpy or matplotlib  will transfer the input array into the appearance of the number, therefore, the input data should be a raw data instead of the statistics data
+    ex: ```a = [1,2,1,3,4,1,5,5,6,7,8,3,1,5]```
+    -->will be the desired row data to feed into hist or norm.pdf or guassin function
+    ex: ```b = [4,1,2,1,3,1,1,1]```
+    -->1 in```a``` show up 4 times, 2 in ```a``` show up 1 times, ......
+    -->the statistic data that add up the occurrance of each number in ```a``` which will not be desired data to feed into, since the function will do the statistics again, the data plotted will be the occurrance of the occurrance of the number in ```a```
+reference :
+(1) <https://stackoverflow.com/questions/33203645/how-to-plot-a-histogram-using-matplotlib-in-python-with-a-list-of-data>
+(2) <https://stackoverflow.com/questions/11315641/python-plotting-a-histogram-with-a-function-line-on-top>
+(3) <https://matplotlib.org/3.1.1/gallery/misc/table_demo.html#sphx-glr-gallery-misc-table-demo-py>
+
+3. for the font size in the table, you need to set the auto_set_font_size to False, then you'll be able to modify the font size
+
+    ```python
+    the_table.auto_set_font_size(False)
+    the_table.set_fontsize(24)
+    ```
+
+    reference : <https://stackoverflow.com/questions/15514005/how-to-change-the-tables-fontsize-with-matplotlib-pyplot>
+
+## [2020/08/21]
+
+1. Using **matplotlib**
+2. Add the mark and the responsed text
+   ![Imgur](https://i.imgur.com/6SgLY5v.png)
+3. add the pie chart
+   ![Imgur](https://i.imgur.com/rD3qrCO.png)
+   reference :
+   (1)<https://matplotlib.org/3.3.0/gallery/pie_and_polar_charts/pie_and_donut_labels.html>
+   (2)<https://matplotlib.org/3.3.0/api/_as_gen/matplotlib.patches.FancyBboxPatch.html#matplotlib.patches.FancyBboxPatch>
+
+## [2020/08/26]
+
+1. Using **pyecharts**
+2. Add the tree plot for the species relationship
+   ![Imgur](https://i.imgur.com/GIxAQAo.png)
+3. there are some problem on using the radial plot that the label in half circle will not outside the node, instead, it will be inside the node.
+
+## [2020/08/28]
+
+### The package for integrating the html into pyhton GUI
+
+(1) pywebview
+
+- reference: <https://pywebview.flowrl.com/>
+
+(2) cefpython
+
+- reference:
+  - <https://github.com/cztomczak/cefpython/blob/master/docs/Tutorial.md>
+  - <https://stackoverflow.com/questions/57974532/why-cant-run-both-tkinter-mainloop-and-cefpython3-messageloop>
+
+(3) pyhtml
+
+- This is not work anymore
+
+## [2020/08/30]
+
+### The geo map visualization in python
+
+ (1) folium
+
+ (2) pyecharts
+
+ (3) plotly
+
+## [2020/08/31]
+
+### Finally figure out how to change the simplified chinese into tradition chinese in the map by pyecharts
+
+1. There are two version of the pyecharts, one is 0.5.11 and the        other is  v1. The 0.5.11 version is no longer maintain anymore, but   there are still  many lesson and example on the internet. The difference is that in 0.5.11 there are less feature and most of all, the v1 modify the API which group the arg or kwarg(key word arguements).
+
+2. My problem is that I want to change the simplified chinese in the map into tradition chinese. So I start to look for maptype, and I found that in the pyecharts.datasets.map_filenames.json the "台灣" maptype is point to map\taiwan.js. However, I just couldn't find any way to get access to the file. So I turn into the older version which require plugin(pip install echart ....) from the map, and I finally can find the taiwan.js in the
+   ```C:\Python37\Lib\site-packages\echarts_china_provinces_pypkg\resources\echarts-china-provinces-js```
+    I modify all the simplified chinese into tradition chinese.
+
+3. Actually, it not so complex. When I was looking for the tooltip formatter option, I found that I could modify the label by myself that I just need to change the name, the problem will be solved.
+
+4. (**V0.5.11**)
+    (1) Here is the example for the formatter and the extension installation
+
+    ```python
+    pip install echarts-countries-pypkg
+    pip install echarts-china-provinces-pypkg
+    pip install echarts-china-cities-pypkg
+    ```
+
+    ``` python
+    import os
+    from pyecharts import Map
+
+    def tooltipformatter(params):
+        return "name: " + params.name + "<br>" + "value: " + params.value
+
+    value = [10,255]
+    attr = ["台中市","嘉義縣"]
+    map = Map("台灣", width=1500, height=700)
+    map.add(
+            "",
+            attr,
+            value,
+            maptype='台湾',
+            is_label_show=True,
+            label_formatter='{b},{c}',
+            is_visualmap=True,
+            is_map_symbol_show=False,
+            visual_text_color="#000",
+            visual_range_text=["0", "255"],
+            visual_range=[0, 255],
+            #tooltip_formatter = '{b}, {c}'
+            tooltip_formatter = tooltipformatter
+            )
+    map.render("map_base.html")
+    os.system("map_base.html")
+    ```
+
+    reference : <https://www.lagou.com/lgeduarticle/55569.html>
+
+    (2) The reult
+    ![Taiwan tradition chinese map v0.5.11](https://i.imgur.com/DlCkzWw.png)
+
+5. (**> V1**)
+    I can't find the map_file.js,so I can only modified the label option.
+   (1) I have no idea why "" is not work in JsCode, So use the '' instead.
+   (2) You ```can use console.log()``` in JsCode to output the data if the code work correctly. To inspect the output goto the html file you generate and press ```F12```, it will shown in console option.
+   (3) There will be no result shown if there are some bugs.
+   (4) Here are my code for formatter
+
+   ``` python
+    from pyecharts.commons.utils import JsCode
+    labelformatter = JsCode("""function(x){
+                                var s2t = { '新北市':'新北市',
+                                            '基隆市':'基隆市',
+                                            '台北市':'台北市',
+                                            '桃园市':'桃園市',
+                                            '新竹市':'新竹市',
+                                            '台中市':'台中市',
+                                            '台南市':'台南市',
+                                            '高雄市':'高雄市',
+                                            '彰化县':'彰化縣',
+                                            '嘉义市':'嘉義市',
+                                            '屏东县':'屏東縣',
+                                            '云林县':'雲林縣',
+                                            '苗栗县':'苗栗縣',
+                                            '新竹县':'新竹縣',
+                                            '嘉义县':'嘉義縣',
+                                            '宜兰县':'宜蘭縣',
+                                            '花莲县':'花蓮縣',
+                                            '台东县':'台東縣',
+                                            '南投县':'南投縣',
+                                            '金门县':'金門縣',
+                                            '连江县':'連江縣',
+                                            '中国属钓鱼岛':'釣魚島',
+                                            '澎湖县':'澎湖縣'};
+                                return s2t[x.name]
+                            }""")
+
+   ```
+
+    (5) Use the formatter in the code
+
+    ``` python
+    #\ the imput data
+    value=[3986291,2785159,2776846,2184655,1886465,1282669,830303,690662,554267,551816,511520,501474]
+    attr = s2tFunc(["新北市", "台中市", "高雄市", "台北市", "台南市", "彰化縣", "屏東縣", "雲林縣", "苗栗縣", "新竹縣", "嘉義縣", "南投縣"])
+
+    #\ createmap
+    c = (
+        Map(init_opts=opts.InitOpts(page_title="Taiwan" ,width="1600px", height="700px"))
+        .add("", list(zip(attr, value)), maptype='台湾')
+        .set_global_opts(title_opts=opts.TitleOpts(title="台灣"), visualmap_opts=opts.VisualMapOpts(max_=max(value)))
+        # .set_series_opts(label_opts=opts.LabelOpts(formatter='{b} : 123'))
+        .set_series_opts(
+            label_opts=opts.LabelOpts(formatter=labelformatter),
+            tooltip_opts=opts.TooltipOpts(formatter=tooltipformatter)
+            )
+        .render("map_base.html")
+    )
+    os.system("map_base.html")
+    ```
+
+    (6)result
+    ![Taiwan tradition chinese map v1](https://i.imgur.com/2IaFqyy.png)
+
+## [2020/09/04]
+
+1. Successfully building up the plot with different frames, timelines
+
+2. Charts include: Pie, bar, map, worldcloud, table.
+
+3. Result
+    ![Imgur](https://imgur.com/6U8SRmN.gif)
+
+4. Pie
+   (1) The position of Pie should be specified by ```center``` in add
+   (2) The grid seems to be no use for the pie position
+
+5. overlap
+   (1) Combine the overlap for the bar and line to Timeline, can't pass the bar that overlap with the line to the Timeline. Therefore, I wrapped it with a grid then pass the grid to the timeline.
+
+6. If the chart color do not follow then modify the ```dimension``` option
+
+7. The structure of the chart
+
+* tab
+    * -- timeline
+      * -- grid
+        * -- map0
+        * -- bar0
+        * -- pie0
+    * -- timeline2
+      * worldcloud0
+    * -- timeline3
+      * grid_multi
+        * bar_multiA
+        * line_multiA
+    * -- table0
+
+8. referece :
+
+   (1) <https://www.kesci.com/home/project/5eb7958f366f4d002d783d4a>
+   (2) <https://gallery.pyecharts.org/#/Geo/geo_chart_countries_js>
+   (3) <https://pyecharts.org/#/zh-cn/render_images>

@@ -1,4 +1,5 @@
-# reference:
+#\ save the file to csv
+#\ reference:
 # https://stackoverflow.com/questions/28162358/append-a-header-for-csv-file
 # https://stackoverflow.com/questions/50701023/insert-new-line-in-csv-at-second-row-via-python
 # http://zetcode.com/python/csv/
@@ -6,7 +7,6 @@
 # https://www.itread01.com/content/1547720842.html
 # https://stackoverflow.com/questions/4897359/output-to-the-same-line-overwriting-previous-output
 # https://stackoverflow.com/questions/29244286/how-to-flatten-a-2d-list-to-1d-without-using-numpy
-
 
 from tkinter import filedialog
 from tkinter import *

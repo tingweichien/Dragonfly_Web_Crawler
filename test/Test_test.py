@@ -824,3 +824,100 @@ if __name__ == '__main__':
 
 func(1,2,3,4)'''
 
+
+#%%
+print("1")
+print("2")
+
+#%%
+print("3")
+print ("4")
+
+
+#%%
+#list all the font in matplotlib
+from matplotlib import font_manager
+font_set = {f.name for f in font_manager.fontManager.ttflist}
+for f in font_set:
+    print(f)
+
+# %%
+# example for chinese font in matplot
+from matplotlib import pyplot as plt
+from matplotlib.font_manager import FontProperties
+ChineseFont1 = FontProperties(fname = 'C:\\Windows\\Fonts\\simsun.ttc')
+ChineseFont2 = FontProperties('MingLiU')
+plt.text(.5, .5, '中文English', fontsize=50, fontproperties = ChineseFont2)
+plt.show()
+
+# %%
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import norm
+#s = np.random.normal(mu, sigma, 100)
+s = [0,2,5,1,7,10,22,13,1,21,10,10]
+count,bims,patches = plt.hist(s, bins=len(s), density=1)
+mu, sigma = np.mean(s), np.std(s)  # mean and standard deviation
+normalY = norm.pdf(s, mu, sigma)
+mn, mx = plt.xlim()
+plt.xlim(mn, mx)
+kde_xs = np.linspace(mn, mx, len(s))
+kde = st.gaussian_kde(s)
+
+plt.plot(kde_xs, normalY)
+plt.plot(kde_xs, kde.pdf(kde_xs), label="PDF")
+plt.show()
+
+
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+import scipy.stats as st
+
+data = np.random.normal(size=1000)
+print(data)
+plt.hist(data,bins=30,density=1);
+mn, mx = plt.xlim()
+plt.xlim(mn, mx)
+kde_xs = np.linspace(mn, mx, 301)
+kde = st.gaussian_kde(x)
+plt.plot(kde_xs, kde.pdf(kde_xs), label="PDF")
+
+# %%
+import scipy.stats as st
+x = np.random.normal(size=1000)
+plt.hist(x, density=True, bins=30, label="Data")
+mn, mx = plt.xlim()
+plt.xlim(mn, mx)
+kde_xs = np.linspace(mn, mx, 301)
+kde = st.gaussian_kde(x)
+plt.plot(kde_xs, kde.pdf(kde_xs), label="PDF")
+
+# %%
+import matplotlib.pyplot as plt
+x = [1,2,3,4,5]
+y = [2,1,3,6,7]
+
+plt.plot(x, y, "-o")
+x0 = [2]
+y0 = [1]
+plt.plot(x0, y0, "s")
+
+plt.show()
+
+# %%
+l = [1,2,3,4]
+l2 = ['name']*len(l)
+l3 = [{key: value} for key, value in zip(l2, l)]
+print(l3)
+# %%
+from opencc import OpenCC
+cc = OpenCC('s2t')  # convert from Simplified Chinese to Traditional Chinese
+# can also set conversion by calling set_conversion
+# cc.set_conversion('s2tw')
+to_convert = '开放中文转换'
+converted = cc.convert(to_convert)
+print(converted)
+# %%
