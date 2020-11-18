@@ -17,6 +17,7 @@ import time
 import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
+from update_chromedriver import *
 
 
 LARGEFONT =("Verdana", 35)
@@ -35,7 +36,13 @@ var_family = None
 var_species = None
 
 
-# change page
+#\ check and update the chromedriver
+check_chromedriver()
+
+
+################################################################################
+#\ main GUI
+#\ change page
 class tkinterApp(tk.Tk):
 
     # __init__ function for class tkinterApp
@@ -268,21 +275,33 @@ class MainPage(tk.Frame):
             self.longitude_label = Label(self.LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
             self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
             self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
+            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NM", font=label_font_style , bg=Species_Find_LabelFrame_bg)
 
 
             #\ Entry
-            self.var_LAT = StringVar(self.LabelFrame_ID_Find)
-            self.var_LNG = StringVar(self.LabelFrame_ID_Find)
+
             self.var_APIKEY = StringVar(self.LabelFrame_ID_Find)
             self.APIKEY_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             self.APIKEY = Entry(self.APIKEY_border, textvariable=self.var_APIKEY)
             self.APIKEY_TLTP = CreateToolTip(self.APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
+
             self.ID_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             self.ID = Entry(self.ID_border)
+
+            self.var_LNG = StringVar(self.LabelFrame_ID_Find)
             self.LNG_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
             self.blank_LNG = Entry(self.LNG_border, textvariable=self.var_LNG)
+
+            self.var_LAT = StringVar(self.LabelFrame_ID_Find)
             self.LAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
             self.blank_LAT = Entry(self.LAT_border, textvariable=self.var_LAT)
+
+            self.var_MC = StringVar(self.LabelFrame_Save2file)
+            self.var_MC.set(str(Index.limit_cnt))
+            self.MaxCrawling_width = 10
+            self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
+            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width)
+
 
 
             #\ drop down menu
@@ -311,7 +330,7 @@ class MainPage(tk.Frame):
                             text='ID Enter\b',
                             justify = 'center',
                             bg='gray80',
-                            command=lambda: self.IDEnterButton(ID.get()))
+                            command=lambda: self.IDEnterButton(self.ID.get()))
                             # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
             controller.BHoverOn(self.id_enter_button, ['gray80','gray70'])
 
@@ -329,6 +348,7 @@ class MainPage(tk.Frame):
                                         command=self.Save2FileButton)
             controller.BHoverOn(self.Save2file_button, ['gray80','gray70'])
 
+
             #\ Slider
             self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
                                         orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1,
@@ -337,15 +357,17 @@ class MainPage(tk.Frame):
             self.Save2file_slider.set(Index.maxcpus)
 
 
-            #\ grid
+
+            #\ ---grid---
             self.canvas.grid(row=0, column=0, columnspan=2)
 
+            #\ ID Find
             self.APIKEY_label.grid(row=3)
             self.id_label.grid(row=4)
             self.latitude_label.grid(row=5)
             self.longitude_label.grid(row=6)
-            self.Species_label.grid(row=7, columnspan=2)
-            self.Save2file_label.grid(row=9)
+
+            self.id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
 
             self.APIKEY.grid(row=3, column=1)
             self.APIKEY_border.grid(row=3, column=1)
@@ -356,17 +378,20 @@ class MainPage(tk.Frame):
             self.blank_LNG.grid(row=6, column=1)
             self.LNG_border.grid(row=6, column=1)
 
-
+            #\ Species find
+            self.Species_label.grid(row=7, columnspan=2)
             self.Family_drop_down_menu.grid(row=8, column=0, padx=3)
             self.Species_drop_down_menu.grid(row=8, column=1, padx=3)
             self.Datacheckbox.grid(row=8, column=2, padx=3)
-
-            self.id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
             self.species_find_button.grid(row=8, column=3, columnspan=1, padx=5)
-            self.Save2file_button.grid(row=10, column=3, columnspan=1, padx = 5)
 
+            #\ Crawling data
+            self.Save2file_button.grid(row=10, column=3)
+            self.Save2file_label.grid(row=9)
             self.Save2file_slider.grid(row=10, column=0, columnspan=2, padx=5)
-
+            self.MaxCrawling_label.grid(row=9,column=3)
+            self.MaxCrawling.grid(row=10, column=3, sticky=N)
+            self.MaxCrawling_border.grid(row=10, column=3, sticky=N)
 
             # some initializing
             self.Place_select_value = ''
@@ -401,6 +426,7 @@ class MainPage(tk.Frame):
             if (msg):
                 self.Show_on_map([_ID_find_result])
 
+
     # \ Species find to plot info inthe table and plot on the map
     def SpeciesFindButton(self, var_family, var_species):
         if self.VarDatacheckbox.get() == True:
@@ -413,6 +439,7 @@ class MainPage(tk.Frame):
             return
         else:
             self.New_table(map_result_list)
+
 
     # dont forget to add the 'event' as input args
     def changeCombobox(self, event):
@@ -540,6 +567,8 @@ class MainPage(tk.Frame):
     #\ crawl data
     # read the flow from here to the top of the method in this class
     def Save2FileButton(self):
+        Index.limit_cnt = int(self.var_MC.get())
+        print(f"limit count is {Index.limit_cnt}")
         self.popup()
 
 

@@ -47,6 +47,7 @@ def Read_check_File(File_name):
     return [oldData, oldData_len, oldID, file_check, file_size]
 
 
+
 #\ write data to csv file
 def Write2File(File_path, folder, file_check, file_size, CSV_Header, Data, oldData):
     #\ auto make the directories
@@ -71,10 +72,12 @@ def Write2File(File_path, folder, file_check, file_size, CSV_Header, Data, oldDa
             print('\n[write type]: Insert')
 
 
+
 #\ write species number to json file
 def writeTotalNum2Json(inputDict, filepath):
     with open(filepath, 'w', encoding='utf-8') as outputfile:
         json.dump(inputDict, outputfile, ensure_ascii=False, indent = 4) #ident =4 use for pretty print, write inputDict to the outputfile
+
 
 #\ read json file
 def ReadTotalNum2Json(filepath):
@@ -87,6 +90,8 @@ def ReadTotalNum2Json(filepath):
     except:
         return []
 
+
+
 #\ check if there is any species need to be update by comparing the new species number in the web with old Snumber from json file
 def checkUpdateSpecies(NewNumberData, filepath):
     Update = []
@@ -96,6 +101,8 @@ def checkUpdateSpecies(NewNumberData, filepath):
             if key in OldNumberData and OldNumberData[key] < NewNumberData[key]:
                 Update.append(key)
     return Update
+
+
 
 #\ remove the empty data and duplicate data in csv database
 def removeEmpty():
@@ -120,6 +127,43 @@ def removeEmpty():
                         File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                         File_writer.writerows(Data)
                         Data = []
+
+
+
+#\ transfer to clear data without dataa that has no latitude and longitutde information
+def CleanDataTF(*args):
+    print("Transferring to the clean data~")
+    for name in Index.Species_Family_Name:
+        folder = Index.current_path + "\\Crawl_Data_clean\\" + Index.Species_class_key[name]
+        os.makedirs(folder, exist_ok=True)
+        for species in Index.Species_Name_Group[Index.Species_Family_Name.index(name)]:
+            filepath = folder + "\\" + Index.Species_class_key[name] + Index.Species_key[species] + "_clean.csv"
+            oldfilepath = ".\Crawl_Data\\" + Index.Species_class_key[name] + "\\" +Index.Species_class_key[name] + Index.Species_key[species] + ".csv"
+            old = ReadFromFile(oldfilepath)
+            newData = []
+            for row in old:
+                if not (row.Latitude == '' and row.Longitude == ''):
+                    newData.append([row.SpeciesFamily,
+                                    row.Species,
+                                    row.IdNumber,
+                                    row.Times,
+                                    row.Dates,
+                                    row.User,
+                                    row.City,
+                                    row.Dictrict,
+                                    row.Place,
+                                    row.Altitude,
+                                    row.Latitude,
+                                    row.Longitude,
+                                    row.Description
+                                    ])
+
+            #\ write to the file
+            with open(filepath, 'w', newline='', errors="ignore") as w:
+                File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                File_writer.writerow(Index.CSV_Head)
+                File_writer.writerows(newData)
+
 
 
 #\ main program
@@ -149,13 +193,13 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         # make sure the loop method will not redo this again and again
         if Index.parse_type == 'parse_one':
             # login
-            [session_S2F, Login_Response_S2F, Login_state_S2F] = Login_Web(myaccount, mypassword)
+            [session_S2F, Login_Response_S2F, Login_state_S2F] = Login_Web(Index.myaccount, Index.mypassword)
 
             # find the total number of the species_input (expect executed one time)
             Species_total_num_Dict = Find_species_total_data()
 
 
-        # get the data
+        # get the data number
         Total_num = int(Species_total_num_Dict[Input_species])
 
         # choose to do the multiprocessing or not
@@ -241,6 +285,7 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         self.IStateLabel_text('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))#print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
 
 
+
 #\ parse all species
 def parse_all(self):
     program_stop_check = False
@@ -249,7 +294,8 @@ def parse_all(self):
     Update = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
     writeTotalNum2Json(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
     self.ICurrentNumLabel_text(0)
-    #\ if there is no json file at the first time
+
+    #\ if there is no json file, which means parsing at the first time
     if len(Update) == 0:
         for species_family_loop in Index.Species_Family_Name:
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
@@ -262,6 +308,8 @@ def parse_all(self):
                     return
 
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))#print("\n---Finishing crawling {} --- ".format(species_family_loop))
+
+    #\ pasring for the second times
     else:
         for species_family_loop in Index.Species_Family_Name:
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
@@ -276,6 +324,10 @@ def parse_all(self):
                         return
 
             self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))#print("\n---Finishing crawling {} --- ".format(species_family_loop))
+
+    #\ update the file to the clean file which all of the data needs to have LAT and LNG information
+    CleanDataTF()
+
 
 
 #\ read the file from csv database
@@ -293,39 +345,6 @@ def ReadFromFile(file):
                 messagebox.showinfo("info", "No record")
     return ReadFileList
 
-#\ transfer to clear data with no data that has no latitude and longitutde information
-def CleanDataTF(*args):
-    for name in Index.Species_Family_Name:
-        folder = Index.current_path + "\\Crawl_Data_clean\\" + Index.Species_class_key[name]
-        os.makedirs(folder, exist_ok=True)
-        for species in Index.Species_Name_Group[Index.Species_Family_Name.index(name)]:
-            filepath = folder + "\\" + Index.Species_class_key[name] + Index.Species_key[species] + "_clean.csv"
-            oldfilepath = ".\Crawl_Data\\" + Index.Species_class_key[name] + "\\" +Index.Species_class_key[name] + Index.Species_key[species] + ".csv"
-            old = ReadFromFile(oldfilepath)
-            newData = []
-            for row in old:
-                if not (row.Latitude == '' and row.Longitude == ''):
-                    newData.append([row.SpeciesFamily,
-                                    row.Species,
-                                    row.IdNumber,
-                                    row.Times,
-                                    row.Dates,
-                                    row.User,
-                                    row.City,
-                                    row.Dictrict,
-                                    row.Place,
-                                    row.Altitude,
-                                    row.Latitude,
-                                    row.Longitude,
-                                    row.Description
-                                    ])
-
-            with open(filepath, 'w', newline='', errors="ignore") as w:
-                File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-                File_writer.writerow(Index.CSV_Head)
-                File_writer.writerows(newData)
-
-
 
 
 #########################################################################
@@ -338,9 +357,11 @@ def savefile(self, parsetype):
 
         if parsetype == 'parse_all':
             parse_all(self)
+
+        #\ not using
         elif parsetype == 'parse_one':
             Save2File(self, Index.parse_one_family_name, Index.parse_one_species_name, None, None)
-            print("\n---Finishing crawling {} ---".format(parse_family_name))
+            print("\n---Finishing crawling {} ---".format(Index.parse_family_name))
         else:
             print("!!!! No parse type define !!!!!")
 

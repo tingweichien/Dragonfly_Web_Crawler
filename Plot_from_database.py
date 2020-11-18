@@ -21,7 +21,7 @@ time = ["2011-01-01", "2020-07-19"]
 
 #\ plot from matplotlib
 #\ plot the species appearance among the years
-#plot_species_time_bar(connection, DB_species, time)
+plot_species_time_bar(connection, DB_species, time)
 
 #\ plot from pyecharts
 #\ plot the distribution of the dragonfly in Taiwan

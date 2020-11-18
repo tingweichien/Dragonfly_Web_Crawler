@@ -373,6 +373,7 @@ def Find_species_total_data():
     from selenium.webdriver.chrome.options import Options
 
 
+
     options = Options()
     # 關閉瀏覽器跳出訊息
     # 不開啟實體瀏覽器背景執行
@@ -380,7 +381,7 @@ def Find_species_total_data():
         options.add_argument("--headless")
         options.add_argument('--disable-gpu')
 
-    driver = webdriver.Chrome(executable_path=Index.ChromeDriverPath, chrome_options = options)
+    driver = webdriver.Chrome(chrome_options = options)
     driver.get(Index.webdriver_Login_url)
     driver.find_element_by_name("account").send_keys(Index.myaccount)
     driver.find_element_by_name("password").send_keys(Index.mypassword)

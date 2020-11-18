@@ -143,7 +143,7 @@ parse_one_species_name = "短腹幽蟌"
 
 
 #\ limit the count for each time looping
-limit_cnt = 5000
+limit_cnt = 100000
 
 #\ first folder for crawling data
 folder_all_crawl_data = 'Crawl_Data\\'

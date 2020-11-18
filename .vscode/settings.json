@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Python37\\python.exe",
+    "python.pythonPath": "c:\\Users\\Admin\\.pyenv\\pyenv-win\\versions\\3.7.3\\python.exe",
     "sqltools.connections": [
         {
             "database": "dragonfly_db",
