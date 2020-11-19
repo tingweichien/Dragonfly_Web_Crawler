@@ -18,7 +18,7 @@ import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
 from update_chromedriver import *
-
+#from tkcalendar import *
 
 LARGEFONT =("Verdana", 35)
 
@@ -34,6 +34,8 @@ Login_state = False
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
 var_species = None
+Plot_var_family = None
+Plot_var_species = None
 
 
 #\ check and update the chromedriver
@@ -92,7 +94,7 @@ class tkinterApp(tk.Tk):
     #\ define the action when mouse hover on the button
     def B_HoverOn(self, event, color):
         event.widget['background'] = color
-    def BHoverOn(self, w, colorList:list):
+    def BHoverOn(self, w:tk.Widget, colorList:list):
         w.bind("<Leave>", lambda event, color=colorList[0]: self.B_HoverOn(event, color))
         w.bind("<Enter>", lambda event, color=colorList[1]: self.B_HoverOn(event, color))
 
@@ -241,45 +243,37 @@ class MainPage(tk.Frame):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
 
-            # label frame
+            #\ Label frame and label setting
             labelframe_font_size = 10
             LabelFrame_font = ("Arial", labelframe_font_size, "bold")
-            self.LabelFrame_Canvas = LabelFrame(self)
-            self.LabelFrame_Canvas.pack()
-
-            ID_LabelFrame_bg = "white"
-            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
-            self.LabelFrame_ID_Find.pack(fill="both", expand="yes")
-            Species_Find_LabelFrame_bg = "white"
-            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
-            self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
-            Save2file_LabelFrame_bg = "white"
-            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
-            self.LabelFrame_Save2file.pack(fill="both", expand="yes")
+            label_font_size = 10
+            label_font_style = ("Arial", label_font_size)
 
 
+            #\ ---Image Frame---
+            #####################
             #\ 設定圖片
             #\ directory from where script was ran
+            self.LabelFrame_Canvas = LabelFrame(self)
             self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
             self.image_path = Index.Image_path + "\dragonfly_picture.gif"
             self.canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
             self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
+            self.LabelFrame_Canvas.pack()
 
 
-            #\ label
-            label_font_size = 10
-            label_font_style = ("Arial", label_font_size)
+            #\ ---ID Find Frame---
+            ######################
+            ID_LabelFrame_bg = "white"
+            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
+
+            #\ Label
             self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
             self.id_label = Label(self.LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
             self.latitude_label = Label(self.LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
             self.longitude_label = Label(self.LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-            self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
-            self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
-            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NM", font=label_font_style , bg=Species_Find_LabelFrame_bg)
-
 
             #\ Entry
-
             self.var_APIKEY = StringVar(self.LabelFrame_ID_Find)
             self.APIKEY_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             self.APIKEY = Entry(self.APIKEY_border, textvariable=self.var_APIKEY)
@@ -295,37 +289,8 @@ class MainPage(tk.Frame):
             self.var_LAT = StringVar(self.LabelFrame_ID_Find)
             self.LAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
             self.blank_LAT = Entry(self.LAT_border, textvariable=self.var_LAT)
+            self.LabelFrame_ID_Find.pack(fill="both", expand="yes")
 
-            self.var_MC = StringVar(self.LabelFrame_Save2file)
-            self.var_MC.set(str(Index.limit_cnt))
-            self.MaxCrawling_width = 10
-            self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
-            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width)
-
-
-
-            #\ drop down menu
-            # species
-            global var_species
-            var_species = StringVar(self.LabelFrame_Species_Find)
-            var_species.set(Index.Calopterygidae_Species[0])
-            self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
-
-            # family
-            global var_family
-            var_family = StringVar(self.LabelFrame_Species_Find)
-            var_family.set(Index.Species_Family_Name[0])
-            self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
-            self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
-
-            #\ check box
-            self.VarDatacheckbox = BooleanVar(self.LabelFrame_Species_Find)
-            self.Datacheckbox = Checkbutton(self.LabelFrame_Species_Find, text="SQL", variable=self.VarDatacheckbox, bg="white")
-            self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
-
-
-
-            #\ Button(self, text='Quit', command=self.destroy).grid(row=5, column=0, sticky=W, pady=4)
             self.id_enter_button = Button(self.LabelFrame_ID_Find,
                             text='ID Enter\b',
                             justify = 'center',
@@ -334,6 +299,36 @@ class MainPage(tk.Frame):
                             # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
             controller.BHoverOn(self.id_enter_button, ['gray80','gray70'])
 
+
+            #\ ---Species Find Frame---
+            ###########################
+            Species_Find_LabelFrame_bg = "white"
+            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+
+            #\ Label
+            self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+
+            #\ drop down menu
+            #\ species
+            global var_species
+            var_species = StringVar(self.LabelFrame_Species_Find)
+            var_species.set(Index.Calopterygidae_Species[0])
+            self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
+
+            #\ family
+            global var_family
+            var_family = StringVar(self.LabelFrame_Species_Find)
+            var_family.set(Index.Species_Family_Name[0])
+            self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
+            self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
+
+            #\ check box
+            self.VarDatacheckbox = BooleanVar(self.LabelFrame_Species_Find)
+            self.Datacheckbox = Checkbutton(self.LabelFrame_Species_Find, text="EXCEL-SQL", variable=self.VarDatacheckbox, bg="white")
+            self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
+            self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
+
+            #\ Button
             self.species_find_button = Button(self.LabelFrame_Species_Find,
                                         text='Find Species',
                                         justify='center',
@@ -341,13 +336,29 @@ class MainPage(tk.Frame):
                                         command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
             controller.BHoverOn(self.species_find_button, ['gray80','gray70'])
 
+
+            #\ ---Save2file Frame---
+            ########################
+            Save2file_LabelFrame_bg = "white"
+            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
+            self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
+            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NM", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Save2file.pack(fill="both", expand="yes") # fill both horizon and vertically
+
+            #\ Entry
+            self.var_MC = StringVar(self.LabelFrame_Save2file)
+            self.var_MC.set(str(Index.limit_cnt))
+            self.MaxCrawling_width = 10
+            self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
+            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width)
+
+            #\ Button
             self.Save2file_button = Button(self.LabelFrame_Save2file,
                                         text='Update',
                                         justify='center',
                                         bg='gray80',
                                         command=self.Save2FileButton)
             controller.BHoverOn(self.Save2file_button, ['gray80','gray70'])
-
 
             #\ Slider
             self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
@@ -357,8 +368,46 @@ class MainPage(tk.Frame):
             self.Save2file_slider.set(Index.maxcpus)
 
 
+            #\ ---Plot Chart---
+            ###################
+            #\ Label Frame
+            Plot_LabelFrame_bg = "white"
+            self.LabelFrame_Plot = LabelFrame(self, text='Plot Chart', font=LabelFrame_font, bg=Plot_LabelFrame_bg)
+            self.LabelFrame_Plot.pack(fill="both", expand="yes") # fill both horizon and vertically
+
+            #\ Drop down menu
+            #\ species
+            global Plot_var_species
+            Plot_var_species = StringVar(self.LabelFrame_Plot)
+            Plot_var_species.set(Index.Calopterygidae_Species[0])
+            self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
+
+            #\ family
+            global Plot_var_family
+            Plot_var_family = StringVar(self.LabelFrame_Plot)
+            Plot_var_family.set(Index.Species_Family_Name[0])
+            self.Plot_Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=10, textvariable=Plot_var_family, values=Index.Species_Family_Name)
+            self.Plot_Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
+
+            #\ Button
+            self.MatplotlibPlot_button = Button(self.LabelFrame_Plot,
+                                        text='Matplotlib',
+                                        justify='center',
+                                        bg='gray80',
+                                        command=self.MatplotlibPlotButton)
+            controller.BHoverOn(self.MatplotlibPlot_button, ['gray80','gray70'])
+
+            self.PyechartsPlot_button = Button(self.LabelFrame_Plot,
+                                        text='Pyecharts',
+                                        justify='center',
+                                        bg='gray80',
+                                        command=self.PyechartsPlotButton)
+            controller.BHoverOn(self.PyechartsPlot_button, ['gray80','gray70'])
+
+
 
             #\ ---grid---
+            #############
             self.canvas.grid(row=0, column=0, columnspan=2)
 
             #\ ID Find
@@ -382,8 +431,8 @@ class MainPage(tk.Frame):
             self.Species_label.grid(row=7, columnspan=2)
             self.Family_drop_down_menu.grid(row=8, column=0, padx=3)
             self.Species_drop_down_menu.grid(row=8, column=1, padx=3)
-            self.Datacheckbox.grid(row=8, column=2, padx=3)
-            self.species_find_button.grid(row=8, column=3, columnspan=1, padx=5)
+            self.Datacheckbox.grid(row=7, column=2, padx=3)
+            self.species_find_button.grid(row=8, column=2, columnspan=1, padx=5)
 
             #\ Crawling data
             self.Save2file_button.grid(row=10, column=3)
@@ -393,13 +442,24 @@ class MainPage(tk.Frame):
             self.MaxCrawling.grid(row=10, column=3, sticky=N)
             self.MaxCrawling_border.grid(row=10, column=3, sticky=N)
 
-            # some initializing
+            #\ Plot Chart
+            self.Plot_Family_drop_down_menu.grid(row=11, column=0, padx=3)
+            self.Plot_Species_drop_down_menu.grid(row=11, column=1, padx=3)
+            self.MatplotlibPlot_button.grid(row=11, column=3,pady=3)
+            self.PyechartsPlot_button.grid(row=12, column=3)
+
+
+
+            #\ some initializing
+            ####################
             self.Place_select_value = ''
             self.User_select_value = ''
             self.Map_spec_method_or_and = ''
 
+
+
     ###################################################################################
-    #\ Method
+    #\ ---Method---
     #\ ID find
     def IDEnterButton(self, ID):
         # CHECK IF THE USER ENTER THE id OR NOT
@@ -791,6 +851,15 @@ class MainPage(tk.Frame):
             messagebox.showinfo("info", "try to reduce the limit number")
 
         return limit_map_list
+
+
+    #\ Plot by Matplotlib
+    def MatplotlibPlotButton(self):
+        pass
+
+    #\ Plot by Pyechart
+    def PyechartsPlotButton(self):
+        pass
 
 
 
