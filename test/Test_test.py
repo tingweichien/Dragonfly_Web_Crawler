@@ -920,4 +920,7 @@ cc = OpenCC('s2t')  # convert from Simplified Chinese to Traditional Chinese
 to_convert = '开放中文转换'
 converted = cc.convert(to_convert)
 print(converted)
+
+# %%
+
 # %%

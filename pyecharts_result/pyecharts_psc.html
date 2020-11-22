@@ -42,18 +42,19 @@
         }
     </style>
     <div class="tab">
-            <button class="tablinks" onclick="showChart(event, 'be10a4383911416683129c5ae240f6af')">TimeLine</button>
-            <button class="tablinks" onclick="showChart(event, 'bcc1da5d0f7245fca11492d291433c6b')">WorldCloud</button>
-            <button class="tablinks" onclick="showChart(event, '45d779ccfac04499bb291d38f85262f0')">Species total count</button>
-            <button class="tablinks" onclick="showChart(event, '67833184f0384775b1144ed2733a76d2')">Table</button>
+            <button class="tablinks" onclick="showChart(event, '4b2e7c6443574da9b6e2f8f88e3f165c')">TimeLine</button>
+            <button class="tablinks" onclick="showChart(event, '84a370c40a6c43da96049e7fe8bd6151')">WorldCloud</button>
+            <button class="tablinks" onclick="showChart(event, '56344fe839f2405aac61fcc4fd209613')">Species total count</button>
+            <button class="tablinks" onclick="showChart(event, '6cadfa0af87c4a55aa2a153676588cce')">Counts stack</button>
+            <button class="tablinks" onclick="showChart(event, '4b7690ee0e8b4905bcd391e2afdaddb5')">Table</button>
     </div>
 
     <div class="box">
-                <div id="be10a4383911416683129c5ae240f6af" class="chart-container" style="width:1500px; height:650px;"></div>
+                <div id="4b2e7c6443574da9b6e2f8f88e3f165c" class="chart-container" style="width:1500px; height:650px;"></div>
     <script>
-        var chart_be10a4383911416683129c5ae240f6af = echarts.init(
-            document.getElementById('be10a4383911416683129c5ae240f6af'), 'white', {renderer: 'canvas'});
-        var option_be10a4383911416683129c5ae240f6af = {
+        var chart_4b2e7c6443574da9b6e2f8f88e3f165c = echarts.init(
+            document.getElementById('4b2e7c6443574da9b6e2f8f88e3f165c'), 'white', {renderer: 'canvas'});
+        var option_4b2e7c6443574da9b6e2f8f88e3f165c = {
     "baseOption": {
         "series": [
             {
@@ -68,14 +69,7 @@
                     3,
                     30,
                     19,
-                    4,
-                    9,
-                    3,
-                    1,
-                    4,
-                    1,
-                    1,
-                    1
+                    4
                 ],
                 "showBackground": false,
                 "barMinHeight": 0,
@@ -137,34 +131,6 @@
                     {
                         "name": "\u6843\u56ed\u5e02",
                         "value": 4
-                    },
-                    {
-                        "name": "\u5c4f\u4e1c\u53bf",
-                        "value": 9
-                    },
-                    {
-                        "name": "\u82b1\u83b2\u53bf",
-                        "value": 3
-                    },
-                    {
-                        "name": "\u9ad8\u96c4\u5e02",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u82d7\u6817\u53bf",
-                        "value": 4
-                    },
-                    {
-                        "name": "\u4e91\u6797\u53bf",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u53f0\u5357\u5e02",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u53f0\u4e1c\u53bf",
-                        "value": 1
                     }
                 ],
                 "roam": true,
@@ -233,34 +199,6 @@
                     {
                         "name": "\u6843\u5712\u5e02",
                         "value": 4
-                    },
-                    {
-                        "name": "\u5c4f\u6771\u7e23",
-                        "value": 9
-                    },
-                    {
-                        "name": "\u82b1\u84ee\u7e23",
-                        "value": 3
-                    },
-                    {
-                        "name": "\u9ad8\u96c4\u5e02",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u82d7\u6817\u7e23",
-                        "value": 4
-                    },
-                    {
-                        "name": "\u96f2\u6797\u7e23",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u53f0\u5357\u5e02",
-                        "value": 1
-                    },
-                    {
-                        "name": "\u53f0\u6771\u7e23",
-                        "value": 1
                     }
                 ],
                 "radius": [
@@ -394,14 +332,7 @@
                     "\u57fa\u9686\u5e02",
                     "\u53f0\u5317\u5e02",
                     "\u5b9c\u862d\u7e23",
-                    "\u6843\u5712\u5e02",
-                    "\u5c4f\u6771\u7e23",
-                    "\u82b1\u84ee\u7e23",
-                    "\u9ad8\u96c4\u5e02",
-                    "\u82d7\u6817\u7e23",
-                    "\u96f2\u6797\u7e23",
-                    "\u53f0\u5357\u5e02",
-                    "\u53f0\u6771\u7e23"
+                    "\u6843\u5712\u5e02"
                 ]
             }
         ],
@@ -1258,9 +1189,7 @@
                         "\u9ad8\u96c4\u5e02",
                         "\u53f0\u6771\u7e23",
                         "\u82b1\u84ee\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u96f2\u6797\u7e23"
+                        "\u5357\u6295\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -1288,9 +1217,7 @@
                         1,
                         2,
                         6,
-                        7,
-                        5,
-                        1
+                        7
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -1372,14 +1299,6 @@
                         {
                             "name": "\u5357\u6295\u53bf",
                             "value": 7
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 5
-                        },
-                        {
-                            "name": "\u4e91\u6797\u53bf",
-                            "value": 1
                         }
                     ],
                     "roam": true,
@@ -1468,14 +1387,6 @@
                         {
                             "name": "\u5357\u6295\u7e23",
                             "value": 7
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 5
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -1559,9 +1470,7 @@
                         "\u9ad8\u96c4\u5e02",
                         "\u53f0\u6771\u7e23",
                         "\u82b1\u84ee\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u96f2\u6797\u7e23"
+                        "\u5357\u6295\u7e23"
                     ]
                 }
             ],
@@ -1693,9 +1602,7 @@
                         "\u65b0\u7af9\u7e23",
                         "\u53f0\u6771\u7e23",
                         "\u53f0\u5357\u5e02",
-                        "\u82d7\u6817\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u82b1\u84ee\u7e23"
+                        "\u82d7\u6817\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -1723,9 +1630,7 @@
                         36,
                         8,
                         1,
-                        11,
-                        3,
-                        5
+                        11
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -1807,14 +1712,6 @@
                         {
                             "name": "\u82d7\u6817\u53bf",
                             "value": 11
-                        },
-                        {
-                            "name": "\u4e91\u6797\u53bf",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u82b1\u83b2\u53bf",
-                            "value": 5
                         }
                     ],
                     "roam": true,
@@ -1903,14 +1800,6 @@
                         {
                             "name": "\u82d7\u6817\u7e23",
                             "value": 11
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 5
                         }
                     ],
                     "radius": [
@@ -1994,9 +1883,7 @@
                         "\u65b0\u7af9\u7e23",
                         "\u53f0\u6771\u7e23",
                         "\u53f0\u5357\u5e02",
-                        "\u82d7\u6817\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u82b1\u84ee\u7e23"
+                        "\u82d7\u6817\u7e23"
                     ]
                 }
             ],
@@ -2128,11 +2015,7 @@
                         "\u5c4f\u6771\u7e23",
                         "\u53f0\u6771\u7e23",
                         "\u96f2\u6797\u7e23",
-                        "\u53f0\u4e2d\u5e02",
-                        "\u82b1\u84ee\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u53f0\u5357\u5e02"
+                        "\u53f0\u4e2d\u5e02"
                     ],
                     "selected": {},
                     "show": true,
@@ -2160,11 +2043,7 @@
                         17,
                         7,
                         10,
-                        1,
-                        4,
-                        3,
-                        1,
-                        3
+                        1
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -2246,22 +2125,6 @@
                         {
                             "name": "\u53f0\u4e2d\u5e02",
                             "value": 1
-                        },
-                        {
-                            "name": "\u82b1\u83b2\u53bf",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u5357\u6295\u53bf",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u5609\u4e49\u53bf",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 3
                         }
                     ],
                     "roam": true,
@@ -2350,22 +2213,6 @@
                         {
                             "name": "\u53f0\u4e2d\u5e02",
                             "value": 1
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u5357\u6295\u7e23",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u5609\u7fa9\u7e23",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 3
                         }
                     ],
                     "radius": [
@@ -2449,11 +2296,7 @@
                         "\u5c4f\u6771\u7e23",
                         "\u53f0\u6771\u7e23",
                         "\u96f2\u6797\u7e23",
-                        "\u53f0\u4e2d\u5e02",
-                        "\u82b1\u84ee\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u53f0\u5357\u5e02"
+                        "\u53f0\u4e2d\u5e02"
                     ]
                 }
             ],
@@ -2584,12 +2427,7 @@
                         "\u82b1\u84ee\u7e23",
                         "\u96f2\u6797\u7e23",
                         "\u82d7\u6817\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u53f0\u4e2d\u5e02",
-                        "\u5c4f\u6771\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u5609\u7fa9\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -2616,11 +2454,6 @@
                         2,
                         13,
                         10,
-                        1,
-                        4,
-                        7,
-                        1,
-                        1,
                         1
                     ],
                     "showBackground": false,
@@ -2698,26 +2531,6 @@
                         },
                         {
                             "name": "\u5609\u4e49\u53bf",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e2d\u5e02",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u5c4f\u4e1c\u53bf",
-                            "value": 7
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e1c\u53bf",
                             "value": 1
                         }
                     ],
@@ -2803,26 +2616,6 @@
                         {
                             "name": "\u5609\u7fa9\u7e23",
                             "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e2d\u5e02",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 7
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -2905,12 +2698,7 @@
                         "\u82b1\u84ee\u7e23",
                         "\u96f2\u6797\u7e23",
                         "\u82d7\u6817\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u53f0\u4e2d\u5e02",
-                        "\u5c4f\u6771\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u5609\u7fa9\u7e23"
                     ]
                 }
             ],
@@ -3041,9 +2829,7 @@
                         "\u57fa\u9686\u5e02",
                         "\u5b9c\u862d\u7e23",
                         "\u5c4f\u6771\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u96f2\u6797\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -3070,9 +2856,7 @@
                         44,
                         76,
                         15,
-                        8,
-                        1,
-                        1
+                        8
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -3150,14 +2934,6 @@
                         {
                             "name": "\u4e91\u6797\u53bf",
                             "value": 8
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e1c\u53bf",
-                            "value": 1
                         }
                     ],
                     "roam": true,
@@ -3242,14 +3018,6 @@
                         {
                             "name": "\u96f2\u6797\u7e23",
                             "value": 8
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -3332,9 +3100,7 @@
                         "\u57fa\u9686\u5e02",
                         "\u5b9c\u862d\u7e23",
                         "\u5c4f\u6771\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u96f2\u6797\u7e23"
                     ]
                 }
             ],
@@ -3465,11 +3231,7 @@
                         "\u96f2\u6797\u7e23",
                         "\u57fa\u9686\u5e02",
                         "\u53f0\u4e2d\u5e02",
-                        "\u5b9c\u862d\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u5c4f\u6771\u7e23",
-                        "\u65b0\u7af9\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u5b9c\u862d\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -3496,11 +3258,7 @@
                         6,
                         11,
                         3,
-                        64,
-                        2,
-                        10,
-                        1,
-                        1
+                        64
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -3578,22 +3336,6 @@
                         {
                             "name": "\u5b9c\u5170\u53bf",
                             "value": 64
-                        },
-                        {
-                            "name": "\u5609\u4e49\u53bf",
-                            "value": 2
-                        },
-                        {
-                            "name": "\u5c4f\u4e1c\u53bf",
-                            "value": 10
-                        },
-                        {
-                            "name": "\u65b0\u7af9\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e1c\u53bf",
-                            "value": 1
                         }
                     ],
                     "roam": true,
@@ -3678,22 +3420,6 @@
                         {
                             "name": "\u5b9c\u862d\u7e23",
                             "value": 64
-                        },
-                        {
-                            "name": "\u5609\u7fa9\u7e23",
-                            "value": 2
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 10
-                        },
-                        {
-                            "name": "\u65b0\u7af9\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -3776,11 +3502,7 @@
                         "\u96f2\u6797\u7e23",
                         "\u57fa\u9686\u5e02",
                         "\u53f0\u4e2d\u5e02",
-                        "\u5b9c\u862d\u7e23",
-                        "\u5609\u7fa9\u7e23",
-                        "\u5c4f\u6771\u7e23",
-                        "\u65b0\u7af9\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u5b9c\u862d\u7e23"
                     ]
                 }
             ],
@@ -3912,8 +3634,7 @@
                         "\u6843\u5712\u5e02",
                         "\u5c4f\u6771\u7e23",
                         "\u96f2\u6797\u7e23",
-                        "\u5f70\u5316\u7e23",
-                        "\u53f0\u6771\u7e23"
+                        "\u5f70\u5316\u7e23"
                     ],
                     "selected": {},
                     "show": true,
@@ -3941,7 +3662,6 @@
                         9,
                         10,
                         2,
-                        1,
                         1
                     ],
                     "showBackground": false,
@@ -4023,10 +3743,6 @@
                         },
                         {
                             "name": "\u5f70\u5316\u53bf",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e1c\u53bf",
                             "value": 1
                         }
                     ],
@@ -4116,10 +3832,6 @@
                         {
                             "name": "\u5f70\u5316\u7e23",
                             "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -4203,8 +3915,7 @@
                         "\u6843\u5712\u5e02",
                         "\u5c4f\u6771\u7e23",
                         "\u96f2\u6797\u7e23",
-                        "\u5f70\u5316\u7e23",
-                        "\u53f0\u6771\u7e23"
+                        "\u5f70\u5316\u7e23"
                     ]
                 }
             ],
@@ -4331,14 +4042,7 @@
                         "\u57fa\u9686\u5e02",
                         "\u53f0\u5317\u5e02",
                         "\u5b9c\u862d\u7e23",
-                        "\u6843\u5712\u5e02",
-                        "\u5c4f\u6771\u7e23",
-                        "\u82b1\u84ee\u7e23",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u82d7\u6817\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u6843\u5712\u5e02"
                     ],
                     "selected": {},
                     "show": true,
@@ -4361,14 +4065,7 @@
                         3,
                         30,
                         19,
-                        4,
-                        9,
-                        3,
-                        1,
-                        4,
-                        1,
-                        1,
-                        1
+                        4
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -4430,34 +4127,6 @@
                         {
                             "name": "\u6843\u56ed\u5e02",
                             "value": 4
-                        },
-                        {
-                            "name": "\u5c4f\u4e1c\u53bf",
-                            "value": 9
-                        },
-                        {
-                            "name": "\u82b1\u83b2\u53bf",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u82d7\u6817\u53bf",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u4e91\u6797\u53bf",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u4e1c\u53bf",
-                            "value": 1
                         }
                     ],
                     "roam": true,
@@ -4526,34 +4195,6 @@
                         {
                             "name": "\u6843\u5712\u5e02",
                             "value": 4
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 9
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 3
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u82d7\u6817\u7e23",
-                            "value": 4
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1
                         }
                     ],
                     "radius": [
@@ -4632,14 +4273,7 @@
                         "\u57fa\u9686\u5e02",
                         "\u53f0\u5317\u5e02",
                         "\u5b9c\u862d\u7e23",
-                        "\u6843\u5712\u5e02",
-                        "\u5c4f\u6771\u7e23",
-                        "\u82b1\u84ee\u7e23",
-                        "\u9ad8\u96c4\u5e02",
-                        "\u82d7\u6817\u7e23",
-                        "\u96f2\u6797\u7e23",
-                        "\u53f0\u5357\u5e02",
-                        "\u53f0\u6771\u7e23"
+                        "\u6843\u5712\u5e02"
                     ]
                 }
             ],
@@ -4732,13 +4366,13 @@
         }
     ]
 };
-        chart_be10a4383911416683129c5ae240f6af.setOption(option_be10a4383911416683129c5ae240f6af);
+        chart_4b2e7c6443574da9b6e2f8f88e3f165c.setOption(option_4b2e7c6443574da9b6e2f8f88e3f165c);
     </script>
-                <div id="bcc1da5d0f7245fca11492d291433c6b" class="chart-container" style="width:1400px; height:650px;"></div>
+                <div id="84a370c40a6c43da96049e7fe8bd6151" class="chart-container" style="width:1400px; height:650px;"></div>
     <script>
-        var chart_bcc1da5d0f7245fca11492d291433c6b = echarts.init(
-            document.getElementById('bcc1da5d0f7245fca11492d291433c6b'), 'white', {renderer: 'canvas'});
-        var option_bcc1da5d0f7245fca11492d291433c6b = {
+        var chart_84a370c40a6c43da96049e7fe8bd6151 = echarts.init(
+            document.getElementById('84a370c40a6c43da96049e7fe8bd6151'), 'white', {renderer: 'canvas'});
+        var option_84a370c40a6c43da96049e7fe8bd6151 = {
     "baseOption": {
         "series": [
             {
@@ -4760,7 +4394,7 @@
                         "value": 69,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(26,136,90)"
+                                "color": "rgb(116,125,61)"
                             }
                         }
                     },
@@ -4769,7 +4403,7 @@
                         "value": 13,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(138,91,117)"
+                                "color": "rgb(109,123,143)"
                             }
                         }
                     },
@@ -4778,7 +4412,7 @@
                         "value": 13,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(51,114,103)"
+                                "color": "rgb(36,63,70)"
                             }
                         }
                     },
@@ -4787,7 +4421,7 @@
                         "value": 3,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(36,72,9)"
+                                "color": "rgb(128,143,126)"
                             }
                         }
                     },
@@ -4796,7 +4430,7 @@
                         "value": 30,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(107,12,112)"
+                                "color": "rgb(129,107,73)"
                             }
                         }
                     },
@@ -4805,7 +4439,7 @@
                         "value": 19,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(37,32,116)"
+                                "color": "rgb(73,16,147)"
                             }
                         }
                     },
@@ -4814,70 +4448,7 @@
                         "value": 4,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(74,31,2)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u5c4f\u6771\u7e23",
-                        "value": 9,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(79,140,28)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u82b1\u84ee\u7e23",
-                        "value": 3,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(133,151,107)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u9ad8\u96c4\u5e02",
-                        "value": 1,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(43,29,32)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u82d7\u6817\u7e23",
-                        "value": 4,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(123,23,112)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u96f2\u6797\u7e23",
-                        "value": 1,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(45,90,154)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u53f0\u5357\u5e02",
-                        "value": 1,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(63,39,38)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u53f0\u6771\u7e23",
-                        "value": 1,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(50,33,69)"
+                                "color": "rgb(86,148,59)"
                             }
                         }
                     }
@@ -4949,7 +4520,7 @@
                             "value": 60,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(92,155,26)"
+                                    "color": "rgb(50,51,159)"
                                 }
                             }
                         },
@@ -4958,7 +4529,7 @@
                             "value": 61,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(16,32,146)"
+                                    "color": "rgb(52,38,147)"
                                 }
                             }
                         },
@@ -4967,7 +4538,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(151,127,117)"
+                                    "color": "rgb(157,1,77)"
                                 }
                             }
                         },
@@ -4976,7 +4547,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(128,35,104)"
+                                    "color": "rgb(157,42,129)"
                                 }
                             }
                         },
@@ -4985,7 +4556,7 @@
                             "value": 14,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(109,20,98)"
+                                    "color": "rgb(150,95,146)"
                                 }
                             }
                         },
@@ -4994,7 +4565,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(79,54,148)"
+                                    "color": "rgb(29,134,7)"
                                 }
                             }
                         },
@@ -5003,7 +4574,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(75,11,76)"
+                                    "color": "rgb(158,96,37)"
                                 }
                             }
                         },
@@ -5012,7 +4583,7 @@
                             "value": 37,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(153,159,26)"
+                                    "color": "rgb(13,139,44)"
                                 }
                             }
                         },
@@ -5021,7 +4592,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(7,22,79)"
+                                    "color": "rgb(82,14,64)"
                                 }
                             }
                         }
@@ -5121,7 +4692,7 @@
                             "value": 60,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(143,93,102)"
+                                    "color": "rgb(124,124,123)"
                                 }
                             }
                         },
@@ -5130,7 +4701,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(137,75,25)"
+                                    "color": "rgb(33,120,105)"
                                 }
                             }
                         },
@@ -5139,7 +4710,7 @@
                             "value": 51,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(137,115,74)"
+                                    "color": "rgb(88,97,0)"
                                 }
                             }
                         },
@@ -5148,7 +4719,7 @@
                             "value": 24,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(96,118,32)"
+                                    "color": "rgb(75,112,45)"
                                 }
                             }
                         },
@@ -5157,7 +4728,7 @@
                             "value": 18,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(103,98,63)"
+                                    "color": "rgb(91,66,47)"
                                 }
                             }
                         },
@@ -5166,7 +4737,7 @@
                             "value": 35,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(44,135,124)"
+                                    "color": "rgb(118,59,65)"
                                 }
                             }
                         },
@@ -5175,7 +4746,7 @@
                             "value": 3,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(134,9,151)"
+                                    "color": "rgb(92,158,10)"
                                 }
                             }
                         },
@@ -5184,7 +4755,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(63,154,26)"
+                                    "color": "rgb(106,13,17)"
                                 }
                             }
                         },
@@ -5193,7 +4764,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(82,17,82)"
+                                    "color": "rgb(49,26,114)"
                                 }
                             }
                         },
@@ -5202,7 +4773,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(13,6,21)"
+                                    "color": "rgb(86,33,61)"
                                 }
                             }
                         },
@@ -5211,7 +4782,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(11,100,157)"
+                                    "color": "rgb(56,89,98)"
                                 }
                             }
                         }
@@ -5311,7 +4882,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(2,124,62)"
+                                    "color": "rgb(74,104,10)"
                                 }
                             }
                         },
@@ -5320,7 +4891,7 @@
                             "value": 85,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(113,63,23)"
+                                    "color": "rgb(128,11,160)"
                                 }
                             }
                         },
@@ -5329,7 +4900,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(42,75,149)"
+                                    "color": "rgb(116,142,64)"
                                 }
                             }
                         },
@@ -5338,7 +4909,7 @@
                             "value": 33,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(27,129,12)"
+                                    "color": "rgb(134,151,121)"
                                 }
                             }
                         },
@@ -5347,7 +4918,7 @@
                             "value": 66,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(27,88,13)"
+                                    "color": "rgb(93,99,149)"
                                 }
                             }
                         },
@@ -5356,7 +4927,7 @@
                             "value": 22,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(120,64,100)"
+                                    "color": "rgb(111,61,145)"
                                 }
                             }
                         },
@@ -5365,7 +4936,7 @@
                             "value": 27,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(27,110,86)"
+                                    "color": "rgb(19,95,123)"
                                 }
                             }
                         },
@@ -5374,7 +4945,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(62,57,134)"
+                                    "color": "rgb(9,100,82)"
                                 }
                             }
                         },
@@ -5383,7 +4954,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(4,129,149)"
+                                    "color": "rgb(9,124,134)"
                                 }
                             }
                         },
@@ -5392,7 +4963,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(109,24,59)"
+                                    "color": "rgb(26,130,24)"
                                 }
                             }
                         },
@@ -5401,7 +4972,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(71,1,76)"
+                                    "color": "rgb(127,20,96)"
                                 }
                             }
                         },
@@ -5410,25 +4981,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(17,136,37)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 5,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(71,159,133)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(66,31,42)"
+                                    "color": "rgb(47,119,39)"
                                 }
                             }
                         }
@@ -5528,7 +5081,7 @@
                             "value": 76,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(16,110,117)"
+                                    "color": "rgb(91,121,12)"
                                 }
                             }
                         },
@@ -5537,7 +5090,7 @@
                             "value": 100,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(129,8,129)"
+                                    "color": "rgb(103,28,52)"
                                 }
                             }
                         },
@@ -5546,7 +5099,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(78,147,56)"
+                                    "color": "rgb(157,41,83)"
                                 }
                             }
                         },
@@ -5555,7 +5108,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(107,24,86)"
+                                    "color": "rgb(34,153,146)"
                                 }
                             }
                         },
@@ -5564,7 +5117,7 @@
                             "value": 58,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(117,61,147)"
+                                    "color": "rgb(57,133,157)"
                                 }
                             }
                         },
@@ -5573,7 +5126,7 @@
                             "value": 18,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(102,68,31)"
+                                    "color": "rgb(1,56,27)"
                                 }
                             }
                         },
@@ -5582,7 +5135,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(155,91,35)"
+                                    "color": "rgb(0,47,101)"
                                 }
                             }
                         },
@@ -5591,7 +5144,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(50,132,10)"
+                                    "color": "rgb(40,144,75)"
                                 }
                             }
                         },
@@ -5600,7 +5153,7 @@
                             "value": 36,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(76,80,44)"
+                                    "color": "rgb(51,96,94)"
                                 }
                             }
                         },
@@ -5609,7 +5162,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(26,29,5)"
+                                    "color": "rgb(68,37,25)"
                                 }
                             }
                         },
@@ -5618,7 +5171,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(89,120,88)"
+                                    "color": "rgb(112,45,115)"
                                 }
                             }
                         },
@@ -5627,25 +5180,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(144,17,32)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 3,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(125,56,36)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 5,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(62,59,136)"
+                                    "color": "rgb(22,56,45)"
                                 }
                             }
                         }
@@ -5745,7 +5280,7 @@
                             "value": 84,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(114,154,71)"
+                                    "color": "rgb(125,52,87)"
                                 }
                             }
                         },
@@ -5754,7 +5289,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(70,118,96)"
+                                    "color": "rgb(143,27,159)"
                                 }
                             }
                         },
@@ -5763,7 +5298,7 @@
                             "value": 62,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(95,157,91)"
+                                    "color": "rgb(74,117,58)"
                                 }
                             }
                         },
@@ -5772,7 +5307,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(87,66,146)"
+                                    "color": "rgb(30,105,91)"
                                 }
                             }
                         },
@@ -5781,7 +5316,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(86,158,80)"
+                                    "color": "rgb(98,33,101)"
                                 }
                             }
                         },
@@ -5790,7 +5325,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(148,102,129)"
+                                    "color": "rgb(98,63,120)"
                                 }
                             }
                         },
@@ -5799,7 +5334,7 @@
                             "value": 32,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(160,115,115)"
+                                    "color": "rgb(73,127,52)"
                                 }
                             }
                         },
@@ -5808,7 +5343,7 @@
                             "value": 27,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(76,140,45)"
+                                    "color": "rgb(74,110,30)"
                                 }
                             }
                         },
@@ -5817,7 +5352,7 @@
                             "value": 17,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(32,62,55)"
+                                    "color": "rgb(44,150,118)"
                                 }
                             }
                         },
@@ -5826,7 +5361,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(126,22,129)"
+                                    "color": "rgb(43,66,60)"
                                 }
                             }
                         },
@@ -5835,7 +5370,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(123,16,52)"
+                                    "color": "rgb(53,114,1)"
                                 }
                             }
                         },
@@ -5844,43 +5379,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(77,107,22)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 4,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(68,108,143)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5357\u6295\u7e23",
-                            "value": 3,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(134,69,62)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5609\u7fa9\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(25,159,33)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 3,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(89,82,73)"
+                                    "color": "rgb(31,28,106)"
                                 }
                             }
                         }
@@ -5980,7 +5479,7 @@
                             "value": 48,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(145,68,13)"
+                                    "color": "rgb(51,37,15)"
                                 }
                             }
                         },
@@ -5989,7 +5488,7 @@
                             "value": 70,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(118,27,147)"
+                                    "color": "rgb(121,44,11)"
                                 }
                             }
                         },
@@ -5998,7 +5497,7 @@
                             "value": 61,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(99,56,4)"
+                                    "color": "rgb(61,1,130)"
                                 }
                             }
                         },
@@ -6007,7 +5506,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(133,140,72)"
+                                    "color": "rgb(112,114,55)"
                                 }
                             }
                         },
@@ -6016,7 +5515,7 @@
                             "value": 50,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(52,107,45)"
+                                    "color": "rgb(64,106,85)"
                                 }
                             }
                         },
@@ -6025,7 +5524,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(90,145,108)"
+                                    "color": "rgb(56,109,110)"
                                 }
                             }
                         },
@@ -6034,7 +5533,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(67,12,106)"
+                                    "color": "rgb(155,19,113)"
                                 }
                             }
                         },
@@ -6043,7 +5542,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(130,112,137)"
+                                    "color": "rgb(23,101,68)"
                                 }
                             }
                         },
@@ -6052,7 +5551,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(4,41,153)"
+                                    "color": "rgb(36,131,137)"
                                 }
                             }
                         },
@@ -6061,7 +5560,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(2,159,59)"
+                                    "color": "rgb(9,69,15)"
                                 }
                             }
                         },
@@ -6070,52 +5569,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(102,59,114)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u4e2d\u5e02",
-                            "value": 4,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(32,101,31)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 7,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(29,57,111)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(96,144,13)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(46,53,114)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(101,80,123)"
+                                    "color": "rgb(37,42,51)"
                                 }
                             }
                         }
@@ -6215,7 +5669,7 @@
                             "value": 63,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(29,36,38)"
+                                    "color": "rgb(74,150,54)"
                                 }
                             }
                         },
@@ -6224,7 +5678,7 @@
                             "value": 126,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(111,32,159)"
+                                    "color": "rgb(21,138,81)"
                                 }
                             }
                         },
@@ -6233,7 +5687,7 @@
                             "value": 56,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(72,52,154)"
+                                    "color": "rgb(140,144,159)"
                                 }
                             }
                         },
@@ -6242,7 +5696,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(149,98,116)"
+                                    "color": "rgb(80,56,101)"
                                 }
                             }
                         },
@@ -6251,7 +5705,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(20,132,112)"
+                                    "color": "rgb(42,102,39)"
                                 }
                             }
                         },
@@ -6260,7 +5714,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(96,67,80)"
+                                    "color": "rgb(160,22,18)"
                                 }
                             }
                         },
@@ -6269,7 +5723,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(25,30,2)"
+                                    "color": "rgb(38,36,69)"
                                 }
                             }
                         },
@@ -6278,7 +5732,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(139,115,59)"
+                                    "color": "rgb(20,39,107)"
                                 }
                             }
                         },
@@ -6287,7 +5741,7 @@
                             "value": 76,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(34,38,127)"
+                                    "color": "rgb(140,6,88)"
                                 }
                             }
                         },
@@ -6296,7 +5750,7 @@
                             "value": 15,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(87,4,14)"
+                                    "color": "rgb(53,80,80)"
                                 }
                             }
                         },
@@ -6305,25 +5759,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(119,73,151)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(43,46,144)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(83,62,10)"
+                                    "color": "rgb(93,124,128)"
                                 }
                             }
                         }
@@ -6423,7 +5859,7 @@
                             "value": 95,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(51,59,112)"
+                                    "color": "rgb(119,37,134)"
                                 }
                             }
                         },
@@ -6432,7 +5868,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(135,10,6)"
+                                    "color": "rgb(155,80,31)"
                                 }
                             }
                         },
@@ -6441,7 +5877,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(3,20,29)"
+                                    "color": "rgb(135,74,48)"
                                 }
                             }
                         },
@@ -6450,7 +5886,7 @@
                             "value": 31,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(59,53,34)"
+                                    "color": "rgb(158,95,154)"
                                 }
                             }
                         },
@@ -6459,7 +5895,7 @@
                             "value": 111,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(62,82,1)"
+                                    "color": "rgb(38,22,126)"
                                 }
                             }
                         },
@@ -6468,7 +5904,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(88,83,82)"
+                                    "color": "rgb(131,5,30)"
                                 }
                             }
                         },
@@ -6477,7 +5913,7 @@
                             "value": 12,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(66,5,46)"
+                                    "color": "rgb(37,78,34)"
                                 }
                             }
                         },
@@ -6486,7 +5922,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(37,64,5)"
+                                    "color": "rgb(79,104,29)"
                                 }
                             }
                         },
@@ -6495,7 +5931,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(82,43,16)"
+                                    "color": "rgb(128,89,19)"
                                 }
                             }
                         },
@@ -6504,7 +5940,7 @@
                             "value": 3,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(22,51,141)"
+                                    "color": "rgb(36,125,142)"
                                 }
                             }
                         },
@@ -6513,43 +5949,7 @@
                             "value": 64,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(30,46,130)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5609\u7fa9\u7e23",
-                            "value": 2,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(153,34,77)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 10,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(47,7,114)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u65b0\u7af9\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(16,57,136)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(139,151,114)"
+                                    "color": "rgb(54,89,4)"
                                 }
                             }
                         }
@@ -6649,7 +6049,7 @@
                             "value": 57,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(68,47,3)"
+                                    "color": "rgb(24,19,72)"
                                 }
                             }
                         },
@@ -6658,7 +6058,7 @@
                             "value": 35,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(61,139,80)"
+                                    "color": "rgb(136,70,149)"
                                 }
                             }
                         },
@@ -6667,7 +6067,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(79,110,31)"
+                                    "color": "rgb(115,115,141)"
                                 }
                             }
                         },
@@ -6676,7 +6076,7 @@
                             "value": 14,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(68,142,30)"
+                                    "color": "rgb(106,0,139)"
                                 }
                             }
                         },
@@ -6685,7 +6085,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(95,81,64)"
+                                    "color": "rgb(92,113,79)"
                                 }
                             }
                         },
@@ -6694,7 +6094,7 @@
                             "value": 208,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(6,57,109)"
+                                    "color": "rgb(109,83,43)"
                                 }
                             }
                         },
@@ -6703,7 +6103,7 @@
                             "value": 29,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(106,83,93)"
+                                    "color": "rgb(17,93,16)"
                                 }
                             }
                         },
@@ -6712,7 +6112,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(26,133,91)"
+                                    "color": "rgb(52,23,150)"
                                 }
                             }
                         },
@@ -6721,7 +6121,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(115,37,65)"
+                                    "color": "rgb(131,17,53)"
                                 }
                             }
                         },
@@ -6730,7 +6130,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(102,21,98)"
+                                    "color": "rgb(78,54,49)"
                                 }
                             }
                         },
@@ -6739,7 +6139,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(142,145,28)"
+                                    "color": "rgb(115,81,18)"
                                 }
                             }
                         },
@@ -6748,16 +6148,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(92,98,37)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(135,127,100)"
+                                    "color": "rgb(66,44,61)"
                                 }
                             }
                         }
@@ -6857,7 +6248,7 @@
                             "value": 69,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(26,136,90)"
+                                    "color": "rgb(116,125,61)"
                                 }
                             }
                         },
@@ -6866,7 +6257,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(138,91,117)"
+                                    "color": "rgb(109,123,143)"
                                 }
                             }
                         },
@@ -6875,7 +6266,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(51,114,103)"
+                                    "color": "rgb(36,63,70)"
                                 }
                             }
                         },
@@ -6884,7 +6275,7 @@
                             "value": 3,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(36,72,9)"
+                                    "color": "rgb(128,143,126)"
                                 }
                             }
                         },
@@ -6893,7 +6284,7 @@
                             "value": 30,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(107,12,112)"
+                                    "color": "rgb(129,107,73)"
                                 }
                             }
                         },
@@ -6902,7 +6293,7 @@
                             "value": 19,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(37,32,116)"
+                                    "color": "rgb(73,16,147)"
                                 }
                             }
                         },
@@ -6911,70 +6302,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(74,31,2)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u5c4f\u6771\u7e23",
-                            "value": 9,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(79,140,28)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u82b1\u84ee\u7e23",
-                            "value": 3,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(133,151,107)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u9ad8\u96c4\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(43,29,32)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u82d7\u6817\u7e23",
-                            "value": 4,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(123,23,112)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u96f2\u6797\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(45,90,154)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u5357\u5e02",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(63,39,38)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u53f0\u6771\u7e23",
-                            "value": 1,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(50,33,69)"
+                                    "color": "rgb(86,148,59)"
                                 }
                             }
                         }
@@ -7044,13 +6372,13 @@
         }
     ]
 };
-        chart_bcc1da5d0f7245fca11492d291433c6b.setOption(option_bcc1da5d0f7245fca11492d291433c6b);
+        chart_84a370c40a6c43da96049e7fe8bd6151.setOption(option_84a370c40a6c43da96049e7fe8bd6151);
     </script>
-                <div id="45d779ccfac04499bb291d38f85262f0" class="chart-container" style="width:1400px; height:650px;"></div>
+                <div id="56344fe839f2405aac61fcc4fd209613" class="chart-container" style="width:1400px; height:650px;"></div>
     <script>
-        var chart_45d779ccfac04499bb291d38f85262f0 = echarts.init(
-            document.getElementById('45d779ccfac04499bb291d38f85262f0'), 'white', {renderer: 'canvas'});
-        var option_45d779ccfac04499bb291d38f85262f0 = {
+        var chart_56344fe839f2405aac61fcc4fd209613 = echarts.init(
+            document.getElementById('56344fe839f2405aac61fcc4fd209613'), 'white', {renderer: 'canvas'});
+        var option_56344fe839f2405aac61fcc4fd209613 = {
     "baseOption": {
         "series": [
             {
@@ -7060,20 +6388,13 @@
                 "yAxisIndex": 0,
                 "legendHoverLink": true,
                 "data": [
-                    69,
-                    13,
-                    13,
                     3,
-                    30,
-                    19,
-                    4,
-                    9,
-                    3,
-                    1,
-                    4,
-                    1,
-                    1,
-                    1
+                    5,
+                    13,
+                    40,
+                    45,
+                    36,
+                    29
                 ],
                 "showBackground": false,
                 "barMinHeight": 0,
@@ -7111,11 +6432,11 @@
                 "data": [
                     [
                         "Jan",
-                        69
+                        3
                     ],
                     [
                         "Feb",
-                        13
+                        5
                     ],
                     [
                         "Mar",
@@ -7123,39 +6444,19 @@
                     ],
                     [
                         "Apr",
-                        3
+                        40
                     ],
                     [
                         "May",
-                        30
+                        45
                     ],
                     [
                         "Jun",
-                        19
+                        36
                     ],
                     [
                         "Jul",
-                        4
-                    ],
-                    [
-                        "Aug",
-                        9
-                    ],
-                    [
-                        "Sep",
-                        3
-                    ],
-                    [
-                        "Oct",
-                        1
-                    ],
-                    [
-                        "Nov",
-                        4
-                    ],
-                    [
-                        "Dec",
-                        1
+                        29
                     ]
                 ],
                 "hoverAnimation": true,
@@ -7284,7 +6585,7 @@
             "show": true,
             "type": "continuous",
             "min": 0,
-            "max": 69,
+            "max": 45,
             "text": [
                 "High",
                 "Low"
@@ -7336,15 +6637,15 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        60,
-                        61,
-                        13,
-                        11,
-                        14,
-                        2,
-                        6,
-                        37,
-                        1
+                        1,
+                        4,
+                        15,
+                        27,
+                        22,
+                        28,
+                        20,
+                        32,
+                        36
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -7382,39 +6683,39 @@
                     "data": [
                         [
                             "Jan",
-                            60
+                            1
                         ],
                         [
                             "Feb",
-                            61
+                            4
                         ],
                         [
                             "Mar",
-                            13
+                            15
                         ],
                         [
                             "Apr",
-                            11
+                            27
                         ],
                         [
                             "May",
-                            14
+                            22
                         ],
                         [
                             "Jun",
-                            2
+                            28
                         ],
                         [
                             "Jul",
-                            6
+                            20
                         ],
                         [
                             "Aug",
-                            37
+                            32
                         ],
                         [
                             "Sep",
-                            1
+                            36
                         ]
                     ],
                     "hoverAnimation": true,
@@ -7532,7 +6833,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 61,
+                "max": 36,
                 "text": [
                     "High",
                     "Low"
@@ -7609,17 +6910,17 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        60,
-                        21,
-                        51,
+                        1,
+                        14,
+                        24,
+                        35,
+                        28,
+                        40,
+                        17,
+                        18,
                         24,
                         18,
-                        35,
-                        3,
-                        6,
-                        2,
-                        1,
-                        7
+                        9
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -7657,47 +6958,47 @@
                     "data": [
                         [
                             "Jan",
-                            60
-                        ],
-                        [
-                            "Feb",
-                            21
-                        ],
-                        [
-                            "Mar",
-                            51
-                        ],
-                        [
-                            "Apr",
-                            24
-                        ],
-                        [
-                            "May",
-                            18
-                        ],
-                        [
-                            "Jun",
-                            35
-                        ],
-                        [
-                            "Jul",
-                            3
-                        ],
-                        [
-                            "Aug",
-                            6
-                        ],
-                        [
-                            "Sep",
-                            2
-                        ],
-                        [
-                            "Oct",
                             1
                         ],
                         [
+                            "Feb",
+                            14
+                        ],
+                        [
+                            "Mar",
+                            24
+                        ],
+                        [
+                            "Apr",
+                            35
+                        ],
+                        [
+                            "May",
+                            28
+                        ],
+                        [
+                            "Jun",
+                            40
+                        ],
+                        [
+                            "Jul",
+                            17
+                        ],
+                        [
+                            "Aug",
+                            18
+                        ],
+                        [
+                            "Sep",
+                            24
+                        ],
+                        [
+                            "Oct",
+                            18
+                        ],
+                        [
                             "Nov",
-                            7
+                            9
                         ]
                     ],
                     "hoverAnimation": true,
@@ -7815,7 +7116,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 60,
+                "max": 40,
                 "text": [
                     "High",
                     "Low"
@@ -7892,20 +7193,18 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        41,
-                        85,
-                        5,
-                        33,
-                        66,
-                        22,
-                        27,
-                        8,
                         1,
                         2,
-                        6,
-                        7,
-                        5,
-                        1
+                        13,
+                        32,
+                        44,
+                        42,
+                        31,
+                        29,
+                        36,
+                        40,
+                        27,
+                        12
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -7943,51 +7242,51 @@
                     "data": [
                         [
                             "Jan",
-                            41
-                        ],
-                        [
-                            "Feb",
-                            85
-                        ],
-                        [
-                            "Mar",
-                            5
-                        ],
-                        [
-                            "Apr",
-                            33
-                        ],
-                        [
-                            "May",
-                            66
-                        ],
-                        [
-                            "Jun",
-                            22
-                        ],
-                        [
-                            "Jul",
-                            27
-                        ],
-                        [
-                            "Aug",
-                            8
-                        ],
-                        [
-                            "Sep",
                             1
                         ],
                         [
-                            "Oct",
+                            "Feb",
                             2
                         ],
                         [
+                            "Mar",
+                            13
+                        ],
+                        [
+                            "Apr",
+                            32
+                        ],
+                        [
+                            "May",
+                            44
+                        ],
+                        [
+                            "Jun",
+                            42
+                        ],
+                        [
+                            "Jul",
+                            31
+                        ],
+                        [
+                            "Aug",
+                            29
+                        ],
+                        [
+                            "Sep",
+                            36
+                        ],
+                        [
+                            "Oct",
+                            40
+                        ],
+                        [
                             "Nov",
-                            6
+                            27
                         ],
                         [
                             "Dec",
-                            7
+                            12
                         ]
                     ],
                     "hoverAnimation": true,
@@ -8105,7 +7404,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 85,
+                "max": 44,
                 "text": [
                     "High",
                     "Low"
@@ -8182,20 +7481,18 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        76,
-                        100,
-                        40,
-                        4,
-                        58,
-                        18,
-                        21,
-                        40,
-                        36,
-                        8,
                         1,
-                        11,
-                        3,
-                        5
+                        1,
+                        10,
+                        33,
+                        47,
+                        77,
+                        61,
+                        52,
+                        50,
+                        57,
+                        28,
+                        4
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -8233,51 +7530,51 @@
                     "data": [
                         [
                             "Jan",
-                            76
-                        ],
-                        [
-                            "Feb",
-                            100
-                        ],
-                        [
-                            "Mar",
-                            40
-                        ],
-                        [
-                            "Apr",
-                            4
-                        ],
-                        [
-                            "May",
-                            58
-                        ],
-                        [
-                            "Jun",
-                            18
-                        ],
-                        [
-                            "Jul",
-                            21
-                        ],
-                        [
-                            "Aug",
-                            40
-                        ],
-                        [
-                            "Sep",
-                            36
-                        ],
-                        [
-                            "Oct",
-                            8
-                        ],
-                        [
-                            "Nov",
                             1
                         ],
                         [
+                            "Feb",
+                            1
+                        ],
+                        [
+                            "Mar",
+                            10
+                        ],
+                        [
+                            "Apr",
+                            33
+                        ],
+                        [
+                            "May",
+                            47
+                        ],
+                        [
+                            "Jun",
+                            77
+                        ],
+                        [
+                            "Jul",
+                            61
+                        ],
+                        [
+                            "Aug",
+                            52
+                        ],
+                        [
+                            "Sep",
+                            50
+                        ],
+                        [
+                            "Oct",
+                            57
+                        ],
+                        [
+                            "Nov",
+                            28
+                        ],
+                        [
                             "Dec",
-                            11
+                            4
                         ]
                     ],
                     "hoverAnimation": true,
@@ -8395,7 +7692,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 100,
+                "max": 77,
                 "text": [
                     "High",
                     "Low"
@@ -8472,22 +7769,18 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        84,
                         4,
-                        62,
-                        4,
-                        44,
-                        41,
-                        32,
-                        27,
-                        17,
-                        7,
-                        10,
-                        1,
-                        4,
-                        3,
-                        1,
-                        3
+                        2,
+                        12,
+                        33,
+                        49,
+                        68,
+                        45,
+                        45,
+                        24,
+                        34,
+                        26,
+                        2
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -8525,51 +7818,51 @@
                     "data": [
                         [
                             "Jan",
-                            84
+                            4
                         ],
                         [
                             "Feb",
-                            4
+                            2
                         ],
                         [
                             "Mar",
-                            62
+                            12
                         ],
                         [
                             "Apr",
-                            4
+                            33
                         ],
                         [
                             "May",
-                            44
+                            49
                         ],
                         [
                             "Jun",
-                            41
+                            68
                         ],
                         [
                             "Jul",
-                            32
+                            45
                         ],
                         [
                             "Aug",
-                            27
+                            45
                         ],
                         [
                             "Sep",
-                            17
+                            24
                         ],
                         [
                             "Oct",
-                            7
+                            34
                         ],
                         [
                             "Nov",
-                            10
+                            26
                         ],
                         [
                             "Dec",
-                            1
+                            2
                         ]
                     ],
                     "hoverAnimation": true,
@@ -8687,7 +7980,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 84,
+                "max": 68,
                 "text": [
                     "High",
                     "Low"
@@ -8764,22 +8057,17 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        48,
-                        70,
-                        61,
-                        21,
-                        50,
-                        44,
-                        5,
                         2,
-                        13,
-                        10,
-                        1,
                         4,
-                        7,
-                        1,
-                        1,
-                        1
+                        27,
+                        56,
+                        53,
+                        64,
+                        33,
+                        41,
+                        40,
+                        10,
+                        9
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -8817,39 +8105,39 @@
                     "data": [
                         [
                             "Jan",
-                            48
-                        ],
-                        [
-                            "Feb",
-                            70
-                        ],
-                        [
-                            "Mar",
-                            61
-                        ],
-                        [
-                            "Apr",
-                            21
-                        ],
-                        [
-                            "May",
-                            50
-                        ],
-                        [
-                            "Jun",
-                            44
-                        ],
-                        [
-                            "Jul",
-                            5
-                        ],
-                        [
-                            "Aug",
                             2
                         ],
                         [
+                            "Feb",
+                            4
+                        ],
+                        [
+                            "Mar",
+                            27
+                        ],
+                        [
+                            "Apr",
+                            56
+                        ],
+                        [
+                            "May",
+                            53
+                        ],
+                        [
+                            "Jun",
+                            64
+                        ],
+                        [
+                            "Jul",
+                            33
+                        ],
+                        [
+                            "Aug",
+                            41
+                        ],
+                        [
                             "Sep",
-                            13
+                            40
                         ],
                         [
                             "Oct",
@@ -8857,11 +8145,7 @@
                         ],
                         [
                             "Nov",
-                            1
-                        ],
-                        [
-                            "Dec",
-                            4
+                            9
                         ]
                     ],
                     "hoverAnimation": true,
@@ -8979,7 +8263,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 70,
+                "max": 64,
                 "text": [
                     "High",
                     "Low"
@@ -9056,19 +8340,17 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        63,
-                        126,
-                        56,
-                        5,
-                        10,
-                        44,
-                        8,
-                        44,
-                        76,
-                        15,
-                        8,
                         1,
-                        1
+                        16,
+                        39,
+                        67,
+                        69,
+                        82,
+                        76,
+                        45,
+                        41,
+                        13,
+                        8
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -9106,51 +8388,47 @@
                     "data": [
                         [
                             "Jan",
-                            63
+                            1
                         ],
                         [
                             "Feb",
-                            126
+                            16
                         ],
                         [
                             "Mar",
-                            56
+                            39
                         ],
                         [
                             "Apr",
-                            5
+                            67
                         ],
                         [
                             "May",
-                            10
+                            69
                         ],
                         [
                             "Jun",
-                            44
+                            82
                         ],
                         [
                             "Jul",
-                            8
-                        ],
-                        [
-                            "Aug",
-                            44
-                        ],
-                        [
-                            "Sep",
                             76
                         ],
                         [
+                            "Aug",
+                            45
+                        ],
+                        [
+                            "Sep",
+                            41
+                        ],
+                        [
                             "Oct",
-                            15
+                            13
                         ],
                         [
                             "Nov",
                             8
-                        ],
-                        [
-                            "Dec",
-                            1
                         ]
                     ],
                     "hoverAnimation": true,
@@ -9268,7 +8546,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 126,
+                "max": 82,
                 "text": [
                     "High",
                     "Low"
@@ -9345,21 +8623,17 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        95,
-                        41,
-                        9,
-                        31,
-                        111,
-                        9,
-                        12,
-                        6,
-                        11,
-                        3,
-                        64,
-                        2,
-                        10,
                         1,
-                        1
+                        4,
+                        54,
+                        78,
+                        52,
+                        50,
+                        46,
+                        37,
+                        32,
+                        37,
+                        15
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -9397,51 +8671,47 @@
                     "data": [
                         [
                             "Jan",
-                            95
+                            1
                         ],
                         [
                             "Feb",
-                            41
+                            4
                         ],
                         [
                             "Mar",
-                            9
+                            54
                         ],
                         [
                             "Apr",
-                            31
+                            78
                         ],
                         [
                             "May",
-                            111
+                            52
                         ],
                         [
                             "Jun",
-                            9
+                            50
                         ],
                         [
                             "Jul",
-                            12
+                            46
                         ],
                         [
                             "Aug",
-                            6
+                            37
                         ],
                         [
                             "Sep",
-                            11
+                            32
                         ],
                         [
                             "Oct",
-                            3
+                            37
                         ],
                         [
                             "Nov",
-                            64
-                        ],
-                        [
-                            "Dec",
-                            2
+                            15
                         ]
                     ],
                     "hoverAnimation": true,
@@ -9559,7 +8829,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 111,
+                "max": 78,
                 "text": [
                     "High",
                     "Low"
@@ -9636,19 +8906,18 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        57,
-                        35,
-                        40,
-                        14,
-                        8,
-                        208,
-                        29,
-                        7,
-                        9,
+                        5,
+                        3,
                         10,
-                        2,
-                        1,
-                        1
+                        51,
+                        64,
+                        70,
+                        74,
+                        51,
+                        33,
+                        35,
+                        18,
+                        7
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -9686,51 +8955,51 @@
                     "data": [
                         [
                             "Jan",
-                            57
+                            5
                         ],
                         [
                             "Feb",
-                            35
+                            3
                         ],
                         [
                             "Mar",
-                            40
-                        ],
-                        [
-                            "Apr",
-                            14
-                        ],
-                        [
-                            "May",
-                            8
-                        ],
-                        [
-                            "Jun",
-                            208
-                        ],
-                        [
-                            "Jul",
-                            29
-                        ],
-                        [
-                            "Aug",
-                            7
-                        ],
-                        [
-                            "Sep",
-                            9
-                        ],
-                        [
-                            "Oct",
                             10
                         ],
                         [
+                            "Apr",
+                            51
+                        ],
+                        [
+                            "May",
+                            64
+                        ],
+                        [
+                            "Jun",
+                            70
+                        ],
+                        [
+                            "Jul",
+                            74
+                        ],
+                        [
+                            "Aug",
+                            51
+                        ],
+                        [
+                            "Sep",
+                            33
+                        ],
+                        [
+                            "Oct",
+                            35
+                        ],
+                        [
                             "Nov",
-                            2
+                            18
                         ],
                         [
                             "Dec",
-                            1
+                            7
                         ]
                     ],
                     "hoverAnimation": true,
@@ -9848,7 +9117,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 208,
+                "max": 74,
                 "text": [
                     "High",
                     "Low"
@@ -9925,20 +9194,13 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        69,
-                        13,
-                        13,
                         3,
-                        30,
-                        19,
-                        4,
-                        9,
-                        3,
-                        1,
-                        4,
-                        1,
-                        1,
-                        1
+                        5,
+                        13,
+                        40,
+                        45,
+                        36,
+                        29
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -9976,11 +9238,11 @@
                     "data": [
                         [
                             "Jan",
-                            69
+                            3
                         ],
                         [
                             "Feb",
-                            13
+                            5
                         ],
                         [
                             "Mar",
@@ -9988,39 +9250,19 @@
                         ],
                         [
                             "Apr",
-                            3
+                            40
                         ],
                         [
                             "May",
-                            30
+                            45
                         ],
                         [
                             "Jun",
-                            19
+                            36
                         ],
                         [
                             "Jul",
-                            4
-                        ],
-                        [
-                            "Aug",
-                            9
-                        ],
-                        [
-                            "Sep",
-                            3
-                        ],
-                        [
-                            "Oct",
-                            1
-                        ],
-                        [
-                            "Nov",
-                            4
-                        ],
-                        [
-                            "Dec",
-                            1
+                            29
                         ]
                     ],
                     "hoverAnimation": true,
@@ -10138,7 +9380,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 69,
+                "max": 45,
                 "text": [
                     "High",
                     "Low"
@@ -10191,7 +9433,538 @@
         }
     ]
 };
-        chart_45d779ccfac04499bb291d38f85262f0.setOption(option_45d779ccfac04499bb291d38f85262f0);
+        chart_56344fe839f2405aac61fcc4fd209613.setOption(option_56344fe839f2405aac61fcc4fd209613);
+    </script>
+                <div id="6cadfa0af87c4a55aa2a153676588cce" class="chart-container" style="width:1400px; height:650px;"></div>
+    <script>
+        var chart_6cadfa0af87c4a55aa2a153676588cce = echarts.init(
+            document.getElementById('6cadfa0af87c4a55aa2a153676588cce'), 'white', {renderer: 'canvas'});
+        var option_6cadfa0af87c4a55aa2a153676588cce = {
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "color": [
+        "#c23531",
+        "#2f4554",
+        "#61a0a8",
+        "#d48265",
+        "#749f83",
+        "#ca8622",
+        "#bda29a",
+        "#6e7074",
+        "#546570",
+        "#c4ccd3",
+        "#f05b72",
+        "#ef5b9c",
+        "#f47920",
+        "#905a3d",
+        "#fab27b",
+        "#2a5caa",
+        "#444693",
+        "#726930",
+        "#b2d235",
+        "#6d8346",
+        "#ac6767",
+        "#1d953f",
+        "#6950a1",
+        "#918597"
+    ],
+    "series": [
+        {
+            "type": "bar",
+            "name": "2011",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2012",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2013",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2014",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2015",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2016",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2017",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2018",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2019",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2020",
+            "legendHoverLink": true,
+            "data": [
+                3,
+                5,
+                13,
+                40,
+                45,
+                36,
+                29
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020"
+            ],
+            "selected": {
+                "2011": true,
+                "2012": true,
+                "2013": true,
+                "2014": true,
+                "2015": true,
+                "2016": true,
+                "2017": true,
+                "2018": true,
+                "2019": true,
+                "2020": true
+            },
+            "show": true,
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "textStyle": {
+            "fontSize": 14
+        },
+        "borderWidth": 0,
+        "padding": 5
+    },
+    "xAxis": [
+        {
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            },
+            "data": [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        }
+    ],
+    "yAxis": [
+        {
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            }
+        }
+    ],
+    "title": [
+        {
+            "text": "\u767d\u75e3\u73c8\u87cc2011 to 2021",
+            "padding": 5,
+            "itemGap": 10
+        }
+    ]
+};
+        chart_6cadfa0af87c4a55aa2a153676588cce.setOption(option_6cadfa0af87c4a55aa2a153676588cce);
     </script>
                         <style>
             .fl-table {
@@ -10245,7 +10018,7 @@
                 background: #F8F8F8;
             }
         </style>
-        <div id="67833184f0384775b1144ed2733a76d2" class="chart-container" style="">
+        <div id="4b7690ee0e8b4905bcd391e2afdaddb5" class="chart-container" style="">
             <p class="title" style="font-size: 18px; font-weight:bold;" > Data Table</p>
             <p class="subtitle" style="font-size: 12px;" > </p>
             <table class="fl-table">

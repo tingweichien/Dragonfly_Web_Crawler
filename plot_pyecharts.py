@@ -86,10 +86,10 @@ def plot_species_city(connection, DB_species:str, time:list):
 
     #\ query 2
     #\ new request
-    query_multi = "SELECT YEAR(Dates), MONTH(Dates), COUNT(*) FROM" +  DB_species + " WHERE Dates BETWEEN \'" + time[0]+ "\' AND \'" + time[1] + "\' GROUP BY YEAR(Dates), MONTH(Dates) ORDER BY YEAR(Dates), MONTH(Dates)"
+    query_multi = "SELECT YEAR(Dates), MONTH(Dates), COUNT(*) FROM " +  DB_species + " WHERE Dates BETWEEN \'" + time[0]+ "\' AND \'" + time[1] + "\' GROUP BY YEAR(Dates), MONTH(Dates) ORDER BY YEAR(Dates), MONTH(Dates)"
 
     #\ return from MySQL
-    result_multi = read_data(connection, query)
+    result_multi = read_data(connection, query_multi)
 
     #\ To avoid that that the spoecies might not have any record
     if result == [] or result_multi == []:
@@ -105,6 +105,11 @@ def plot_species_city(connection, DB_species:str, time:list):
     attrT = []
     value_multi = []
 
+    #\ time line
+    x_mon = ['Jan','Feb','Mar','Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+    #\ title
+    Title = Species_key_fullname_E2C[DB_species.split(".")[1]]
 
     #\ time line create
     timeline = Timeline(init_opts=opts.InitOpts(page_title="Taiwan",
@@ -121,19 +126,24 @@ def plot_species_city(connection, DB_species:str, time:list):
     timeline3.add_schema(is_auto_play=True, play_interval=4000)
 
 
+    #\ Multi Y Bar
+    bar_multiY = Bar(init_opts=opts.InitOpts(page_title="Taiwan", width="1400px", height="650px"))
+    bar_multiY.add_xaxis(x_mon)
+
+
     #\ iterating through the years
     for year in range(start_year, end_year+1):
 
         #\ group the data in same year
         DataSameYear = list(filter(lambda x: x['YEAR(Dates)'] == year, result))
-        DataSameYear_multi = list(filter(lambda x: x['YEAR(Dates)'] == year, result))
+        DataSameYear_multi = list(filter(lambda x: x['YEAR(Dates)'] == year, result_multi))
 
         #\ value inputs to pyecharts
         attrS.clear()
         attrT.clear()
         value.clear()
         value_multi.clear()
-        for data,data2 in zip(DataSameYear,DataSameYear_multi):
+        for data,data2 in zip(DataSameYear, DataSameYear_multi):
             value.append(data['COUNT(*)'])
             attrS.append(t2s[data['City']])
             attrT.append(data['City'])
@@ -144,7 +154,7 @@ def plot_species_city(connection, DB_species:str, time:list):
             continue
 
         #\ specify the title
-        TITLE = "{}-{}".format(Species_key_fullname_E2C[DB_species.split(".")[1]], year)
+        TITLE = "{}-{}".format(Title, year)
 
         #\ Map object
         map0 = (
@@ -192,6 +202,12 @@ def plot_species_city(connection, DB_species:str, time:list):
                                  )
                 )
         )
+
+
+        #\ Bar with multi y axis
+        # bar_multiY.render("bar_stack0.html")
+        bar_multiY.add_yaxis(str(year), value_multi, stack="stack1")
+
 
         #\ Pie
         pie0 = (
@@ -246,7 +262,6 @@ def plot_species_city(connection, DB_species:str, time:list):
 
 
         #\ this bar and line are for the plot to demonstrate the species number in different month
-        x_mon = ['Jan','Feb','Mar','Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
         bar_multiA = (
                 Bar()
                 .add_xaxis(x_mon)
@@ -292,8 +307,6 @@ def plot_species_city(connection, DB_species:str, time:list):
         grid_multi = Grid()
         grid_multi.add(bar_multiA,opts.GridOpts())
 
-
-
         #\ Add the plot to timeline module
         timeline.add(grid, "{}年".format(year))
         timeline2.add(worldcloud0, "{}年".format(year))
@@ -302,11 +315,17 @@ def plot_species_city(connection, DB_species:str, time:list):
     ## --end of for loop--
 
 
+    #\ Multi Y Bar
+    bar_multiY.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+    bar_multiY.set_global_opts( title_opts=opts.TitleOpts(title=Title + str(start_year) + " to " + str(end_year+1)),
+                                )
+
     #\ Table data
     THeader = ["Year","City","Numbers"]
     Trows = []
     for d in result:
         Trows.append([d['YEAR(Dates)'],d['City'],d['COUNT(*)']])
+
 
     #\ Build table
     table0 = Table()
@@ -322,6 +341,7 @@ def plot_species_city(connection, DB_species:str, time:list):
         .add(timeline, "TimeLine")
         .add(timeline2, "WorldCloud")
         .add(timeline3, "Species total count")
+        .add(bar_multiY, "Counts stack")
         .add(table0, "Table")
     )
 

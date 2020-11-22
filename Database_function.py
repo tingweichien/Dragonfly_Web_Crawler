@@ -167,6 +167,3 @@ def Update_database(connection):
 
 
 
-
-
-

@@ -13,12 +13,15 @@ from gmplot import *
 import webbrowser
 import Index
 from Save2File import *
-import time
+from datetime import datetime
 import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
 from update_chromedriver import *
 #from tkcalendar import *
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+import Plot_from_database as PFD
 
 LARGEFONT =("Verdana", 35)
 
@@ -34,8 +37,8 @@ Login_state = False
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
 var_species = None
-Plot_var_family = None
-Plot_var_species = None
+# Plot_var_family = None
+# Plot_var_species = None
 
 
 #\ check and update the chromedriver
@@ -265,7 +268,7 @@ class MainPage(tk.Frame):
             #\ ---ID Find Frame---
             ######################
             ID_LabelFrame_bg = "white"
-            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', font=LabelFrame_font, bg=ID_LabelFrame_bg)
+            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', fg="red", font=LabelFrame_font, bg=ID_LabelFrame_bg)
 
             #\ Label
             self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
@@ -303,7 +306,7 @@ class MainPage(tk.Frame):
             #\ ---Species Find Frame---
             ###########################
             Species_Find_LabelFrame_bg = "white"
-            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
 
             #\ Label
             self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
@@ -340,7 +343,7 @@ class MainPage(tk.Frame):
             #\ ---Save2file Frame---
             ########################
             Save2file_LabelFrame_bg = "white"
-            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
+            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
             self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
             self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NM", font=label_font_style , bg=Species_Find_LabelFrame_bg)
             self.LabelFrame_Save2file.pack(fill="both", expand="yes") # fill both horizon and vertically
@@ -350,7 +353,7 @@ class MainPage(tk.Frame):
             self.var_MC.set(str(Index.limit_cnt))
             self.MaxCrawling_width = 10
             self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
-            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width)
+            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width, justify="center")
 
             #\ Button
             self.Save2file_button = Button(self.LabelFrame_Save2file,
@@ -372,21 +375,21 @@ class MainPage(tk.Frame):
             ###################
             #\ Label Frame
             Plot_LabelFrame_bg = "white"
-            self.LabelFrame_Plot = LabelFrame(self, text='Plot Chart', font=LabelFrame_font, bg=Plot_LabelFrame_bg)
+            self.LabelFrame_Plot = LabelFrame(self, text="Plot Chart", font=LabelFrame_font, bg=Plot_LabelFrame_bg, fg="blue")
             self.LabelFrame_Plot.pack(fill="both", expand="yes") # fill both horizon and vertically
+            self.Time_range_from_label = Label(self.LabelFrame_Plot, text="From", bg=Plot_LabelFrame_bg)
+            self.Time_range_to_label = Label(self.LabelFrame_Plot, text="to", bg=Plot_LabelFrame_bg)
 
             #\ Drop down menu
             #\ species
-            global Plot_var_species
-            Plot_var_species = StringVar(self.LabelFrame_Plot)
-            Plot_var_species.set(Index.Calopterygidae_Species[0])
-            self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
+            self.Plot_var_species = StringVar(self.LabelFrame_Plot, value=Index.Calopterygidae_Species[0])
+            #self.Plot_var_species.set(Index.Calopterygidae_Species[0])
+            self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=self.Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
 
             #\ family
-            global Plot_var_family
-            Plot_var_family = StringVar(self.LabelFrame_Plot)
-            Plot_var_family.set(Index.Species_Family_Name[0])
-            self.Plot_Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=10, textvariable=Plot_var_family, values=Index.Species_Family_Name)
+            self.Plot_var_family = StringVar(self.LabelFrame_Plot, value=Index.Species_Family_Name[0])
+            #self.Plot_var_family.set(Index.Species_Family_Name[0])
+            self.Plot_Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=10, textvariable=self.Plot_var_family, values=Index.Species_Family_Name)
             self.Plot_Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
             #\ Button
@@ -403,6 +406,21 @@ class MainPage(tk.Frame):
                                         bg='gray80',
                                         command=self.PyechartsPlotButton)
             controller.BHoverOn(self.PyechartsPlot_button, ['gray80','gray70'])
+
+            #\ Entry
+            today = datetime.today()
+            shift_year_age = today-relativedelta(years = Index.Plot_chart_init_delta_years)  #\ shift the time back to the previous year
+            self.var_Time_end = StringVar(self.LabelFrame_Plot, value=today.strftime("%Y-%m-%d"))
+            self.var_Time_start = StringVar(self.LabelFrame_Plot, value=shift_year_age.strftime("%Y-%m-%d"))
+            self.Time_range_width = 10
+            self.Time_range_start_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
+            self.Time_range_start = Entry(self.Time_range_start_border, width=self.Time_range_width, textvariable=self.var_Time_start)
+            self.Time_range_end_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
+            self.Time_range_end = Entry(self.Time_range_end_border, width=self.Time_range_width, textvariable=self.var_Time_end)
+
+
+            #\ time selector
+
 
 
 
@@ -443,11 +461,16 @@ class MainPage(tk.Frame):
             self.MaxCrawling_border.grid(row=10, column=3, sticky=N)
 
             #\ Plot Chart
-            self.Plot_Family_drop_down_menu.grid(row=11, column=0, padx=3)
-            self.Plot_Species_drop_down_menu.grid(row=11, column=1, padx=3)
-            self.MatplotlibPlot_button.grid(row=11, column=3,pady=3)
-            self.PyechartsPlot_button.grid(row=12, column=3)
-
+            self.Plot_Family_drop_down_menu.grid(row=11, column=0, columnspan=2, padx=3)
+            self.Plot_Species_drop_down_menu.grid(row=11, column=2, columnspan=2, padx=3)
+            self.MatplotlibPlot_button.grid(row=11, column=4, columnspan=2, pady=3)
+            self.PyechartsPlot_button.grid(row=12, column=4, columnspan=2)
+            self.Time_range_from_label.grid(row=12, column=0)
+            self.Time_range_start.grid(row=12, column=1)
+            self.Time_range_start_border.grid(row=12, column=1)
+            self.Time_range_to_label.grid(row=12, column=2)
+            self.Time_range_end.grid(row=12, column=3)
+            self.Time_range_end_border.grid(row=12, column=3)
 
 
             #\ some initializing
@@ -501,16 +524,22 @@ class MainPage(tk.Frame):
             self.New_table(map_result_list)
 
 
-    # dont forget to add the 'event' as input args
+    #\ dont forget to add the 'event' as input args
     def changeCombobox(self, event):
-        global current_dropdown_index, var_species, var_family
+        global current_dropdown_index, var_species, Plot_var_species
+
         tmp = Index.Species_Name_Group[self.Family_drop_down_menu.current()]
+        tmp1 = Index.Species_Name_Group[self.Plot_Family_drop_down_menu.current()]
         self.Species_drop_down_menu['value'] = tmp
-        var_species.set(tmp[0]) #init the dropdown list in the first element
+        self.Plot_Species_drop_down_menu['value'] = tmp1
+        #\ init the dropdown list in the first element when the family changed
+        var_species.set(tmp[0])
+        self.Plot_var_species.set(tmp1[0])
+
         #print(var_family.get())
         #print(self.Family_drop_down_menu.current())
 
-    # specify the crawling speed
+    #\ specify the crawling speed
     def Save2FileSliderValue(self, event):
         Index.cpus = self.Save2file_slider.get()
         #print("crawling speed : {}".format(Index.cpus))
@@ -855,11 +884,19 @@ class MainPage(tk.Frame):
 
     #\ Plot by Matplotlib
     def MatplotlibPlotButton(self):
-        pass
+        print(f"time start from {self.var_Time_start.get()} to {self.var_Time_end.get()}")
+        print(self.Plot_var_species.get())
+        PFD.PlotChart("Matplotlib",
+                        Index.Species_key_fullname_C2E[self.Plot_var_species.get()],
+                        [self.var_Time_start.get(), self.var_Time_end.get()]
+                    )
 
     #\ Plot by Pyechart
     def PyechartsPlotButton(self):
-        pass
+        PFD.PlotChart("Pyecharts",
+                            Index.Species_key_fullname_C2E[self.Plot_var_species.get()],
+                            [self.var_Time_start.get(), self.var_Time_end.get()]
+                        )
 
 
 

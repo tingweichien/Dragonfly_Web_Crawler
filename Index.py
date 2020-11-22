@@ -156,8 +156,9 @@ TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species
 GIFMAXFRAME = 80
 
 
-
-
+#----------------------------------------------------------------------#
+#\ Notes: use "Species_key_fullname_C2E" and "Species_key_fullname_E2C"#
+#----------------------------------------------------------------------#
 #####################################################################
 ##\ Species name
 Calopterygidae_Species = [
@@ -572,17 +573,30 @@ SFNE_name = []
 for counts, n in enumerate(Species_Name_Group_size):
     SFNE_name = SFNE_name + [Species_Family_Name_E[counts]]*n
 
+
+#####################################################################################################
+#####################################################################################################
 #\ Chinese to English
+#\ {'白痣珈蟌': 'Calopterygidae01', '細胸珈蟌': 'Calopterygidae02', '綠翅珈蟌': 'Calopterygidae03'.....
 Species_key_fullname_C2E={k:SFNE_name[count]+v for count, (k,v) in enumerate(Species_key.items())}
+
 #\ Eng to CN
 Species_key_fullname_E2C = {k:v for v,k in Species_key_fullname_C2E.items()}
+#####################################################################################################
+#####################################################################################################
+
 
 #\ Species_key keys to list
 #\ This will be an ordered list of species name that can be used to count for index
 #\ will be used in database
+#\ ['白痣珈蟌', '細胸珈蟌', '綠翅珈蟌', '中華珈蟌南臺亞種', '中華珈蟌指名亞種', '脊紋鼓蟌', '簾格鼓蟌', '棋紋鼓蟌', '朱環鼓蟌', '針尾細蟌', '白粉細蟌', '橙尾細蟌', '紅腹細蟌', '昧
+# 影細蟌', '黃腹細蟌', '朱紅細蟌', '亞東細蟌', '朝雲細蟌', '青紋細蟌', '四斑細蟌', '月斑細蟌', '藍彩細蟌', '葦笛細蟌', '蔚藍細蟌', '錢博細蟌', '瘦面細蟌', '弓背細蟌', '丹頂細蟌',
 Species_key_keys_list = list(Species_key.keys())
 
+
 #\ Species_key value to list
+#\['01', '02', '03', '04', '05', '01', '02', '03', '04', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15',
+#  '16', '17', '18', '19', '01', '02', '01', '02', '03', '04', '01', '01', '02', '03', '04', '05', '01', '02', '01', '02', '01', '02', '03', '04',
 Species_key_values_list = list(Species_key.values())
 
 
@@ -612,3 +626,8 @@ username = "timweiwei"
 hostaddress = "127.0.0.1"
 password = "tim960622"
 DB_name =  'Dragonfly_DB'
+
+
+
+#\ init plot delta time showing on the GUI of the time start to end time (year)
+Plot_chart_init_delta_years = 10 #\ 10 years
