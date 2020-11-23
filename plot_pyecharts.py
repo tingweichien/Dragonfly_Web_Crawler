@@ -205,8 +205,8 @@ def plot_species_city(connection, DB_species:str, time:list):
 
 
         #\ Bar with multi y axis
-        # bar_multiY.render("bar_stack0.html")
-        bar_multiY.add_yaxis(str(year), value_multi, stack="stack1")
+        bar_multiY.add_yaxis(str(year), value_multi + [0] * (12 - len(value_multi)), stack="stack1")
+        print( value_multi + [0] * (12 - len(value_multi)))
 
 
         #\ Pie
@@ -232,8 +232,8 @@ def plot_species_city(connection, DB_species:str, time:list):
         )
 
 
-        #\ Grid
-        grid = (
+        #\ Grid with bar pie map
+        bar_map_pie_grid = (
             Grid()
             .add(bar0, grid_opts=opts.GridOpts(pos_left="80%"))
             .add(map0, grid_opts=opts.GridOpts(pos_left="50%"))
@@ -308,7 +308,7 @@ def plot_species_city(connection, DB_species:str, time:list):
         grid_multi.add(bar_multiA,opts.GridOpts())
 
         #\ Add the plot to timeline module
-        timeline.add(grid, "{}年".format(year))
+        timeline.add(bar_map_pie_grid, "{}年".format(year))
         timeline2.add(worldcloud0, "{}年".format(year))
         timeline3.add(grid_multi, "{}年".format(year))
 
