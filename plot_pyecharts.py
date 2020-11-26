@@ -111,6 +111,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     #\ title
     Title = Species_key_fullname_E2C[DB_species.split(".")[1]]
 
+
     #\ time line create
     timeline = Timeline(init_opts=opts.InitOpts(page_title="Taiwan",
                                             width="1500px",
@@ -129,6 +130,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     #\ Multi Y Bar
     bar_multiY = Bar(init_opts=opts.InitOpts(page_title="Taiwan", width="1400px", height="650px"))
     bar_multiY.add_xaxis(x_mon)
+    value_multi_accumulate = [0]*12
 
 
     #\ iterating through the years
@@ -205,8 +207,13 @@ def plot_species_city(connection, DB_species:str, time:list):
 
 
         #\ Bar with multi y axis
-        bar_multiY.add_yaxis(str(year), value_multi + [0] * (12 - len(value_multi)), stack="stack1")
-        print( value_multi + [0] * (12 - len(value_multi)))
+        value_multi_zero_compensate = value_multi + [0] * (12 - len(value_multi))
+        bar_multiY.add_yaxis(str(year), value_multi_zero_compensate, stack="stack1")
+
+        #\ Accumulate the counts for each month during the year duration
+        value_multi_accumulate = [sum(val) for val in zip(value_multi_accumulate, value_multi_zero_compensate)]
+
+
 
 
         #\ Pie
@@ -305,7 +312,7 @@ def plot_species_city(connection, DB_species:str, time:list):
 
         #\ make a grid
         grid_multi = Grid()
-        grid_multi.add(bar_multiA,opts.GridOpts())
+        grid_multi.add(bar_multiA, opts.GridOpts())
 
         #\ Add the plot to timeline module
         timeline.add(bar_map_pie_grid, "{}年".format(year))
@@ -315,10 +322,27 @@ def plot_species_city(connection, DB_species:str, time:list):
     ## --end of for loop--
 
 
-    #\ Multi Y Bar
+    #\ Multi Y Bar with counts
     bar_multiY.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-    bar_multiY.set_global_opts( title_opts=opts.TitleOpts(title=Title + str(start_year) + " to " + str(end_year+1)),
-                                )
+    bar_multiY.set_global_opts( title_opts=opts.TitleOpts(title=Title + str(start_year) + " to " + str(end_year+1)))
+
+    #\ line in the Multi Y Bar with counts
+    line_multiY = (
+            Line()
+            .add_xaxis(x_mon)
+            .add_yaxis("", value_multi_accumulate, yaxis_index=1)
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=True, color="black"))
+    )
+
+    line_multiY.overlap(bar_multiY)
+    #\ make a grid
+    bar_multiY_grid = Grid(init_opts=opts.InitOpts(page_title="Taiwan",
+                                            width="1500px",
+                                            height="650px"))
+    bar_multiY_grid.add(line_multiY, opts.GridOpts())
+
+
+
 
     #\ Table data
     THeader = ["Year","City","Numbers"]
@@ -341,7 +365,7 @@ def plot_species_city(connection, DB_species:str, time:list):
         .add(timeline, "TimeLine")
         .add(timeline2, "WorldCloud")
         .add(timeline3, "Species total count")
-        .add(bar_multiY, "Counts stack")
+        .add(bar_multiY_grid, "Counts stack")
         .add(table0, "Table")
     )
 
