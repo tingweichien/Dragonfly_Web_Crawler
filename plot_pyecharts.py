@@ -9,6 +9,11 @@ from pyecharts.commons.utils import JsCode
 from pyecharts.globals import ThemeType
 from Database_function import *
 from Index import *
+import webbrowser
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+
 
 #\ simplified to tradition Dict
 s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'};
@@ -372,5 +377,10 @@ def plot_species_city(connection, DB_species:str, time:list):
     #\ Save and render to the following file
     tab.render(pyecharts_psc_html)
 
-    #\ Open the file
-    os.system(pyecharts_psc_html)
+    #\ open  in the browser
+    webbrowser.open(pyecharts_psc_html, new = 2, autoraise=False)
+
+
+    # browser = webdriver.Chrome()
+    # browser.get('file:///' + os.getcwd() + pyecharts_psc_html)
+    # browser.refresh()

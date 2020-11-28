@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from cefpython3 import cefpython as cef
+# from cefpython3 import cefpython as cef
 import threading
 import sys
 
@@ -115,39 +115,52 @@ if __name__ == '__main__':
 '''
 
 
-###################################################################################
-from cefpython3 import cefpython as cef
-import platform
-import sys
-import tkinter as tk
-import threading
+# ###################################################################################
+# from cefpython3 import cefpython as cef
+# import platform
+# import sys
+# import tkinter as tk
+# import threading
 
-def htmlfunction(frame):
-    print("this is the html function")
-    rect = [0, 0, 960, 540]
-    sys.excepthook = cef.ExceptHook
-    window_info = cef.WindowInfo(frame.winfo_id())
-    window_info.SetAsChild(frame.winfo_id(), rect)
-    cef.Initialize()
-    browser = cef.CreateBrowserSync(window_info, url='http://www.google.com')
-    cef.MessageLoop()
-    cef.Shutdown()
-
-
-def b1funciton(frame, t):
-    t.start()
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1800x1080")
-    f1 = tk.Frame(root, bg = "blue", height=200)
-    f2 = tk.Frame(root, bg = "green", height=800)
-    f1.pack(side='top', fill='x')
-    f2.pack(side='top', fill='x')
-    thread = threading.Thread(target=htmlfunction, args=(f2,))
-    b1 = tk.Button(f1, text="Button", command=lambda: b1funciton(f2, thread))
-    b1.pack()
-    root.mainloop()
+# def htmlfunction(frame):
+#     print("this is the html function")
+#     rect = [0, 0, 960, 540]
+#     sys.excepthook = cef.ExceptHook
+#     window_info = cef.WindowInfo(frame.winfo_id())
+#     window_info.SetAsChild(frame.winfo_id(), rect)
+#     cef.Initialize()
+#     browser = cef.CreateBrowserSync(window_info, url='http://www.google.com')
+#     cef.MessageLoop()
+#     cef.Shutdown()
 
 
+# def b1funciton(frame, t):
+#     t.start()
 
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     root.geometry("1800x1080")
+#     f1 = tk.Frame(root, bg = "blue", height=200)
+#     f2 = tk.Frame(root, bg = "green", height=800)
+#     f1.pack(side='top', fill='x')
+#     f2.pack(side='top', fill='x')
+#     thread = threading.Thread(target=htmlfunction, args=(f2,))
+#     b1 = tk.Button(f1, text="Button", command=lambda: b1funciton(f2, thread))
+#     b1.pack()
+#     root.mainloop()
+
+
+from tkinter import *
+
+root = Tk()
+sv = StringVar()
+
+def callback():
+    print(sv.get())
+    print("change")
+    return True
+
+e = Entry(root, textvariable=sv, validate="all", validatecommand=callback)
+e.grid()
+
+root.mainloop()
