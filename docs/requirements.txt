@@ -12,9 +12,7 @@ matplotlib==3.3.3
 mysql==0.0.2
 mysql-connector==2.2.9
 mysql-connector-python==8.0.22
-mysqlclient==2.0.1
 numpy==1.19.4
-prompt-toolkit==1.0.18
 pyecharts==1.9.0
 PySimpleGUI==4.31.0
 python-dateutil==2.8.1
