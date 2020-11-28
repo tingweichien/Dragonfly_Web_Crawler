@@ -307,6 +307,7 @@ class MainPage(tk.Frame):
             ###########################
             Species_Find_LabelFrame_bg = "white"
             self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
 
             #\ Label
             self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
@@ -329,7 +330,6 @@ class MainPage(tk.Frame):
             self.VarDatacheckbox = BooleanVar(self.LabelFrame_Species_Find)
             self.Datacheckbox = Checkbutton(self.LabelFrame_Species_Find, text="EXCEL-SQL", variable=self.VarDatacheckbox, bg="white")
             self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
-            self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
 
             #\ Button
             self.species_find_button = Button(self.LabelFrame_Species_Find,
@@ -379,16 +379,17 @@ class MainPage(tk.Frame):
             self.LabelFrame_Plot.pack(fill="both", expand="yes") # fill both horizon and vertically
             self.Time_range_from_label = Label(self.LabelFrame_Plot, text="From", bg=Plot_LabelFrame_bg)
             self.Time_range_to_label = Label(self.LabelFrame_Plot, text="to", bg=Plot_LabelFrame_bg)
+            self.Time_Duration_Year_label = Label(self.LabelFrame_Plot, text="Year", bg=Plot_LabelFrame_bg)
+            self.Time_Duration_Month_label = Label(self.LabelFrame_Plot, text="Month", bg=Plot_LabelFrame_bg)
+
 
             #\ Drop down menu
             #\ species
             self.Plot_var_species = StringVar(self.LabelFrame_Plot, value=Index.Calopterygidae_Species[0])
-            #self.Plot_var_species.set(Index.Calopterygidae_Species[0])
             self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=self.Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
 
             #\ family
             self.Plot_var_family = StringVar(self.LabelFrame_Plot, value=Index.Species_Family_Name[0])
-            #self.Plot_var_family.set(Index.Species_Family_Name[0])
             self.Plot_Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=10, textvariable=self.Plot_var_family, values=Index.Species_Family_Name)
             self.Plot_Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
@@ -409,18 +410,42 @@ class MainPage(tk.Frame):
 
             #\ Entry
             today = datetime.today()
-            shift_year_age = today-relativedelta(years = Index.Plot_chart_init_delta_years)  #\ shift the time back to the previous year
+            shift_year_age = today - relativedelta(years = Index.Plot_chart_init_delta_years)  #\ shift the time back to the previous year
             self.var_Time_end = StringVar(self.LabelFrame_Plot, value=today.strftime("%Y-%m-%d"))
             self.var_Time_start = StringVar(self.LabelFrame_Plot, value=shift_year_age.strftime("%Y-%m-%d"))
             self.Time_range_width = 10
             self.Time_range_start_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
-            self.Time_range_start = Entry(self.Time_range_start_border, width=self.Time_range_width, textvariable=self.var_Time_start)
+            self.Time_range_start = Entry(self.Time_range_start_border, width=self.Time_range_width, textvariable=self.var_Time_start, justify="center")
             self.Time_range_end_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
-            self.Time_range_end = Entry(self.Time_range_end_border, width=self.Time_range_width, textvariable=self.var_Time_end)
+            self.Time_range_end = Entry(self.Time_range_end_border, width=self.Time_range_width, textvariable=self.var_Time_end, justify="center")
 
 
             #\ time selector
+            self.VarTimeDuration_ckeckbox = BooleanVar(self.LabelFrame_Plot, value=False)
+            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="EN Duration", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
+            self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time duration or not")
 
+            self.var_Duration_month = StringVar(self.LabelFrame_Plot, value=str(0))
+            self.var_Duration_month.trace_add("write", self.Time_Duration_month_callback)
+            self.var_Duration_year = StringVar(self.LabelFrame_Plot, value=str(0))
+            self.var_Duration_year.trace_add("write", self.Time_Duration_year_callback)
+            self.TimeDuration_range_width = 5
+            self.Time_Duration_year_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
+            self.Time_Duration_year = Entry(   self.Time_Duration_year_border,
+                                                width=self.TimeDuration_range_width,
+                                                textvariable=self.var_Duration_year,
+                                                justify="center",
+                                                # validate='all',
+                                                # validatecommand=self.Time_Duration_year_callback
+                                            )
+            self.Time_Duration_month_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
+            self.Time_Duration_month = Entry( self.Time_Duration_month_border,
+                                            width=self.TimeDuration_range_width,
+                                            textvariable=self.var_Duration_month,
+                                            justify="center",
+                                            # validate='all',
+                                            # validatecommand=self.Time_Duration_month_callback
+                                         )
 
 
 
@@ -471,6 +496,15 @@ class MainPage(tk.Frame):
             self.Time_range_to_label.grid(row=12, column=2)
             self.Time_range_end.grid(row=12, column=3)
             self.Time_range_end_border.grid(row=12, column=3)
+
+            self.TimeDuration_checkbox.grid(row=13, column=0, sticky=E)
+            self.Time_Duration_year.grid(row=13, column=1, sticky=W)
+            self.Time_Duration_year_border.grid(row=13, column=1, sticky=W)
+            self.Time_Duration_Year_label.grid(row=13, column=1, sticky=E)
+            self.Time_Duration_month.grid(row=13, column=2, sticky=W)
+            self.Time_Duration_month_border.grid(row=13, column=2, sticky=E)
+            self.Time_Duration_Month_label.grid(row=13, column=3, sticky=W)
+
 
 
             #\ some initializing
@@ -526,7 +560,7 @@ class MainPage(tk.Frame):
 
     #\ dont forget to add the 'event' as input args
     def changeCombobox(self, event):
-        global current_dropdown_index, var_species, Plot_var_species
+        global current_dropdown_index, var_species
 
         tmp = Index.Species_Name_Group[self.Family_drop_down_menu.current()]
         tmp1 = Index.Species_Name_Group[self.Plot_Family_drop_down_menu.current()]
@@ -608,7 +642,7 @@ class MainPage(tk.Frame):
     #pop up windows for progress
     def popup(self):
         self.check = True
-        self.NewWindow = tk.Toplevel(app)
+        self.NewWindow = tk.Toplevel(self.app)
         self.NewWindow.title("Update data")
         self.NewWindow.geometry(Index.updateWinGeometry)
 
@@ -901,6 +935,25 @@ class MainPage(tk.Frame):
 
 
 
+    #\ Time duration (Year)
+    def Time_Duration_year_callback(self, var, indx, mode):
+        if self.VarTimeDuration_ckeckbox.get() and (self.var_Duration_year.get() not in ["", " "]):
+            self.var_Time_start.set( (datetime.today() - relativedelta(years = int(self.var_Duration_year.get()))).strftime("%Y-%m-%d"))
+
+
+    #\ Time duration (Month)
+    def Time_Duration_month_callback(self, var, indx, mode):
+        if self.VarTimeDuration_ckeckbox.get() and (self.var_Duration_month.get() not in ["", " "]):
+            self.var_Time_start.set((datetime.today() - relativedelta(years = int(self.var_Duration_year.get()), months = int(self.var_Duration_month.get()))).strftime("%Y-%m-%d"))
+
+    #\ Time duraiton checkbutton
+    def TimeDuration_checkbox_callback(self):
+        if self.VarTimeDuration_ckeckbox.get():
+            if (self.var_Duration_month.get() not in ['0', "", " "]):
+                self.var_Time_start.set((datetime.today() - relativedelta(months = int(self.var_Duration_month.get()))).strftime("%Y-%m-%d"))
+
+            if (self.var_Duration_year.get() not in ['0', "", " "]):
+                self.var_Time_start.set( (datetime.today() - relativedelta(years = int(self.var_Duration_year.get()))).strftime("%Y-%m-%d") )
 
 
 

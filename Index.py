@@ -117,9 +117,6 @@ popup_chrome_web = False
 
 ##----crawl dtat to csv----
 
-#\ chrome driver path
-ChromeDriverPath = r".\\chromedriver.exe"
-
 #\ csv title
 CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "District", "Place", "Altitude", "Latitude", "Longitude", "Description"]
 
@@ -618,6 +615,10 @@ s2tFunc = lambda x : [t2s[i] for i in x]
 
 #\ the file to plot
 pyecharts_psc_html = ".\pyecharts_result\pyecharts_psc.html"
+
+#\ init the condition of the web open state
+html_file_exist = False
+old_webID = 0
 
 ##############################################################################
 ##\ Database
