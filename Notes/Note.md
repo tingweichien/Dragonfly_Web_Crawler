@@ -456,3 +456,5 @@ $ git commit -c ORIG_HEAD                      # (4)
 1. Add the Plot charts option GUI
 
 2. The command link to the ```Entry``` can be as the method of the ```StringVar``` : ```trace_Add("write", callbackFunc)``` , remember the call-back function should have three default input argumnets (var, index, mode)
+
+3. If you want to merge the branch in non fast forward: ```--n0-ff```
