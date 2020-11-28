@@ -449,6 +449,10 @@ $ git commit -c ORIG_HEAD                      # (4)
 (4) When encounter the conflicts the vscode offer accept all imcomming or current settings. You can access it by right clicking the file **in the chaging block** not in the **original file block**
 ![picture 2](https://i.imgur.com/2aPYnXr.png)
 
-
-
 (5) reference: <https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git>
+
+## [2020/11/28]
+
+1. Add the Plot charts option GUI
+
+2. The command link to the ```Entry``` can be as the method of the ```StringVar``` : ```trace_Add("write", callbackFunc)``` , remember the call-back function should have three default input argumnets (var, index, mode)
