@@ -6,13 +6,14 @@ import csv
 
 
 # establish the connection
-def create_connection(host_name, user_name, user_password):
+def create_connection(host_name, user_name, user_password, DB_name) -> mysql.connector :
     connection = None
     try:
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            passwd=user_password)
+            passwd=user_password,
+            database=DB_name)
         print("connect to MySQL DB successful")
     except Error as e:
         print(f"The error'{e}' occurred")
@@ -133,6 +134,7 @@ def Update_database(connection):
 
     for S in Index.Species_Family_Name:
         #\ insert species name data into species table
+        #\ Counts
         Id = Index.Species_Family_Name.index(S)
         # length_S = len(Index.Species_Name_Group[Id])
         # insertdata_S = list(zip(Index.Species_Name_Group[Id], [Id+1]*length_S))
@@ -148,15 +150,18 @@ def Update_database(connection):
                 with open(filepath, 'r', newline='', errors='ignore') as r:
                     CSVData_org = csv.DictReader(r)
                     CSVData = [line for line in CSVData_org]
+                    currentData_Num = read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
                     insertdata_SI = []
-                    for SI in CSVData:
+                    for SI in CSVData[currentData_Num: ]:
                         # insert data
                         if SI['Latitude'] == '' and SI['Longitude'] == '':
-                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['Dictrict'], SI['Place'])
+                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Place'])
                             insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_0_end
                         else:
-                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['Dictrict'], SI['Altitude'], SI['Place'], SI['Latitude'], SI['Longitude'])
+                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Altitude'], SI['Place'], SI['Latitude'], SI['Longitude'])
                             insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_end
+
+                        #\ insert the data into database
                         insert_single_data(connection, insertquery_SI, insertdata_SI)
                 print('create the {} table'.format(Species_table_name))
             except:

@@ -14,8 +14,8 @@ def PlotChart(PlotType:str, DB_species:str, time:list):
         database=DB_name)
 
     #\ read
-    '''readquery = "SELECT * FROM dragonfly_db.aeshnidae01 WHERE Dates BETWEEN '2020-01-01' AND '2020-07-19'"
-    result = read_data(connection, readquery)'''
+    # readquery = "SELECT * FROM dragonfly_db.aeshnidae01 WHERE Dates BETWEEN '2020-01-01' AND '2020-07-19'"
+    # result = read_data(connection, readquery)
 
     #\ the input data
     DB_species = "dragonfly_db." + DB_species

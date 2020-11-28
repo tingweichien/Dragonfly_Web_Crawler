@@ -642,7 +642,7 @@ class MainPage(tk.Frame):
     #pop up windows for progress
     def popup(self):
         self.check = True
-        self.NewWindow = tk.Toplevel(self.app)
+        self.NewWindow = tk.Toplevel(app)
         self.NewWindow.title("Update data")
         self.NewWindow.geometry(Index.updateWinGeometry)
 
@@ -931,8 +931,6 @@ class MainPage(tk.Frame):
                             Index.Species_key_fullname_C2E[self.Plot_var_species.get()],
                             [self.var_Time_start.get(), self.var_Time_end.get()]
                         )
-
-
 
 
     #\ Time duration (Year)

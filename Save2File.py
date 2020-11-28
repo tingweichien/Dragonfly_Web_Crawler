@@ -23,6 +23,8 @@ from operator import add
 from multiprocessing import Process, Value, Pool
 import time
 import json
+from Database_function import *
+
 
 TotalSpeciesNumber = 0
 
@@ -349,11 +351,12 @@ def ReadFromFile(file):
 
 #########################################################################
 #\ select the parsing type : all family or one
-def savefile(self, parsetype):
+def savefile(self, parsetype:str):
     # --main--
     if __name__ == 'Save2File':
         # start timer
         Start = time.time()
+
 
         if parsetype == 'parse_all':
             parse_all(self)
@@ -364,6 +367,14 @@ def savefile(self, parsetype):
             print("\n---Finishing crawling {} ---".format(Index.parse_family_name))
         else:
             print("!!!! No parse type define !!!!!")
+
+
+        print("start writing to the MySQL database")
+        #\ Build the MySQL connection
+        connection_SF = create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
+        #\ also insert to the data base
+        Update_database(connection_SF)
+
 
         #\ End timer
         End = time.time()
