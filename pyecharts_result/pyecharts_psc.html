@@ -42,19 +42,19 @@
         }
     </style>
     <div class="tab">
-            <button class="tablinks" onclick="showChart(event, '32cc504145fd49899d89dac16e595505')">TimeLine</button>
-            <button class="tablinks" onclick="showChart(event, '656e3c8edb894b269989179b21d6de96')">WorldCloud</button>
-            <button class="tablinks" onclick="showChart(event, '0143f7d7eee74b928f92f27f2a8d77a2')">Species total count</button>
-            <button class="tablinks" onclick="showChart(event, '3cfdb55475304beea97d853b2cf8e7c9')">Counts stack</button>
-            <button class="tablinks" onclick="showChart(event, 'a1854fd5b6c648d2b305a331d35a2a91')">Table</button>
+            <button class="tablinks" onclick="showChart(event, 'd56eb6303b3a457b963437e91da8223b')">TimeLine</button>
+            <button class="tablinks" onclick="showChart(event, '2dede1d51f0945b393e10ce484585ead')">WorldCloud</button>
+            <button class="tablinks" onclick="showChart(event, 'feddce3f386541549b04a122c6a2cb40')">Species total count</button>
+            <button class="tablinks" onclick="showChart(event, '51f8e85e86fe47058f0abb7f0d80be38')">Counts stack</button>
+            <button class="tablinks" onclick="showChart(event, 'f595e2d5269a4971925cd4d58b4e7c49')">Table</button>
     </div>
 
     <div class="box">
-                <div id="32cc504145fd49899d89dac16e595505" class="chart-container" style="width:1500px; height:650px;"></div>
+                <div id="d56eb6303b3a457b963437e91da8223b" class="chart-container" style="width:1500px; height:650px;"></div>
     <script>
-        var chart_32cc504145fd49899d89dac16e595505 = echarts.init(
-            document.getElementById('32cc504145fd49899d89dac16e595505'), 'white', {renderer: 'canvas'});
-        var option_32cc504145fd49899d89dac16e595505 = {
+        var chart_d56eb6303b3a457b963437e91da8223b = echarts.init(
+            document.getElementById('d56eb6303b3a457b963437e91da8223b'), 'white', {renderer: 'canvas'});
+        var option_d56eb6303b3a457b963437e91da8223b = {
     "baseOption": {
         "series": [
             {
@@ -63,12 +63,13 @@
                 "yAxisIndex": 0,
                 "legendHoverLink": true,
                 "data": [
-                    69,
-                    13,
-                    13,
-                    3,
-                    30,
-                    19,
+                    34,
+                    17,
+                    4,
+                    16,
+                    71,
+                    11,
+                    24,
                     4
                 ],
                 "showBackground": false,
@@ -105,28 +106,32 @@
                 "mapType": "\u53f0\u6e7e",
                 "data": [
                     {
-                        "name": "\u65b0\u7af9\u53bf",
-                        "value": 69
+                        "name": "\u53f0\u5317\u5e02",
+                        "value": 34
                     },
                     {
                         "name": "\u5357\u6295\u53bf",
-                        "value": 13
-                    },
-                    {
-                        "name": "\u65b0\u5317\u5e02",
-                        "value": 13
+                        "value": 17
                     },
                     {
                         "name": "\u57fa\u9686\u5e02",
-                        "value": 3
+                        "value": 4
                     },
                     {
-                        "name": "\u53f0\u5317\u5e02",
-                        "value": 30
+                        "name": "\u65b0\u5317\u5e02",
+                        "value": 16
+                    },
+                    {
+                        "name": "\u65b0\u7af9\u53bf",
+                        "value": 71
+                    },
+                    {
+                        "name": "\u5c4f\u4e1c\u53bf",
+                        "value": 11
                     },
                     {
                         "name": "\u5b9c\u5170\u53bf",
-                        "value": 19
+                        "value": 24
                     },
                     {
                         "name": "\u6843\u56ed\u5e02",
@@ -173,28 +178,32 @@
                 "clockwise": true,
                 "data": [
                     {
-                        "name": "\u65b0\u7af9\u7e23",
-                        "value": 69
+                        "name": "\u53f0\u5317\u5e02",
+                        "value": 34
                     },
                     {
                         "name": "\u5357\u6295\u7e23",
-                        "value": 13
-                    },
-                    {
-                        "name": "\u65b0\u5317\u5e02",
-                        "value": 13
+                        "value": 17
                     },
                     {
                         "name": "\u57fa\u9686\u5e02",
-                        "value": 3
+                        "value": 4
                     },
                     {
-                        "name": "\u53f0\u5317\u5e02",
-                        "value": 30
+                        "name": "\u65b0\u5317\u5e02",
+                        "value": 16
+                    },
+                    {
+                        "name": "\u65b0\u7af9\u7e23",
+                        "value": 71
+                    },
+                    {
+                        "name": "\u5c4f\u6771\u7e23",
+                        "value": 11
                     },
                     {
                         "name": "\u5b9c\u862d\u7e23",
-                        "value": 19
+                        "value": 24
                     },
                     {
                         "name": "\u6843\u5712\u5e02",
@@ -238,6 +247,7 @@
             "playInterval": 4000,
             "bottom": "-5px",
             "data": [
+                "2010\u5e74",
                 "2011\u5e74",
                 "2012\u5e74",
                 "2013\u5e74",
@@ -326,11 +336,12 @@
                     }
                 },
                 "data": [
-                    "\u65b0\u7af9\u7e23",
-                    "\u5357\u6295\u7e23",
-                    "\u65b0\u5317\u5e02",
-                    "\u57fa\u9686\u5e02",
                     "\u53f0\u5317\u5e02",
+                    "\u5357\u6295\u7e23",
+                    "\u57fa\u9686\u5e02",
+                    "\u65b0\u5317\u5e02",
+                    "\u65b0\u7af9\u7e23",
+                    "\u5c4f\u6771\u7e23",
                     "\u5b9c\u862d\u7e23",
                     "\u6843\u5712\u5e02"
                 ]
@@ -340,7 +351,7 @@
             "show": true,
             "type": "continuous",
             "min": 0,
-            "max": 69,
+            "max": 71,
             "text": [
                 "High",
                 "Low"
@@ -366,6 +377,298 @@
         }
     },
     "options": [
+        {
+            "legend": [
+                {
+                    "data": [
+                        ""
+                    ],
+                    "selected": {
+                        "": true
+                    },
+                    "show": true,
+                    "padding": 5,
+                    "itemGap": 10,
+                    "itemWidth": 25,
+                    "itemHeight": 14
+                },
+                {
+                    "data": [
+                        ""
+                    ],
+                    "selected": {
+                        "": true
+                    },
+                    "show": true,
+                    "padding": 5,
+                    "itemGap": 10,
+                    "itemWidth": 25,
+                    "itemHeight": 14
+                },
+                {
+                    "data": [
+                        "\u6843\u5712\u5e02"
+                    ],
+                    "selected": {},
+                    "show": true,
+                    "padding": 5,
+                    "itemGap": 10,
+                    "itemWidth": 25,
+                    "itemHeight": 14
+                }
+            ],
+            "series": [
+                {
+                    "type": "bar",
+                    "xAxisIndex": 0,
+                    "yAxisIndex": 0,
+                    "legendHoverLink": true,
+                    "data": [
+                        4
+                    ],
+                    "showBackground": false,
+                    "barMinHeight": 0,
+                    "barCategoryGap": "20%",
+                    "barGap": "30%",
+                    "large": false,
+                    "largeThreshold": 400,
+                    "seriesLayoutBy": "column",
+                    "datasetIndex": 0,
+                    "clip": true,
+                    "zlevel": 0,
+                    "z": 2,
+                    "label": {
+                        "show": true,
+                        "position": "right",
+                        "margin": 8
+                    },
+                    "rippleEffect": {
+                        "show": true,
+                        "brushType": "stroke",
+                        "scale": 2.5,
+                        "period": 4
+                    }
+                },
+                {
+                    "type": "map",
+                    "label": {
+                        "show": true,
+                        "position": "top",
+                        "margin": 8,
+                        "formatter": function(x){                                var s2t = { '\u65b0\u5317\u5e02':'\u65b0\u5317\u5e02',                                            '\u57fa\u9686\u5e02':'\u57fa\u9686\u5e02',                                            '\u53f0\u5317\u5e02':'\u53f0\u5317\u5e02',                                            '\u6843\u56ed\u5e02':'\u6843\u5712\u5e02',                                            '\u65b0\u7af9\u5e02':'\u65b0\u7af9\u5e02',                                            '\u53f0\u4e2d\u5e02':'\u53f0\u4e2d\u5e02',                                            '\u53f0\u5357\u5e02':'\u53f0\u5357\u5e02',                                            '\u9ad8\u96c4\u5e02':'\u9ad8\u96c4\u5e02',                                            '\u5f70\u5316\u53bf':'\u5f70\u5316\u7e23',                                            '\u5609\u4e49\u5e02':'\u5609\u7fa9\u5e02',                                            '\u5c4f\u4e1c\u53bf':'\u5c4f\u6771\u7e23',                                            '\u4e91\u6797\u53bf':'\u96f2\u6797\u7e23',                                            '\u82d7\u6817\u53bf':'\u82d7\u6817\u7e23',                                            '\u65b0\u7af9\u53bf':'\u65b0\u7af9\u7e23',                                            '\u5609\u4e49\u53bf':'\u5609\u7fa9\u7e23',                                            '\u5b9c\u5170\u53bf':'\u5b9c\u862d\u7e23',                                            '\u82b1\u83b2\u53bf':'\u82b1\u84ee\u7e23',                                            '\u53f0\u4e1c\u53bf':'\u53f0\u6771\u7e23',                                            '\u5357\u6295\u53bf':'\u5357\u6295\u7e23',                                            '\u91d1\u95e8\u53bf':'\u91d1\u9580\u7e23',                                            '\u8fde\u6c5f\u53bf':'\u9023\u6c5f\u7e23',                                            '\u4e2d\u56fd\u5c5e\u9493\u9c7c\u5c9b':'\u91e3\u9b5a\u5cf6',                                            '\u6f8e\u6e56\u53bf':'\u6f8e\u6e56\u7e23'};                                return s2t[x.name]                            }
+                    },
+                    "mapType": "\u53f0\u6e7e",
+                    "data": [
+                        {
+                            "name": "\u6843\u56ed\u5e02",
+                            "value": 4
+                        }
+                    ],
+                    "roam": true,
+                    "aspectScale": 0.75,
+                    "nameProperty": "name",
+                    "selectedMode": false,
+                    "zoom": 1,
+                    "mapValueCalculation": "sum",
+                    "showLegendSymbol": true,
+                    "tooltip": {
+                        "show": true,
+                        "trigger": "item",
+                        "triggerOn": "mousemove|click",
+                        "axisPointer": {
+                            "type": "line"
+                        },
+                        "showContent": true,
+                        "alwaysShowContent": false,
+                        "showDelay": 0,
+                        "hideDelay": 100,
+                        "formatter": function(params){                                var s2t = { '\u65b0\u5317\u5e02':'\u65b0\u5317\u5e02',                                            '\u57fa\u9686\u5e02':'\u57fa\u9686\u5e02',                                            '\u53f0\u5317\u5e02':'\u53f0\u5317\u5e02',                                            '\u6843\u56ed\u5e02':'\u6843\u5712\u5e02',                                            '\u65b0\u7af9\u5e02':'\u65b0\u7af9\u5e02',                                            '\u53f0\u4e2d\u5e02':'\u53f0\u4e2d\u5e02',                                            '\u53f0\u5357\u5e02':'\u53f0\u5357\u5e02',                                            '\u9ad8\u96c4\u5e02':'\u9ad8\u96c4\u5e02',                                            '\u5f70\u5316\u53bf':'\u5f70\u5316\u7e23',                                            '\u5609\u4e49\u5e02':'\u5609\u7fa9\u5e02',                                            '\u5c4f\u4e1c\u53bf':'\u5c4f\u6771\u7e23',                                            '\u4e91\u6797\u53bf':'\u96f2\u6797\u7e23',                                            '\u82d7\u6817\u53bf':'\u82d7\u6817\u7e23',                                            '\u65b0\u7af9\u53bf':'\u65b0\u7af9\u7e23',                                            '\u5609\u4e49\u53bf':'\u5609\u7fa9\u7e23',                                            '\u5b9c\u5170\u53bf':'\u5b9c\u862d\u7e23',                                            '\u82b1\u83b2\u53bf':'\u82b1\u84ee\u7e23',                                            '\u53f0\u4e1c\u53bf':'\u53f0\u6771\u7e23',                                            '\u5357\u6295\u53bf':'\u5357\u6295\u7e23',                                            '\u91d1\u95e8\u53bf':'\u91d1\u9580\u7e23',                                            '\u8fde\u6c5f\u53bf':'\u9023\u6c5f\u7e23',                                            '\u4e2d\u56fd\u5c5e\u9493\u9c7c\u5c9b':'\u91e3\u9b5a\u5cf6',                                            '\u6f8e\u6e56\u53bf':'\u6f8e\u6e56\u7e23'};                                return 'name: '+ s2t[params.name] + '<br>' + 'value: ' + params.value                            },
+                        "textStyle": {
+                            "fontSize": 14
+                        },
+                        "borderWidth": 0,
+                        "padding": 5
+                    },
+                    "emphasis": {},
+                    "rippleEffect": {
+                        "show": true,
+                        "brushType": "stroke",
+                        "scale": 2.5,
+                        "period": 4
+                    },
+                    "xAxisIndex": 1,
+                    "yAxisIndex": 1
+                },
+                {
+                    "type": "pie",
+                    "clockwise": true,
+                    "data": [
+                        {
+                            "name": "\u6843\u5712\u5e02",
+                            "value": 4
+                        }
+                    ],
+                    "radius": [
+                        "0%",
+                        "20%"
+                    ],
+                    "center": [
+                        "11%",
+                        "85%"
+                    ],
+                    "label": {
+                        "show": true,
+                        "position": "top",
+                        "color": "black",
+                        "margin": 8,
+                        "formatter": "{b}: {c}"
+                    },
+                    "rippleEffect": {
+                        "show": true,
+                        "brushType": "stroke",
+                        "scale": 2.5,
+                        "period": 4
+                    },
+                    "xAxisIndex": 2,
+                    "yAxisIndex": 2
+                }
+            ],
+            "xAxis": [
+                {
+                    "show": true,
+                    "scale": false,
+                    "nameLocation": "end",
+                    "nameGap": 15,
+                    "gridIndex": 0,
+                    "inverse": false,
+                    "offset": 0,
+                    "splitNumber": 5,
+                    "minInterval": 0,
+                    "splitLine": {
+                        "show": false,
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        }
+                    }
+                }
+            ],
+            "yAxis": [
+                {
+                    "show": true,
+                    "scale": false,
+                    "nameLocation": "end",
+                    "nameGap": 15,
+                    "gridIndex": 0,
+                    "inverse": false,
+                    "offset": 0,
+                    "splitNumber": 5,
+                    "minInterval": 0,
+                    "splitLine": {
+                        "show": false,
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        }
+                    },
+                    "data": [
+                        "\u6843\u5712\u5e02"
+                    ]
+                }
+            ],
+            "title": [
+                {
+                    "padding": 5,
+                    "itemGap": 10
+                },
+                {
+                    "text": "\u767d\u75e3\u73c8\u87cc-2010",
+                    "padding": 5,
+                    "itemGap": 10
+                },
+                {
+                    "padding": 5,
+                    "itemGap": 10
+                }
+            ],
+            "tooltip": {
+                "show": true,
+                "trigger": "item",
+                "triggerOn": "mousemove|click",
+                "axisPointer": {
+                    "type": "line"
+                },
+                "showContent": true,
+                "alwaysShowContent": false,
+                "showDelay": 0,
+                "hideDelay": 100,
+                "textStyle": {
+                    "fontSize": 14
+                },
+                "borderWidth": 0,
+                "padding": 5
+            },
+            "visualMap": {
+                "show": true,
+                "type": "continuous",
+                "min": 0,
+                "max": 4,
+                "text": [
+                    "High",
+                    "Low"
+                ],
+                "inRange": {
+                    "color": [
+                        "lightskyblue",
+                        "yellow",
+                        "orangered"
+                    ]
+                },
+                "calculable": true,
+                "inverse": false,
+                "splitNumber": 5,
+                "dimension": 0,
+                "orient": "vertical",
+                "left": "10",
+                "top": "middle",
+                "showLabel": true,
+                "itemWidth": 20,
+                "itemHeight": 140,
+                "borderWidth": 0
+            },
+            "color": [
+                "#c23531",
+                "#2f4554",
+                "#61a0a8",
+                "#d48265",
+                "#749f83",
+                "#ca8622",
+                "#bda29a",
+                "#6e7074",
+                "#546570",
+                "#c4ccd3",
+                "#f05b72",
+                "#ef5b9c",
+                "#f47920",
+                "#905a3d",
+                "#fab27b",
+                "#2a5caa",
+                "#444693",
+                "#726930",
+                "#b2d235",
+                "#6d8346",
+                "#ac6767",
+                "#1d953f",
+                "#6950a1",
+                "#918597"
+            ]
+        },
         {
             "legend": [
                 {
@@ -4036,11 +4339,12 @@
                 },
                 {
                     "data": [
-                        "\u65b0\u7af9\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u65b0\u5317\u5e02",
-                        "\u57fa\u9686\u5e02",
                         "\u53f0\u5317\u5e02",
+                        "\u5357\u6295\u7e23",
+                        "\u57fa\u9686\u5e02",
+                        "\u65b0\u5317\u5e02",
+                        "\u65b0\u7af9\u7e23",
+                        "\u5c4f\u6771\u7e23",
                         "\u5b9c\u862d\u7e23",
                         "\u6843\u5712\u5e02"
                     ],
@@ -4059,12 +4363,13 @@
                     "yAxisIndex": 0,
                     "legendHoverLink": true,
                     "data": [
-                        69,
-                        13,
-                        13,
-                        3,
-                        30,
-                        19,
+                        34,
+                        17,
+                        4,
+                        16,
+                        71,
+                        11,
+                        24,
                         4
                     ],
                     "showBackground": false,
@@ -4101,28 +4406,32 @@
                     "mapType": "\u53f0\u6e7e",
                     "data": [
                         {
-                            "name": "\u65b0\u7af9\u53bf",
-                            "value": 69
+                            "name": "\u53f0\u5317\u5e02",
+                            "value": 34
                         },
                         {
                             "name": "\u5357\u6295\u53bf",
-                            "value": 13
-                        },
-                        {
-                            "name": "\u65b0\u5317\u5e02",
-                            "value": 13
+                            "value": 17
                         },
                         {
                             "name": "\u57fa\u9686\u5e02",
-                            "value": 3
+                            "value": 4
                         },
                         {
-                            "name": "\u53f0\u5317\u5e02",
-                            "value": 30
+                            "name": "\u65b0\u5317\u5e02",
+                            "value": 16
+                        },
+                        {
+                            "name": "\u65b0\u7af9\u53bf",
+                            "value": 71
+                        },
+                        {
+                            "name": "\u5c4f\u4e1c\u53bf",
+                            "value": 11
                         },
                         {
                             "name": "\u5b9c\u5170\u53bf",
-                            "value": 19
+                            "value": 24
                         },
                         {
                             "name": "\u6843\u56ed\u5e02",
@@ -4169,28 +4478,32 @@
                     "clockwise": true,
                     "data": [
                         {
-                            "name": "\u65b0\u7af9\u7e23",
-                            "value": 69
+                            "name": "\u53f0\u5317\u5e02",
+                            "value": 34
                         },
                         {
                             "name": "\u5357\u6295\u7e23",
-                            "value": 13
-                        },
-                        {
-                            "name": "\u65b0\u5317\u5e02",
-                            "value": 13
+                            "value": 17
                         },
                         {
                             "name": "\u57fa\u9686\u5e02",
-                            "value": 3
+                            "value": 4
                         },
                         {
-                            "name": "\u53f0\u5317\u5e02",
-                            "value": 30
+                            "name": "\u65b0\u5317\u5e02",
+                            "value": 16
+                        },
+                        {
+                            "name": "\u65b0\u7af9\u7e23",
+                            "value": 71
+                        },
+                        {
+                            "name": "\u5c4f\u6771\u7e23",
+                            "value": 11
                         },
                         {
                             "name": "\u5b9c\u862d\u7e23",
-                            "value": 19
+                            "value": 24
                         },
                         {
                             "name": "\u6843\u5712\u5e02",
@@ -4267,11 +4580,12 @@
                         }
                     },
                     "data": [
-                        "\u65b0\u7af9\u7e23",
-                        "\u5357\u6295\u7e23",
-                        "\u65b0\u5317\u5e02",
-                        "\u57fa\u9686\u5e02",
                         "\u53f0\u5317\u5e02",
+                        "\u5357\u6295\u7e23",
+                        "\u57fa\u9686\u5e02",
+                        "\u65b0\u5317\u5e02",
+                        "\u65b0\u7af9\u7e23",
+                        "\u5c4f\u6771\u7e23",
                         "\u5b9c\u862d\u7e23",
                         "\u6843\u5712\u5e02"
                     ]
@@ -4313,7 +4627,7 @@
                 "show": true,
                 "type": "continuous",
                 "min": 0,
-                "max": 69,
+                "max": 71,
                 "text": [
                     "High",
                     "Low"
@@ -4366,13 +4680,13 @@
         }
     ]
 };
-        chart_32cc504145fd49899d89dac16e595505.setOption(option_32cc504145fd49899d89dac16e595505);
+        chart_d56eb6303b3a457b963437e91da8223b.setOption(option_d56eb6303b3a457b963437e91da8223b);
     </script>
-                <div id="656e3c8edb894b269989179b21d6de96" class="chart-container" style="width:1400px; height:650px;"></div>
+                <div id="2dede1d51f0945b393e10ce484585ead" class="chart-container" style="width:1400px; height:650px;"></div>
     <script>
-        var chart_656e3c8edb894b269989179b21d6de96 = echarts.init(
-            document.getElementById('656e3c8edb894b269989179b21d6de96'), 'white', {renderer: 'canvas'});
-        var option_656e3c8edb894b269989179b21d6de96 = {
+        var chart_2dede1d51f0945b393e10ce484585ead = echarts.init(
+            document.getElementById('2dede1d51f0945b393e10ce484585ead'), 'white', {renderer: 'canvas'});
+        var option_2dede1d51f0945b393e10ce484585ead = {
     "baseOption": {
         "series": [
             {
@@ -4390,56 +4704,65 @@
                 ],
                 "data": [
                     {
-                        "name": "\u65b0\u7af9\u7e23",
-                        "value": 69,
+                        "name": "\u53f0\u5317\u5e02",
+                        "value": 34,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(78,121,16)"
+                                "color": "rgb(101,159,7)"
                             }
                         }
                     },
                     {
                         "name": "\u5357\u6295\u7e23",
-                        "value": 13,
+                        "value": 17,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(124,41,22)"
-                            }
-                        }
-                    },
-                    {
-                        "name": "\u65b0\u5317\u5e02",
-                        "value": 13,
-                        "textStyle": {
-                            "normal": {
-                                "color": "rgb(44,2,77)"
+                                "color": "rgb(90,52,107)"
                             }
                         }
                     },
                     {
                         "name": "\u57fa\u9686\u5e02",
-                        "value": 3,
+                        "value": 4,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(47,69,15)"
+                                "color": "rgb(128,131,9)"
                             }
                         }
                     },
                     {
-                        "name": "\u53f0\u5317\u5e02",
-                        "value": 30,
+                        "name": "\u65b0\u5317\u5e02",
+                        "value": 16,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(16,42,98)"
+                                "color": "rgb(114,130,37)"
+                            }
+                        }
+                    },
+                    {
+                        "name": "\u65b0\u7af9\u7e23",
+                        "value": 71,
+                        "textStyle": {
+                            "normal": {
+                                "color": "rgb(129,129,77)"
+                            }
+                        }
+                    },
+                    {
+                        "name": "\u5c4f\u6771\u7e23",
+                        "value": 11,
+                        "textStyle": {
+                            "normal": {
+                                "color": "rgb(136,57,115)"
                             }
                         }
                     },
                     {
                         "name": "\u5b9c\u862d\u7e23",
-                        "value": 19,
+                        "value": 24,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(154,16,156)"
+                                "color": "rgb(147,51,47)"
                             }
                         }
                     },
@@ -4448,7 +4771,7 @@
                         "value": 4,
                         "textStyle": {
                             "normal": {
-                                "color": "rgb(53,150,118)"
+                                "color": "rgb(113,90,77)"
                             }
                         }
                     }
@@ -4474,6 +4797,7 @@
             "playInterval": 4000,
             "bottom": "-5px",
             "data": [
+                "2010\u5e74",
                 "2011\u5e74",
                 "2012\u5e74",
                 "2013\u5e74",
@@ -4516,11 +4840,111 @@
                     ],
                     "data": [
                         {
+                            "name": "\u6843\u5712\u5e02",
+                            "value": 4,
+                            "textStyle": {
+                                "normal": {
+                                    "color": "rgb(97,37,132)"
+                                }
+                            }
+                        }
+                    ],
+                    "drawOutOfBound": false,
+                    "textStyle": {
+                        "normal": {
+                            "fontFamily": "cursive"
+                        },
+                        "emphasis": {}
+                    }
+                }
+            ],
+            "title": [
+                {
+                    "text": "\u767d\u75e3\u73c8\u87cc-2010\u71b1\u9ede\u5206\u6790",
+                    "padding": 5,
+                    "itemGap": 10,
+                    "textStyle": {
+                        "fontSize": 23
+                    }
+                }
+            ],
+            "tooltip": {
+                "show": true,
+                "trigger": "item",
+                "triggerOn": "mousemove|click",
+                "axisPointer": {
+                    "type": "line"
+                },
+                "showContent": true,
+                "alwaysShowContent": false,
+                "showDelay": 0,
+                "hideDelay": 100,
+                "textStyle": {
+                    "fontSize": 14
+                },
+                "borderWidth": 0,
+                "padding": 5
+            },
+            "color": [
+                "#c23531",
+                "#2f4554",
+                "#61a0a8",
+                "#d48265",
+                "#749f83",
+                "#ca8622",
+                "#bda29a",
+                "#6e7074",
+                "#546570",
+                "#c4ccd3",
+                "#f05b72",
+                "#ef5b9c",
+                "#f47920",
+                "#905a3d",
+                "#fab27b",
+                "#2a5caa",
+                "#444693",
+                "#726930",
+                "#b2d235",
+                "#6d8346",
+                "#ac6767",
+                "#1d953f",
+                "#6950a1",
+                "#918597"
+            ]
+        },
+        {
+            "legend": [
+                {
+                    "data": [],
+                    "selected": {},
+                    "show": true,
+                    "padding": 5,
+                    "itemGap": 10,
+                    "itemWidth": 25,
+                    "itemHeight": 14
+                }
+            ],
+            "series": [
+                {
+                    "type": "wordCloud",
+                    "shape": "circle",
+                    "rotationRange": [
+                        -90,
+                        90
+                    ],
+                    "rotationStep": 45,
+                    "girdSize": 20,
+                    "sizeRange": [
+                        20,
+                        150
+                    ],
+                    "data": [
+                        {
                             "name": "\u65b0\u5317\u5e02",
                             "value": 60,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(107,151,24)"
+                                    "color": "rgb(11,32,12)"
                                 }
                             }
                         },
@@ -4529,7 +4953,7 @@
                             "value": 61,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(67,117,122)"
+                                    "color": "rgb(92,71,107)"
                                 }
                             }
                         },
@@ -4538,7 +4962,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(129,150,159)"
+                                    "color": "rgb(83,79,91)"
                                 }
                             }
                         },
@@ -4547,7 +4971,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(18,57,56)"
+                                    "color": "rgb(146,4,114)"
                                 }
                             }
                         },
@@ -4556,7 +4980,7 @@
                             "value": 14,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(90,95,113)"
+                                    "color": "rgb(151,9,60)"
                                 }
                             }
                         },
@@ -4565,7 +4989,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(155,79,58)"
+                                    "color": "rgb(12,114,20)"
                                 }
                             }
                         },
@@ -4574,7 +4998,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(3,85,46)"
+                                    "color": "rgb(31,118,149)"
                                 }
                             }
                         },
@@ -4583,7 +5007,7 @@
                             "value": 37,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(31,71,149)"
+                                    "color": "rgb(20,27,52)"
                                 }
                             }
                         },
@@ -4592,7 +5016,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(149,110,115)"
+                                    "color": "rgb(20,95,28)"
                                 }
                             }
                         }
@@ -4692,7 +5116,7 @@
                             "value": 60,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(4,7,46)"
+                                    "color": "rgb(5,47,48)"
                                 }
                             }
                         },
@@ -4701,7 +5125,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(57,32,108)"
+                                    "color": "rgb(101,84,75)"
                                 }
                             }
                         },
@@ -4710,7 +5134,7 @@
                             "value": 51,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(32,38,151)"
+                                    "color": "rgb(42,116,138)"
                                 }
                             }
                         },
@@ -4719,7 +5143,7 @@
                             "value": 24,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(46,42,95)"
+                                    "color": "rgb(30,159,43)"
                                 }
                             }
                         },
@@ -4728,7 +5152,7 @@
                             "value": 18,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(159,103,21)"
+                                    "color": "rgb(36,138,101)"
                                 }
                             }
                         },
@@ -4737,7 +5161,7 @@
                             "value": 35,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(120,45,80)"
+                                    "color": "rgb(54,91,83)"
                                 }
                             }
                         },
@@ -4746,7 +5170,7 @@
                             "value": 3,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(14,88,43)"
+                                    "color": "rgb(86,35,105)"
                                 }
                             }
                         },
@@ -4755,7 +5179,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(38,38,77)"
+                                    "color": "rgb(50,86,47)"
                                 }
                             }
                         },
@@ -4764,7 +5188,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(149,105,117)"
+                                    "color": "rgb(48,44,39)"
                                 }
                             }
                         },
@@ -4773,7 +5197,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(27,99,108)"
+                                    "color": "rgb(100,100,141)"
                                 }
                             }
                         },
@@ -4782,7 +5206,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(22,32,57)"
+                                    "color": "rgb(101,83,5)"
                                 }
                             }
                         }
@@ -4882,7 +5306,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(34,98,8)"
+                                    "color": "rgb(66,149,60)"
                                 }
                             }
                         },
@@ -4891,7 +5315,7 @@
                             "value": 85,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(156,27,101)"
+                                    "color": "rgb(114,81,36)"
                                 }
                             }
                         },
@@ -4900,7 +5324,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(135,117,94)"
+                                    "color": "rgb(13,78,109)"
                                 }
                             }
                         },
@@ -4909,7 +5333,7 @@
                             "value": 33,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(35,76,87)"
+                                    "color": "rgb(4,92,101)"
                                 }
                             }
                         },
@@ -4918,7 +5342,7 @@
                             "value": 66,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(130,29,84)"
+                                    "color": "rgb(66,147,17)"
                                 }
                             }
                         },
@@ -4927,7 +5351,7 @@
                             "value": 22,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(128,62,85)"
+                                    "color": "rgb(125,140,125)"
                                 }
                             }
                         },
@@ -4936,7 +5360,7 @@
                             "value": 27,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(6,78,85)"
+                                    "color": "rgb(68,73,23)"
                                 }
                             }
                         },
@@ -4945,7 +5369,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(18,84,50)"
+                                    "color": "rgb(66,125,4)"
                                 }
                             }
                         },
@@ -4954,7 +5378,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(31,90,120)"
+                                    "color": "rgb(150,116,6)"
                                 }
                             }
                         },
@@ -4963,7 +5387,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(4,93,125)"
+                                    "color": "rgb(8,59,16)"
                                 }
                             }
                         },
@@ -4972,7 +5396,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(145,50,10)"
+                                    "color": "rgb(20,24,96)"
                                 }
                             }
                         },
@@ -4981,7 +5405,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(78,34,149)"
+                                    "color": "rgb(21,44,44)"
                                 }
                             }
                         }
@@ -5081,7 +5505,7 @@
                             "value": 76,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(3,76,0)"
+                                    "color": "rgb(10,138,61)"
                                 }
                             }
                         },
@@ -5090,7 +5514,7 @@
                             "value": 100,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(25,71,143)"
+                                    "color": "rgb(91,133,143)"
                                 }
                             }
                         },
@@ -5099,7 +5523,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(156,155,101)"
+                                    "color": "rgb(37,104,103)"
                                 }
                             }
                         },
@@ -5108,7 +5532,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(144,34,26)"
+                                    "color": "rgb(9,5,11)"
                                 }
                             }
                         },
@@ -5117,7 +5541,7 @@
                             "value": 58,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(76,92,110)"
+                                    "color": "rgb(134,125,155)"
                                 }
                             }
                         },
@@ -5126,7 +5550,7 @@
                             "value": 18,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(82,73,9)"
+                                    "color": "rgb(139,62,107)"
                                 }
                             }
                         },
@@ -5135,7 +5559,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(18,22,125)"
+                                    "color": "rgb(125,45,109)"
                                 }
                             }
                         },
@@ -5144,7 +5568,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(86,154,93)"
+                                    "color": "rgb(157,48,12)"
                                 }
                             }
                         },
@@ -5153,7 +5577,7 @@
                             "value": 36,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(69,105,26)"
+                                    "color": "rgb(93,35,11)"
                                 }
                             }
                         },
@@ -5162,7 +5586,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(135,144,30)"
+                                    "color": "rgb(81,103,65)"
                                 }
                             }
                         },
@@ -5171,7 +5595,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(101,133,156)"
+                                    "color": "rgb(34,15,23)"
                                 }
                             }
                         },
@@ -5180,7 +5604,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(109,18,39)"
+                                    "color": "rgb(21,64,124)"
                                 }
                             }
                         }
@@ -5280,7 +5704,7 @@
                             "value": 84,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(66,16,143)"
+                                    "color": "rgb(124,113,6)"
                                 }
                             }
                         },
@@ -5289,7 +5713,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(45,82,36)"
+                                    "color": "rgb(121,93,71)"
                                 }
                             }
                         },
@@ -5298,7 +5722,7 @@
                             "value": 62,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(55,78,57)"
+                                    "color": "rgb(42,10,18)"
                                 }
                             }
                         },
@@ -5307,7 +5731,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(149,76,30)"
+                                    "color": "rgb(64,34,136)"
                                 }
                             }
                         },
@@ -5316,7 +5740,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(125,54,50)"
+                                    "color": "rgb(75,42,63)"
                                 }
                             }
                         },
@@ -5325,7 +5749,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(142,94,56)"
+                                    "color": "rgb(154,81,112)"
                                 }
                             }
                         },
@@ -5334,7 +5758,7 @@
                             "value": 32,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(126,32,152)"
+                                    "color": "rgb(3,70,62)"
                                 }
                             }
                         },
@@ -5343,7 +5767,7 @@
                             "value": 27,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(110,71,21)"
+                                    "color": "rgb(122,154,143)"
                                 }
                             }
                         },
@@ -5352,7 +5776,7 @@
                             "value": 17,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(66,34,21)"
+                                    "color": "rgb(15,31,64)"
                                 }
                             }
                         },
@@ -5361,7 +5785,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(97,60,124)"
+                                    "color": "rgb(44,11,61)"
                                 }
                             }
                         },
@@ -5370,7 +5794,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(47,30,83)"
+                                    "color": "rgb(62,9,44)"
                                 }
                             }
                         },
@@ -5379,7 +5803,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(29,117,48)"
+                                    "color": "rgb(129,130,114)"
                                 }
                             }
                         }
@@ -5479,7 +5903,7 @@
                             "value": 48,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(33,113,135)"
+                                    "color": "rgb(25,74,102)"
                                 }
                             }
                         },
@@ -5488,7 +5912,7 @@
                             "value": 70,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(129,39,148)"
+                                    "color": "rgb(127,58,24)"
                                 }
                             }
                         },
@@ -5497,7 +5921,7 @@
                             "value": 61,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(74,74,131)"
+                                    "color": "rgb(130,26,125)"
                                 }
                             }
                         },
@@ -5506,7 +5930,7 @@
                             "value": 21,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(25,141,25)"
+                                    "color": "rgb(74,136,81)"
                                 }
                             }
                         },
@@ -5515,7 +5939,7 @@
                             "value": 50,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(1,28,75)"
+                                    "color": "rgb(100,143,86)"
                                 }
                             }
                         },
@@ -5524,7 +5948,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(41,103,84)"
+                                    "color": "rgb(20,58,11)"
                                 }
                             }
                         },
@@ -5533,7 +5957,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(104,0,149)"
+                                    "color": "rgb(19,43,135)"
                                 }
                             }
                         },
@@ -5542,7 +5966,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(158,101,101)"
+                                    "color": "rgb(70,11,139)"
                                 }
                             }
                         },
@@ -5551,7 +5975,7 @@
                             "value": 13,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(70,68,66)"
+                                    "color": "rgb(114,68,105)"
                                 }
                             }
                         },
@@ -5560,7 +5984,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(0,3,109)"
+                                    "color": "rgb(77,114,133)"
                                 }
                             }
                         },
@@ -5569,7 +5993,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(39,67,104)"
+                                    "color": "rgb(55,93,130)"
                                 }
                             }
                         }
@@ -5669,7 +6093,7 @@
                             "value": 63,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(81,104,49)"
+                                    "color": "rgb(143,22,0)"
                                 }
                             }
                         },
@@ -5678,7 +6102,7 @@
                             "value": 126,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(151,26,45)"
+                                    "color": "rgb(90,70,4)"
                                 }
                             }
                         },
@@ -5687,7 +6111,7 @@
                             "value": 56,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(31,128,142)"
+                                    "color": "rgb(44,130,3)"
                                 }
                             }
                         },
@@ -5696,7 +6120,7 @@
                             "value": 5,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(136,111,10)"
+                                    "color": "rgb(83,146,42)"
                                 }
                             }
                         },
@@ -5705,7 +6129,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(104,131,107)"
+                                    "color": "rgb(143,96,8)"
                                 }
                             }
                         },
@@ -5714,7 +6138,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(40,23,22)"
+                                    "color": "rgb(137,111,15)"
                                 }
                             }
                         },
@@ -5723,7 +6147,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(42,22,2)"
+                                    "color": "rgb(52,80,89)"
                                 }
                             }
                         },
@@ -5732,7 +6156,7 @@
                             "value": 44,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(14,155,132)"
+                                    "color": "rgb(18,52,53)"
                                 }
                             }
                         },
@@ -5741,7 +6165,7 @@
                             "value": 76,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(45,88,106)"
+                                    "color": "rgb(9,48,157)"
                                 }
                             }
                         },
@@ -5750,7 +6174,7 @@
                             "value": 15,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(80,8,87)"
+                                    "color": "rgb(115,131,157)"
                                 }
                             }
                         },
@@ -5759,7 +6183,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(49,109,64)"
+                                    "color": "rgb(77,67,148)"
                                 }
                             }
                         }
@@ -5859,7 +6283,7 @@
                             "value": 95,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(92,6,159)"
+                                    "color": "rgb(71,116,114)"
                                 }
                             }
                         },
@@ -5868,7 +6292,7 @@
                             "value": 41,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(93,26,66)"
+                                    "color": "rgb(117,65,85)"
                                 }
                             }
                         },
@@ -5877,7 +6301,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(58,81,48)"
+                                    "color": "rgb(46,69,154)"
                                 }
                             }
                         },
@@ -5886,7 +6310,7 @@
                             "value": 31,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(153,71,95)"
+                                    "color": "rgb(114,64,145)"
                                 }
                             }
                         },
@@ -5895,7 +6319,7 @@
                             "value": 111,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(117,107,105)"
+                                    "color": "rgb(147,3,47)"
                                 }
                             }
                         },
@@ -5904,7 +6328,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(129,122,68)"
+                                    "color": "rgb(23,61,117)"
                                 }
                             }
                         },
@@ -5913,7 +6337,7 @@
                             "value": 12,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(133,25,27)"
+                                    "color": "rgb(1,87,5)"
                                 }
                             }
                         },
@@ -5922,7 +6346,7 @@
                             "value": 6,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(133,120,55)"
+                                    "color": "rgb(15,152,84)"
                                 }
                             }
                         },
@@ -5931,7 +6355,7 @@
                             "value": 11,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(129,144,21)"
+                                    "color": "rgb(83,62,74)"
                                 }
                             }
                         },
@@ -5940,7 +6364,7 @@
                             "value": 3,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(50,95,17)"
+                                    "color": "rgb(80,137,95)"
                                 }
                             }
                         },
@@ -5949,7 +6373,7 @@
                             "value": 64,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(137,140,111)"
+                                    "color": "rgb(102,155,3)"
                                 }
                             }
                         }
@@ -6049,7 +6473,7 @@
                             "value": 57,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(92,62,109)"
+                                    "color": "rgb(116,48,129)"
                                 }
                             }
                         },
@@ -6058,7 +6482,7 @@
                             "value": 35,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(92,5,131)"
+                                    "color": "rgb(146,66,107)"
                                 }
                             }
                         },
@@ -6067,7 +6491,7 @@
                             "value": 40,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(91,94,0)"
+                                    "color": "rgb(52,48,71)"
                                 }
                             }
                         },
@@ -6076,7 +6500,7 @@
                             "value": 14,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(71,89,90)"
+                                    "color": "rgb(14,105,48)"
                                 }
                             }
                         },
@@ -6085,7 +6509,7 @@
                             "value": 8,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(132,71,118)"
+                                    "color": "rgb(16,149,4)"
                                 }
                             }
                         },
@@ -6094,7 +6518,7 @@
                             "value": 208,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(58,38,135)"
+                                    "color": "rgb(122,132,124)"
                                 }
                             }
                         },
@@ -6103,7 +6527,7 @@
                             "value": 29,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(117,49,36)"
+                                    "color": "rgb(93,126,108)"
                                 }
                             }
                         },
@@ -6112,7 +6536,7 @@
                             "value": 7,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(126,156,90)"
+                                    "color": "rgb(144,110,135)"
                                 }
                             }
                         },
@@ -6121,7 +6545,7 @@
                             "value": 9,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(11,74,11)"
+                                    "color": "rgb(144,124,32)"
                                 }
                             }
                         },
@@ -6130,7 +6554,7 @@
                             "value": 10,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(75,99,65)"
+                                    "color": "rgb(17,97,17)"
                                 }
                             }
                         },
@@ -6139,7 +6563,7 @@
                             "value": 2,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(11,142,117)"
+                                    "color": "rgb(106,16,59)"
                                 }
                             }
                         },
@@ -6148,7 +6572,7 @@
                             "value": 1,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(0,93,153)"
+                                    "color": "rgb(4,28,129)"
                                 }
                             }
                         }
@@ -6244,56 +6668,65 @@
                     ],
                     "data": [
                         {
-                            "name": "\u65b0\u7af9\u7e23",
-                            "value": 69,
+                            "name": "\u53f0\u5317\u5e02",
+                            "value": 34,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(78,121,16)"
+                                    "color": "rgb(101,159,7)"
                                 }
                             }
                         },
                         {
                             "name": "\u5357\u6295\u7e23",
-                            "value": 13,
+                            "value": 17,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(124,41,22)"
-                                }
-                            }
-                        },
-                        {
-                            "name": "\u65b0\u5317\u5e02",
-                            "value": 13,
-                            "textStyle": {
-                                "normal": {
-                                    "color": "rgb(44,2,77)"
+                                    "color": "rgb(90,52,107)"
                                 }
                             }
                         },
                         {
                             "name": "\u57fa\u9686\u5e02",
-                            "value": 3,
+                            "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(47,69,15)"
+                                    "color": "rgb(128,131,9)"
                                 }
                             }
                         },
                         {
-                            "name": "\u53f0\u5317\u5e02",
-                            "value": 30,
+                            "name": "\u65b0\u5317\u5e02",
+                            "value": 16,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(16,42,98)"
+                                    "color": "rgb(114,130,37)"
+                                }
+                            }
+                        },
+                        {
+                            "name": "\u65b0\u7af9\u7e23",
+                            "value": 71,
+                            "textStyle": {
+                                "normal": {
+                                    "color": "rgb(129,129,77)"
+                                }
+                            }
+                        },
+                        {
+                            "name": "\u5c4f\u6771\u7e23",
+                            "value": 11,
+                            "textStyle": {
+                                "normal": {
+                                    "color": "rgb(136,57,115)"
                                 }
                             }
                         },
                         {
                             "name": "\u5b9c\u862d\u7e23",
-                            "value": 19,
+                            "value": 24,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(154,16,156)"
+                                    "color": "rgb(147,51,47)"
                                 }
                             }
                         },
@@ -6302,7 +6735,7 @@
                             "value": 4,
                             "textStyle": {
                                 "normal": {
-                                    "color": "rgb(53,150,118)"
+                                    "color": "rgb(113,90,77)"
                                 }
                             }
                         }
@@ -6372,13 +6805,13 @@
         }
     ]
 };
-        chart_656e3c8edb894b269989179b21d6de96.setOption(option_656e3c8edb894b269989179b21d6de96);
+        chart_2dede1d51f0945b393e10ce484585ead.setOption(option_2dede1d51f0945b393e10ce484585ead);
     </script>
-                <div id="0143f7d7eee74b928f92f27f2a8d77a2" class="chart-container" style="width:1400px; height:650px;"></div>
+                <div id="feddce3f386541549b04a122c6a2cb40" class="chart-container" style="width:1400px; height:650px;"></div>
     <script>
-        var chart_0143f7d7eee74b928f92f27f2a8d77a2 = echarts.init(
-            document.getElementById('0143f7d7eee74b928f92f27f2a8d77a2'), 'white', {renderer: 'canvas'});
-        var option_0143f7d7eee74b928f92f27f2a8d77a2 = {
+        var chart_feddce3f386541549b04a122c6a2cb40 = echarts.init(
+            document.getElementById('feddce3f386541549b04a122c6a2cb40'), 'white', {renderer: 'canvas'});
+        var option_feddce3f386541549b04a122c6a2cb40 = {
     "baseOption": {
         "series": [
             {
@@ -6394,7 +6827,8 @@
                     40,
                     45,
                     36,
-                    29
+                    43,
+                    7
                 ],
                 "showBackground": false,
                 "barMinHeight": 0,
@@ -6456,7 +6890,11 @@
                     ],
                     [
                         "Jul",
-                        29
+                        43
+                    ],
+                    [
+                        "Aug",
+                        7
                     ]
                 ],
                 "hoverAnimation": true,
@@ -6498,6 +6936,7 @@
             "playInterval": 4000,
             "bottom": "-5px",
             "data": [
+                "2010\u5e74",
                 "2011\u5e74",
                 "2012\u5e74",
                 "2013\u5e74",
@@ -6611,6 +7050,239 @@
         }
     },
     "options": [
+        {
+            "legend": [
+                {
+                    "data": [
+                        "\u7e3d\u6578",
+                        ""
+                    ],
+                    "selected": {
+                        "\u7e3d\u6578": true,
+                        "": true
+                    },
+                    "show": true,
+                    "padding": 5,
+                    "itemGap": 10,
+                    "itemWidth": 25,
+                    "itemHeight": 14
+                }
+            ],
+            "series": [
+                {
+                    "type": "bar",
+                    "name": "\u7e3d\u6578",
+                    "xAxisIndex": 0,
+                    "yAxisIndex": 0,
+                    "legendHoverLink": true,
+                    "data": [
+                        20
+                    ],
+                    "showBackground": false,
+                    "barMinHeight": 0,
+                    "barCategoryGap": "20%",
+                    "barGap": "30%",
+                    "large": false,
+                    "largeThreshold": 400,
+                    "seriesLayoutBy": "column",
+                    "datasetIndex": 0,
+                    "clip": true,
+                    "zlevel": 0,
+                    "z": 2,
+                    "label": {
+                        "show": false,
+                        "position": "top",
+                        "margin": 8
+                    },
+                    "rippleEffect": {
+                        "show": true,
+                        "brushType": "stroke",
+                        "scale": 2.5,
+                        "period": 4
+                    }
+                },
+                {
+                    "type": "line",
+                    "connectNulls": false,
+                    "xAxisIndex": 0,
+                    "yAxisIndex": 0,
+                    "symbolSize": 4,
+                    "showSymbol": true,
+                    "smooth": false,
+                    "clip": true,
+                    "step": false,
+                    "data": [
+                        [
+                            "Jan",
+                            20
+                        ]
+                    ],
+                    "hoverAnimation": true,
+                    "label": {
+                        "show": true,
+                        "position": "top",
+                        "color": "black",
+                        "margin": 8
+                    },
+                    "lineStyle": {
+                        "show": true,
+                        "width": 1,
+                        "opacity": 1,
+                        "curveness": 0,
+                        "type": "solid"
+                    },
+                    "areaStyle": {
+                        "opacity": 0
+                    },
+                    "zlevel": 0,
+                    "z": 0,
+                    "rippleEffect": {
+                        "show": true,
+                        "brushType": "stroke",
+                        "scale": 2.5,
+                        "period": 4
+                    }
+                }
+            ],
+            "xAxis": [
+                {
+                    "show": true,
+                    "scale": false,
+                    "nameLocation": "end",
+                    "nameGap": 15,
+                    "gridIndex": 0,
+                    "inverse": false,
+                    "offset": 0,
+                    "splitNumber": 5,
+                    "minInterval": 0,
+                    "splitLine": {
+                        "show": false,
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        }
+                    },
+                    "data": [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                }
+            ],
+            "yAxis": [
+                {
+                    "show": true,
+                    "scale": false,
+                    "nameLocation": "end",
+                    "nameGap": 15,
+                    "gridIndex": 0,
+                    "inverse": false,
+                    "offset": 0,
+                    "splitNumber": 5,
+                    "minInterval": 0,
+                    "splitLine": {
+                        "show": false,
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        }
+                    }
+                }
+            ],
+            "title": [
+                {
+                    "text": "\u767d\u75e3\u73c8\u87cc-2010",
+                    "padding": 5,
+                    "itemGap": 10
+                }
+            ],
+            "tooltip": {
+                "show": true,
+                "trigger": "item",
+                "triggerOn": "mousemove|click",
+                "axisPointer": {
+                    "type": "line"
+                },
+                "showContent": true,
+                "alwaysShowContent": false,
+                "showDelay": 0,
+                "hideDelay": 100,
+                "textStyle": {
+                    "fontSize": 14
+                },
+                "borderWidth": 0,
+                "padding": 5
+            },
+            "visualMap": {
+                "show": true,
+                "type": "continuous",
+                "min": 0,
+                "max": 20,
+                "text": [
+                    "High",
+                    "Low"
+                ],
+                "inRange": {
+                    "color": [
+                        "lightskyblue",
+                        "yellow",
+                        "orangered"
+                    ]
+                },
+                "calculable": true,
+                "inverse": false,
+                "splitNumber": 5,
+                "dimension": 1,
+                "orient": "vertical",
+                "left": "10",
+                "top": "middle",
+                "showLabel": true,
+                "itemWidth": 20,
+                "itemHeight": 140,
+                "borderWidth": 0
+            },
+            "color": [
+                "#c23531",
+                "#2f4554",
+                "#61a0a8",
+                "#d48265",
+                "#749f83",
+                "#ca8622",
+                "#bda29a",
+                "#6e7074",
+                "#546570",
+                "#c4ccd3",
+                "#f05b72",
+                "#ef5b9c",
+                "#f47920",
+                "#905a3d",
+                "#fab27b",
+                "#2a5caa",
+                "#444693",
+                "#726930",
+                "#b2d235",
+                "#6d8346",
+                "#ac6767",
+                "#1d953f",
+                "#6950a1",
+                "#918597"
+            ]
+        },
         {
             "legend": [
                 {
@@ -9200,7 +9872,8 @@
                         40,
                         45,
                         36,
-                        29
+                        43,
+                        7
                     ],
                     "showBackground": false,
                     "barMinHeight": 0,
@@ -9262,7 +9935,11 @@
                         ],
                         [
                             "Jul",
-                            29
+                            43
+                        ],
+                        [
+                            "Aug",
+                            7
                         ]
                     ],
                     "hoverAnimation": true,
@@ -9433,13 +10110,13 @@
         }
     ]
 };
-        chart_0143f7d7eee74b928f92f27f2a8d77a2.setOption(option_0143f7d7eee74b928f92f27f2a8d77a2);
+        chart_feddce3f386541549b04a122c6a2cb40.setOption(option_feddce3f386541549b04a122c6a2cb40);
     </script>
-                <div id="3cfdb55475304beea97d853b2cf8e7c9" class="chart-container" style="width:1500px; height:650px;"></div>
+                <div id="51f8e85e86fe47058f0abb7f0d80be38" class="chart-container" style="width:1500px; height:650px;"></div>
     <script>
-        var chart_3cfdb55475304beea97d853b2cf8e7c9 = echarts.init(
-            document.getElementById('3cfdb55475304beea97d853b2cf8e7c9'), 'white', {renderer: 'canvas'});
-        var option_3cfdb55475304beea97d853b2cf8e7c9 = {
+        var chart_51f8e85e86fe47058f0abb7f0d80be38 = echarts.init(
+            document.getElementById('51f8e85e86fe47058f0abb7f0d80be38'), 'white', {renderer: 'canvas'});
+        var option_51f8e85e86fe47058f0abb7f0d80be38 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -9488,7 +10165,7 @@
             "data": [
                 [
                     "Jan",
-                    20
+                    40
                 ],
                 [
                     "Feb",
@@ -9512,11 +10189,11 @@
                 ],
                 [
                     "Jul",
-                    432
+                    446
                 ],
                 [
                     "Aug",
-                    350
+                    357
                 ],
                 [
                     "Sep",
@@ -9554,6 +10231,50 @@
             },
             "zlevel": 0,
             "z": 0,
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "2010",
+            "xAxisIndex": 0,
+            "yAxisIndex": 0,
+            "legendHoverLink": true,
+            "data": [
+                20,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "showBackground": false,
+            "stack": "stack1",
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "top",
+                "margin": 8
+            },
             "rippleEffect": {
                 "show": true,
                 "brushType": "stroke",
@@ -9970,8 +10691,8 @@
                 40,
                 45,
                 36,
-                29,
-                0,
+                43,
+                7,
                 0,
                 0,
                 0,
@@ -10006,6 +10727,7 @@
         {
             "data": [
                 "",
+                "2010",
                 "2011",
                 "2012",
                 "2013",
@@ -10019,6 +10741,7 @@
             ],
             "selected": {
                 "": true,
+                "2010": true,
                 "2011": true,
                 "2012": true,
                 "2013": true,
@@ -10127,7 +10850,7 @@
         }
     ]
 };
-        chart_3cfdb55475304beea97d853b2cf8e7c9.setOption(option_3cfdb55475304beea97d853b2cf8e7c9);
+        chart_51f8e85e86fe47058f0abb7f0d80be38.setOption(option_51f8e85e86fe47058f0abb7f0d80be38);
     </script>
                         <style>
             .fl-table {
@@ -10181,7 +10904,7 @@
                 background: #F8F8F8;
             }
         </style>
-        <div id="a1854fd5b6c648d2b305a331d35a2a91" class="chart-container" style="">
+        <div id="f595e2d5269a4971925cd4d58b4e7c49" class="chart-container" style="">
             <p class="title" style="font-size: 18px; font-weight:bold;" > Data Table</p>
             <p class="subtitle" style="font-size: 12px;" > </p>
             <table class="fl-table">
@@ -10195,43 +10918,43 @@
     <tbody>
         <tr>
             <td>2020</td>
-            <td>新竹縣</td>
-            <td>69</td>
+            <td>台北市</td>
+            <td>34</td>
         </tr>
         <tr>
             <td>2020</td>
             <td>南投縣</td>
-            <td>13</td>
-        </tr>
-        <tr>
-            <td>2020</td>
-            <td>新北市</td>
-            <td>13</td>
+            <td>17</td>
         </tr>
         <tr>
             <td>2020</td>
             <td>基隆市</td>
-            <td>3</td>
+            <td>4</td>
         </tr>
         <tr>
             <td>2020</td>
-            <td>台北市</td>
-            <td>30</td>
+            <td>新北市</td>
+            <td>16</td>
+        </tr>
+        <tr>
+            <td>2020</td>
+            <td>新竹縣</td>
+            <td>71</td>
+        </tr>
+        <tr>
+            <td>2020</td>
+            <td>屏東縣</td>
+            <td>11</td>
         </tr>
         <tr>
             <td>2020</td>
             <td>宜蘭縣</td>
-            <td>19</td>
+            <td>24</td>
         </tr>
         <tr>
             <td>2020</td>
             <td>桃園市</td>
             <td>4</td>
-        </tr>
-        <tr>
-            <td>2020</td>
-            <td>屏東縣</td>
-            <td>9</td>
         </tr>
         <tr>
             <td>2020</td>
@@ -10867,6 +11590,26 @@
             <td>2011</td>
             <td>基隆市</td>
             <td>1</td>
+        </tr>
+        <tr>
+            <td>2010</td>
+            <td>桃園市</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>2010</td>
+            <td>新北市</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>2010</td>
+            <td>台北市</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>2010</td>
+            <td>屏東縣</td>
+            <td>3</td>
         </tr>
     </tbody>
 </table>
