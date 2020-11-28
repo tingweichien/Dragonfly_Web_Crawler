@@ -9,10 +9,7 @@ import Index
 import calendar
 from operator import add
 from scipy.stats import norm
-import statistics
 import scipy.stats as st
-import itertools
-import random
 import matplotlib.colors as mcolors
 from Database_function import *
 
