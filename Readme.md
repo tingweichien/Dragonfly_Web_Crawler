@@ -20,10 +20,15 @@
      <a href="https://github.com/pyecharts/pyecharts/pulls">
         <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="Contributions welcome">
     </a>
+    <a href='https://dragonfly-web-crawler.readthedocs.io/en/latest/?badge=latest'>
+        <img src='https://readthedocs.org/projects/dragonfly-web-crawler/badge/?version=latest' alt='Documentation Status' />
+    </a>
     <a href="https://opensource.org/licenses/MIT">
         <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License">
     </a>
 </p>
+
+
 
 ## 1. Introduce
 
@@ -37,7 +42,7 @@
 ## 2. Installation
 
 - Execute the ```GUI_split.exe``` to run the program.
-![start](./image/program_result_picture/start.png)
+![start](./docs/image/program_result_picture/start.png)
 
 - Open ```GUI_split.py``` and debug it.
 
@@ -94,24 +99,24 @@
 
 #### (1) ***Overview***
 
-![overview](./image/program_result_picture/overview.png)
+![overview](./docs/image/program_result_picture/overview.png)
 
 #### (2) ***Login***
 
-![LoginPage](./image/program_result_picture/Login.PNG)
+![LoginPage](./docs/image/program_result_picture/Login.PNG)
 
 #### (3) ***Mainpage***
 
-![Mainpage](./image/program_result_picture/mainpage.png)
+![Mainpage](https://i.imgur.com/2IDBYVc.png)
 
 #### (4) ***Plot to Google map***
 
-![Table](./image/program_result_picture/Tablepng.png)
-![GoogleMapPlot](./image/program_result_picture/googlemap.png)
+![Table](./docs/image/program_result_picture/Tablepng.png)
+![GoogleMapPlot](./docs/image/program_result_picture/googlemap.png)
 
 #### (5) ***Save the data***
 
-![Updating](./image/program_result_picture/Updatingpng.png)
+![Updating](./docs/image/program_result_picture/Updatingpng.png)
 
 #### (6) ***Plot by matplotlib***
 
@@ -123,9 +128,11 @@
     ![Pie plot](https://imgur.com/rD3qrCO.png)
 
 #### (7) ***Plot by pyecharts***
+- **Overview**
+  ![pyecharts overview](https://i.imgur.com/toAw1z1.png)
 
 - **Combine the map, worldcloud, bar, pie, table together**
-   ![Combine pyecharts](https://imgur.com/6U8SRmN.gif)
+  ![Combine pyecharts](https://imgur.com/6U8SRmN.gif)
 
 ---
 

@@ -44,7 +44,7 @@ info_box_template = """
 
 
 #\ ico image path
-ico_image_path = 'image\\dragonfly_ico.ico'
+ico_image_path = 'docs\image\\dragonfly_ico.ico'
 
 #\ statement in the login page
 copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
@@ -109,7 +109,7 @@ headers = {
 current_path = os.getcwd()
 
 #\ image path
-Image_path = current_path + "\image"
+Image_path = current_path + "\docs\image"
 
 #\ webdriver to crawl the total number of the record
 popup_chrome_web = False

@@ -260,7 +260,7 @@ class MainPage(tk.Frame):
             self.LabelFrame_Canvas = LabelFrame(self)
             self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
             self.image_path = Index.Image_path + "\dragonfly_picture.gif"
-            self.canvas.background = PhotoImage(file = "image\dragonfly_picture.gif")
+            self.canvas.background = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
             self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
             self.LabelFrame_Canvas.pack()
 
@@ -422,7 +422,7 @@ class MainPage(tk.Frame):
 
             #\ time selector
             self.VarTimeDuration_ckeckbox = BooleanVar(self.LabelFrame_Plot, value=False)
-            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="EN Duration", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
+            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="-->", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
             self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time duration or not")
 
             self.var_Duration_month = StringVar(self.LabelFrame_Plot, value=str(0))
@@ -488,8 +488,8 @@ class MainPage(tk.Frame):
             #\ Plot Chart
             self.Plot_Family_drop_down_menu.grid(row=11, column=0, columnspan=2, padx=3)
             self.Plot_Species_drop_down_menu.grid(row=11, column=2, columnspan=2, padx=3)
-            self.MatplotlibPlot_button.grid(row=11, column=4, columnspan=2, pady=3)
-            self.PyechartsPlot_button.grid(row=12, column=4, columnspan=2)
+            self.MatplotlibPlot_button.grid(row=11, column=5, columnspan=2, pady=3, padx=20, sticky=E)
+            self.PyechartsPlot_button.grid(row=12, column=5, columnspan=2, padx=20, sticky=E)
             self.Time_range_from_label.grid(row=12, column=0)
             self.Time_range_start.grid(row=12, column=1)
             self.Time_range_start_border.grid(row=12, column=1)
@@ -497,13 +497,13 @@ class MainPage(tk.Frame):
             self.Time_range_end.grid(row=12, column=3)
             self.Time_range_end_border.grid(row=12, column=3)
 
-            self.TimeDuration_checkbox.grid(row=13, column=0, sticky=E)
-            self.Time_Duration_year.grid(row=13, column=1, sticky=W)
-            self.Time_Duration_year_border.grid(row=13, column=1, sticky=W)
-            self.Time_Duration_Year_label.grid(row=13, column=1, sticky=E)
-            self.Time_Duration_month.grid(row=13, column=2, sticky=W)
-            self.Time_Duration_month_border.grid(row=13, column=2, sticky=E)
-            self.Time_Duration_Month_label.grid(row=13, column=3, sticky=W)
+            self.TimeDuration_checkbox.grid(row=13, column=1, )
+            self.Time_Duration_year.grid(row=13, column=2, sticky=W)
+            self.Time_Duration_year_border.grid(row=13, column=2, sticky=W)
+            self.Time_Duration_Year_label.grid(row=13, column=3, sticky=W)
+            self.Time_Duration_month.grid(row=13, column=3, sticky=E)
+            self.Time_Duration_month_border.grid(row=13, column=3, sticky=E)
+            self.Time_Duration_Month_label.grid(row=13, column=5, sticky=W)
 
 
 
