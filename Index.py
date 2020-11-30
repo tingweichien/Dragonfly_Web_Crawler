@@ -21,7 +21,7 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 ###################################################
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
-MainPageGeometry = "380x620"
+MainPageGeometry = "380x650"
 updateWinGeometry = "500x350"
 
 #\ PY GUI setting
@@ -110,6 +110,15 @@ current_path = os.getcwd()
 
 #\ image path
 Image_path = current_path + "\docs\image"
+
+#\ github image
+github_img_path = current_path + "\\docs\\image\\github.png"
+
+#\ web version app
+web_version_img_path = current_path + "\\docs\\image\\web_version.png"
+
+#\ read the docs
+Readthedocs_img_path = current_path + "\\docs\\image\\readthedocs.png"
 
 #\ webdriver to crawl the total number of the record
 popup_chrome_web = False

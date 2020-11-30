@@ -434,22 +434,23 @@ reference :
 1. Merge the branch ```Plot``` to the master
 
 2. The ```.gitignore``` will ignore the ```Craw_data_clean``` after merging , so I am not able to merge them together
-(1) Therefore I reset the current commit, delete the content in the gitigore and recommit again
 
-(2) The following step shows how to do that, but one problem is that I wil not able to merge then after reset, it will do a new commit instead.
+    (1) Therefore I reset the current commit, delete the content in the gitigore and recommit again
 
-```
-$ git commit -m "Something terribly misguided" # (0: Your Accident)
-$ git reset HEAD~                              # (1)
-<< edit files as necessary >>                  # (2)
-$ git add .                                    # (3)
-$ git commit -c ORIG_HEAD                      # (4)
-```
+    (2) The following step shows how to do that, but one problem is that I wil not able to merge then after reset, it will do a new commit instead.
 
-(4) When encounter the conflicts the vscode offer accept all imcomming or current settings. You can access it by right clicking the file **in the chaging block** not in the **original file block**
-![picture 2](https://i.imgur.com/2aPYnXr.png)
+    ```
+    $ git commit -m "Something terribly misguided" # (0: Your Accident)
+    $ git reset HEAD~                              # (1)
+    << edit files as necessary >>                  # (2)
+    $ git add .                                    # (3)
+    $ git commit -c ORIG_HEAD                      # (4)
+    ```
 
-(5) reference: <https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git>
+    (4) When encounter the conflicts the vscode offer accept all imcomming or current settings. You can access it by right clicking the file **in the chaging block** not in the **original file block**
+    ![picture 2](https://i.imgur.com/2aPYnXr.png)
+
+    (5) reference: <https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git>
 
 ## [2020/11/28]
 
@@ -526,3 +527,33 @@ $ git commit -c ORIG_HEAD                      # (4)
 3. reference:
    - [How to merge several commit together](https://gitbook.tw/chapters/rewrite-history/merge-multiple-commits-to-one-commit.html)
    - [push after rebase](https://stackoverflow.com/questions/8939977/git-push-rejected-after-feature-branch-rebase)
+
+
+## [2020/12/1]
+
+1. Add the link to the github, readthedocs, webpage
+
+2. The photoImage is pretty weired
+
+   - Remember to use the ```.png``` file
+   - The instance of the photoimage should be start wit ```self.```
+   - You should make the instance of the PhotoImage class or else it will failed to display
+
+       ```python
+       self.ReadthedocsImg = PhotoImage(file=Index.Readthedocs_img_path)
+       self.Readthedocs_Label = Label(self.Hub_parentF, text="read the docs", cursor="hand2", image=self.ReadthedocsImg, bg=Label_bg_color)
+       ```
+
+3. The alignment of the label is really tricky, I add another frame outside the label and inside the labelframe
+
+    ```python
+    #\ Hub and docs
+    self.Hub_Label.pack(side=LEFT, padx=15)
+    self.Readthedocs_Label.pack(side=RIGHT, padx=15)
+    self.Web_version_Label.pack(side=RIGHT, padx=15)
+    self.Hub_parentF.pack(expand=True)
+    ```
+
+4. result
+![result add Github radthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
+

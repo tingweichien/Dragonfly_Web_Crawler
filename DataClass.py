@@ -77,16 +77,18 @@ class CreateToolTip(object):
     '''
     create a tooltip for a given widget
     '''
-    def __init__(self, widget, text='widget info'):
+    def __init__(self, widget, text='widget info', window_x = 25, window_y = -23):
         self.widget = widget
         self.text = text
+        self.window_x = window_x
+        self.window_y = window_y
         self.widget.bind("<Enter>", self.enter)
         self.widget.bind("<Leave>", self.close)
     def enter(self, event=None):
         x = y = 0
         x, y, cx, cy = self.widget.bbox("insert")
-        x += self.widget.winfo_rootx() + 25
-        y += self.widget.winfo_rooty() - 23  #use minus to make the infobox shown above the cursor
+        x += self.widget.winfo_rootx() + self.window_x
+        y += self.widget.winfo_rooty() + self.window_y  #use minus to make the infobox shown above the cursor
         # creates a toplevel window
         self.tw = tk.Toplevel(self.widget)
         # Leaves only the label and removes the app window

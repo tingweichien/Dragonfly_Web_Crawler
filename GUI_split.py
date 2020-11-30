@@ -22,6 +22,8 @@ from update_chromedriver import *
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
+from PIL import ImageTk, Image
+
 
 LARGEFONT =("Verdana", 35)
 
@@ -298,6 +300,7 @@ class MainPage(tk.Frame):
                             text='ID Enter\b',
                             justify = 'center',
                             bg='gray80',
+                            cursor="hand2",
                             command=lambda: self.IDEnterButton(self.ID.get()))
                             # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
             controller.BHoverOn(self.id_enter_button, ['gray80','gray70'])
@@ -336,6 +339,7 @@ class MainPage(tk.Frame):
                                         text='Find Species',
                                         justify='center',
                                         bg='gray80',
+                                        cursor="hand2",
                                         command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
             controller.BHoverOn(self.species_find_button, ['gray80','gray70'])
 
@@ -360,6 +364,7 @@ class MainPage(tk.Frame):
                                         text='Update',
                                         justify='center',
                                         bg='gray80',
+                                        cursor="hand2",
                                         command=self.Save2FileButton)
             controller.BHoverOn(self.Save2file_button, ['gray80','gray70'])
 
@@ -398,6 +403,7 @@ class MainPage(tk.Frame):
                                         text='Matplotlib',
                                         justify='center',
                                         bg='gray80',
+                                        cursor="hand2",
                                         command=self.MatplotlibPlotButton)
             controller.BHoverOn(self.MatplotlibPlot_button, ['gray80','gray70'])
 
@@ -405,6 +411,7 @@ class MainPage(tk.Frame):
                                         text='Pyecharts',
                                         justify='center',
                                         bg='gray80',
+                                        cursor="hand2",
                                         command=self.PyechartsPlotButton)
             controller.BHoverOn(self.PyechartsPlot_button, ['gray80','gray70'])
 
@@ -447,6 +454,27 @@ class MainPage(tk.Frame):
                                             # validatecommand=self.Time_Duration_month_callback
                                          )
 
+
+            #\ The link to my Github and doc
+            Hub_LabelFrame_bg = "White"
+            self.Hub_Frame = LabelFrame(self, text="", font=LabelFrame_font, bg=Hub_LabelFrame_bg)
+            self.Hub_Frame.pack(fill="both", expand="yes")
+            self.Hub_parentF = Frame(self.Hub_Frame, bg=Hub_LabelFrame_bg)
+            self.githubImg = PhotoImage(file=Index.github_img_path)
+            Label_bg_color = "white"
+            self.Hub_Label = Label(self.Hub_parentF, text="github", cursor="hand2", image=self.githubImg, bg=Label_bg_color)
+            self.Hub_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://github.com/tingweichien/Dragonfly_Web_Crawler"))
+            self.Hub_Label_tooltip = CreateToolTip(self.Hub_Label, "Go to Github", window_y=-15)
+
+            self.web_versionImg = PhotoImage(file=Index.web_version_img_path)
+            self.Web_version_Label = Label(self.Hub_parentF, text="web version", cursor="hand2", image=self.web_versionImg, bg=Label_bg_color)
+            self.Web_version_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://flask-web-training.herokuapp.com/"))
+            self.Web_version_tooltip = CreateToolTip(self.Web_version_Label, "Go to Web version of this app", window_y=-15)
+
+            self.ReadthedocsImg = PhotoImage(file=Index.Readthedocs_img_path)
+            self.Readthedocs_Label = Label(self.Hub_parentF, text="read the docs", cursor="hand2", image=self.ReadthedocsImg, bg=Label_bg_color)
+            self.Readthedocs_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://dragonfly-web-crawler.readthedocs.io/en/latest/"))
+            self.Readthedocs_tooltip = CreateToolTip(self.Readthedocs_Label, "Go to read the docs for more detail info", window_y=-10)
 
 
             #\ ---grid---
@@ -504,6 +532,12 @@ class MainPage(tk.Frame):
             self.Time_Duration_month.grid(row=13, column=3, sticky=E)
             self.Time_Duration_month_border.grid(row=13, column=3, sticky=E)
             self.Time_Duration_Month_label.grid(row=13, column=5, sticky=W)
+
+            #\ Hub and docs
+            self.Hub_Label.pack(side=LEFT, padx=15)
+            self.Readthedocs_Label.pack(side=RIGHT, padx=15)
+            self.Web_version_Label.pack(side=RIGHT, padx=15)
+            self.Hub_parentF.pack(expand=True)
 
 
 
@@ -639,7 +673,7 @@ class MainPage(tk.Frame):
         UpdateGIF_thread = threading.Thread(target=self.UpdateGIF, args=(0,)).start()
         threading.Thread(target=start_multithread).start()
 
-    #pop up windows for progress
+    #\ pop up windows for progress
     def popup(self):
         self.check = True
         self.NewWindow = tk.Toplevel(self.app)
@@ -955,6 +989,9 @@ class MainPage(tk.Frame):
             if (self.var_Duration_year.get() not in ['0', "", " "]):
                 self.var_Time_start.set( (datetime.today() - relativedelta(years = int(self.var_Duration_year.get()))).strftime("%Y-%m-%d") )
 
+    #\ Hub open
+    def Hub_callback(self, link):
+        webbrowser.open(link)
 
 
 # Driver Code
