@@ -2,7 +2,7 @@
 
 import tkinter as tk
 from tkinter import ttk
-from tkinter import *
+from PySimpleGUI.PySimpleGUI import RELIEF_FLAT, RELIEF_GROOVE, RELIEF_SUNKEN
 from Dragonfly import *
 from tkinter import messagebox
 from tkinter.messagebox import *
@@ -19,10 +19,12 @@ from multiprocessing import Process, Value, Pool
 import gmplot
 from update_chromedriver import *
 #from tkcalendar import *
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
-from PIL import ImageTk, Image
+from urllib.request import urlopen
+import io
+from PIL import Image, ImageTk
 
 
 LARGEFONT =("Verdana", 35)
@@ -259,12 +261,14 @@ class MainPage(tk.Frame):
             #####################
             #\ 設定圖片
             #\ directory from where script was ran
-            self.LabelFrame_Canvas = LabelFrame(self)
-            self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
-            self.image_path = Index.Image_path + "\dragonfly_picture.gif"
-            self.canvas.background = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
-            self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
-            self.LabelFrame_Canvas.pack()
+            # self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
+            # self.canvas.background = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+            # self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
+            self.img_counter = 0
+            # put the image on a typical widget
+            self.imglabel = tk.Label(self, bg='white',relief=FLAT, borderwidth=0, highlightthickness=0)
+            self.imglabel.pack(padx=5, pady=5)
+            self.update_img()
 
 
             #\ ---ID Find Frame---
@@ -275,8 +279,7 @@ class MainPage(tk.Frame):
             #\ Label
             self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
             self.id_label = Label(self.LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
-            self.latitude_label = Label(self.LabelFrame_ID_Find, text = "Latitude:", font=label_font_style, bg=ID_LabelFrame_bg)
-            self.longitude_label = Label(self.LabelFrame_ID_Find, text="Longitude:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.latitude_label = Label(self.LabelFrame_ID_Find, text = "(LAT, LNG): ", font=label_font_style, bg=ID_LabelFrame_bg)
 
             #\ Entry
             self.var_APIKEY = StringVar(self.LabelFrame_ID_Find)
@@ -287,23 +290,20 @@ class MainPage(tk.Frame):
             self.ID_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
             self.ID = Entry(self.ID_border)
 
-            self.var_LNG = StringVar(self.LabelFrame_ID_Find)
-            self.LNG_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-            self.blank_LNG = Entry(self.LNG_border, textvariable=self.var_LNG)
+            self.var_LNGLAT = StringVar(self.LabelFrame_ID_Find)
+            self.LNGLAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief=RELIEF_FLAT)
+            self.blank_LNGLAT = Entry(self.LNGLAT_border, textvariable=self.var_LNGLAT)
 
-            self.var_LAT = StringVar(self.LabelFrame_ID_Find)
-            self.LAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")
-            self.blank_LAT = Entry(self.LAT_border, textvariable=self.var_LAT)
+
             self.LabelFrame_ID_Find.pack(fill="both", expand="yes")
 
-            self.id_enter_button = Button(self.LabelFrame_ID_Find,
+            self.id_enter_button = ttk.Button(self.LabelFrame_ID_Find,
                             text='ID Enter\b',
-                            justify = 'center',
-                            bg='gray80',
+                            #justify = 'center',
+                            #bg='gray80',
                             cursor="hand2",
                             command=lambda: self.IDEnterButton(self.ID.get()))
                             # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
-            controller.BHoverOn(self.id_enter_button, ['gray80','gray70'])
 
 
             #\ ---Species Find Frame---
@@ -335,13 +335,12 @@ class MainPage(tk.Frame):
             self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
 
             #\ Button
-            self.species_find_button = Button(self.LabelFrame_Species_Find,
+            self.species_find_button = ttk.Button(self.LabelFrame_Species_Find,
                                         text='Find Species',
-                                        justify='center',
-                                        bg='gray80',
+                                        #justify='center',
+                                        #bg='gray80',
                                         cursor="hand2",
                                         command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
-            controller.BHoverOn(self.species_find_button, ['gray80','gray70'])
 
 
             #\ ---Save2file Frame---
@@ -360,13 +359,13 @@ class MainPage(tk.Frame):
             self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width, justify="center")
 
             #\ Button
-            self.Save2file_button = Button(self.LabelFrame_Save2file,
+            self.Save2file_button = ttk.Button(self.LabelFrame_Save2file,
                                         text='Update',
-                                        justify='center',
-                                        bg='gray80',
+                                        #justify='center',
+                                        #bg='gray80',
+                                        style='Fun.TButton',
                                         cursor="hand2",
                                         command=self.Save2FileButton)
-            controller.BHoverOn(self.Save2file_button, ['gray80','gray70'])
 
             #\ Slider
             self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
@@ -402,18 +401,26 @@ class MainPage(tk.Frame):
             self.MatplotlibPlot_button = Button(self.LabelFrame_Plot,
                                         text='Matplotlib',
                                         justify='center',
-                                        bg='gray80',
+                                        bg='White',
                                         cursor="hand2",
+                                        relief=RELIEF_GROOVE,
                                         command=self.MatplotlibPlotButton)
-            controller.BHoverOn(self.MatplotlibPlot_button, ['gray80','gray70'])
+            controller.BHoverOn(self.MatplotlibPlot_button, ['White','gray70'])
+            self.MatplotlibPlot_button_logo = PhotoImage(file=Index.Matplotlib_img_path)
+            self.MatplotlibPlot_button.config(image=self.MatplotlibPlot_button_logo)
+
+
 
             self.PyechartsPlot_button = Button(self.LabelFrame_Plot,
                                         text='Pyecharts',
                                         justify='center',
-                                        bg='gray80',
+                                        bg='White',
                                         cursor="hand2",
+                                        relief=RELIEF_GROOVE,
                                         command=self.PyechartsPlotButton)
-            controller.BHoverOn(self.PyechartsPlot_button, ['gray80','gray70'])
+            controller.BHoverOn(self.PyechartsPlot_button, ['White','gray70'])
+            self.PyechartsPlot_button_logo = PhotoImage(file=Index.Echarts_img_path)
+            self.PyechartsPlot_button.config(image=self.PyechartsPlot_button_logo)
 
             #\ Entry
             today = datetime.today()
@@ -429,7 +436,7 @@ class MainPage(tk.Frame):
 
             #\ time selector
             self.VarTimeDuration_ckeckbox = BooleanVar(self.LabelFrame_Plot, value=False)
-            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="-->", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
+            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="--", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
             self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time duration or not")
 
             self.var_Duration_month = StringVar(self.LabelFrame_Plot, value=str(0))
@@ -478,14 +485,12 @@ class MainPage(tk.Frame):
 
 
             #\ ---grid---
-            #############
-            self.canvas.grid(row=0, column=0, columnspan=2)
+            ############
 
             #\ ID Find
             self.APIKEY_label.grid(row=3)
             self.id_label.grid(row=4)
             self.latitude_label.grid(row=5)
-            self.longitude_label.grid(row=6)
 
             self.id_enter_button.grid(row=4, column=2, columnspan=1, padx = 5)
 
@@ -493,10 +498,8 @@ class MainPage(tk.Frame):
             self.APIKEY_border.grid(row=3, column=1)
             self.ID.grid(row=4, column=1)
             self.ID_border.grid(row=4, column=1)
-            self.blank_LAT.grid(row=5, column=1)
-            self.LAT_border.grid(row=5, column=1)
-            self.blank_LNG.grid(row=6, column=1)
-            self.LNG_border.grid(row=6, column=1)
+            self.blank_LNGLAT.grid(row=5, column=1)
+            self.LNGLAT_border.grid(row=5, column=1)
 
             #\ Species find
             self.Species_label.grid(row=7, columnspan=2)
@@ -517,21 +520,21 @@ class MainPage(tk.Frame):
             self.Plot_Family_drop_down_menu.grid(row=11, column=0, columnspan=2, padx=3)
             self.Plot_Species_drop_down_menu.grid(row=11, column=2, columnspan=2, padx=3)
             self.MatplotlibPlot_button.grid(row=11, column=5, columnspan=2, pady=3, padx=20, sticky=E)
-            self.PyechartsPlot_button.grid(row=12, column=5, columnspan=2, padx=20, sticky=E)
+            self.PyechartsPlot_button.grid(row=12, rowspan=2, column=5, columnspan=2, padx=20, sticky=E)
             self.Time_range_from_label.grid(row=12, column=0)
             self.Time_range_start.grid(row=12, column=1)
             self.Time_range_start_border.grid(row=12, column=1)
             self.Time_range_to_label.grid(row=12, column=2)
             self.Time_range_end.grid(row=12, column=3)
-            self.Time_range_end_border.grid(row=12, column=3)
+            self.Time_range_end_border.grid(row=12, column=3, pady=3)
 
-            self.TimeDuration_checkbox.grid(row=13, column=1, )
-            self.Time_Duration_year.grid(row=13, column=2, sticky=W)
-            self.Time_Duration_year_border.grid(row=13, column=2, sticky=W)
-            self.Time_Duration_Year_label.grid(row=13, column=3, sticky=W)
-            self.Time_Duration_month.grid(row=13, column=3, sticky=E)
-            self.Time_Duration_month_border.grid(row=13, column=3, sticky=E)
-            self.Time_Duration_Month_label.grid(row=13, column=5, sticky=W)
+            self.TimeDuration_checkbox.grid(row=13, column=1, sticky=W)
+            self.Time_Duration_year.grid(row=13, column=1, sticky=E)
+            self.Time_Duration_year_border.grid(row=13, column=1, sticky=E)
+            self.Time_Duration_Year_label.grid(row=13, column=2, sticky=W)
+            self.Time_Duration_month.grid(row=13, column=3, sticky=W)
+            self.Time_Duration_month_border.grid(row=13, column=3, sticky=W)
+            self.Time_Duration_Month_label.grid(row=13, column=3, sticky=E)
 
             #\ Hub and docs
             self.Hub_Label.pack(side=LEFT, padx=15)
@@ -570,8 +573,7 @@ class MainPage(tk.Frame):
                 _ID_find_result.Latitude = 'No Data'
                 map_key = False
 
-        self.var_LNG.set(_ID_find_result.Longitude)
-        self.var_LAT.set(_ID_find_result.Latitude)
+        self.var_LNGLAT.set(f"({_ID_find_result.Longitude}, {_ID_find_result.Longitude})")
         if (map_key):
             msg = messagebox.askyesno("info", "Do you want to plot it on map?")
             if (msg):
@@ -992,6 +994,33 @@ class MainPage(tk.Frame):
     #\ Hub open
     def Hub_callback(self, link):
         webbrowser.open(link)
+
+
+    #\ update the image cover
+    def update_img(self):
+        self.img_counter %= len(Index.img_url_list)
+        try:
+            image_bytes = urlopen( Index.img_url_list[self.img_counter]).read()
+            # internal data file
+            data_stream = io.BytesIO(image_bytes)
+
+            # open as a PIL image object
+            pil_image = Image.open(data_stream)
+
+            # convert PIL image object to Tkinter PhotoImage object
+            pil_image = pil_image.resize((380, 180), Image.ANTIALIAS)
+            self.tk_image = ImageTk.PhotoImage(pil_image)
+        except :
+            self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+
+
+
+        self.imglabel.config(image=self.tk_image)
+        self.img_counter += 1
+        self.after(Index.img_change_time*1000, self.update_img)
+
+
+
 
 
 # Driver Code

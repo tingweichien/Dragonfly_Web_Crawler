@@ -21,7 +21,7 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 ###################################################
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
-MainPageGeometry = "380x650"
+MainPageGeometry = "380x680"
 updateWinGeometry = "500x350"
 
 #\ PY GUI setting
@@ -86,6 +86,7 @@ species_all_record_data_first_url = 'rec_list_view_for_key.php'
 species_all_record_data_page_url = '?pageNum_rs_dragonfly_record='
 species_all_record_data_species_url = '&type=total_kind&kind='
 
+
 #\ total number of the species url
 #\ "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
 total_num_species_url = "kind_total_records.php"
@@ -111,14 +112,37 @@ current_path = os.getcwd()
 #\ image path
 Image_path = current_path + "\docs\image"
 
-#\ github image
+#\ github image icons
 github_img_path = current_path + "\\docs\\image\\github.png"
 
-#\ web version app
+#\ web version app icons
 web_version_img_path = current_path + "\\docs\\image\\web_version.png"
 
-#\ read the docs
+#\ read the docs icons
 Readthedocs_img_path = current_path + "\\docs\\image\\readthedocs.png"
+
+#\ matplotlib icons
+Matplotlib_img_path = current_path + "\\docs\\image\\matplotlib.png"
+
+#\ pyecharts icons
+Pyecharts_img_path = current_path + "\\docs\\image\\pyecharts.png"
+
+#\ echarts icons
+Echarts_img_path = current_path + "\\docs\\image\\echarts.png"
+
+#\ image cover url
+img_url1="https://i.ibb.co/3mQF3Jt/32585369723-e87b06b042-c.jpg"
+img_url2="https://i.ibb.co/z5jBfvN/34077780896-32c563c964-c.jpg"
+img_url3="https://i.ibb.co/G7r55jC/gradonfly-2.jpg"
+img_url4="https://i.ibb.co/bWTSXdg/gragonfly-3.jpg"
+img_url5="https://i.ibb.co/Csw2yNb/49541318057-421658466a-c.jpg"
+
+img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5]
+
+
+#\ img change times(sec)
+img_change_time = 10
+
 
 #\ webdriver to crawl the total number of the record
 popup_chrome_web = False
