@@ -557,3 +557,12 @@ reference :
 4. result
 ![result add Github radthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
 
+## [2020/12/3]
+
+1. Modify the find ID GUI: merge the latitude and logitude together
+
+2. Add the image cover from giving urls and make it change by time
+3. The website to upload image is [IMBB](https://u7803223.imgbb.com/?list=images&sort=date_desc&page=1&params_hidden%5Buserid%5D=YFSvBC&params_hidden%5Bfrom%5D=user)
+4. Reference:
+    - [How to create a timer using tkinter?](https://stackoverflow.com/questions/2400262/how-to-create-a-timer-using-tkinter)
+    - [python使用Tkinter顯示網路圖片的方法](https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/371848/)

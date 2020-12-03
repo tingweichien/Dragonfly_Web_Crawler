@@ -131,17 +131,27 @@ Pyecharts_img_path = current_path + "\\docs\\image\\pyecharts.png"
 Echarts_img_path = current_path + "\\docs\\image\\echarts.png"
 
 #\ image cover url
-img_url1="https://i.ibb.co/3mQF3Jt/32585369723-e87b06b042-c.jpg"
-img_url2="https://i.ibb.co/z5jBfvN/34077780896-32c563c964-c.jpg"
-img_url3="https://i.ibb.co/G7r55jC/gradonfly-2.jpg"
-img_url4="https://i.ibb.co/bWTSXdg/gragonfly-3.jpg"
-img_url5="https://i.ibb.co/Csw2yNb/49541318057-421658466a-c.jpg"
+img_url1 = "https://i.ibb.co/3mQF3Jt/32585369723-e87b06b042-c.jpg"
+img_url2 = "https://i.ibb.co/z5jBfvN/34077780896-32c563c964-c.jpg"
+img_url3 = "https://i.ibb.co/G7r55jC/gradonfly-2.jpg"
+img_url4 = "https://i.ibb.co/bWTSXdg/gragonfly-3.jpg"
+img_url5 = "https://i.ibb.co/Csw2yNb/49541318057-421658466a-c.jpg"
+img_url6 = "https://i.ibb.co/wC4JmbZ/35048782976-2b2158c72e-c.jpg"
+img_url7 = "https://i.ibb.co/yFLjyJx/50114518317-f3dc38aa42-c.jpg"
+img_url8 = "https://i.ibb.co/2FkyRcM/50347503451-9c1a57a74b-c.jpg"
 
-img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5]
+img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5, img_url6, img_url7, img_url8]
 
 
-#\ img change times(sec)
+#\ cover img change times(sec)
 img_change_time = 10
+
+
+#\ cover image size setting
+coverImagWidth = 360
+coverImagHeight = 210
+
+
 
 
 #\ webdriver to crawl the total number of the record

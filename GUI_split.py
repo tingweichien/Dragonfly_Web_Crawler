@@ -261,13 +261,12 @@ class MainPage(tk.Frame):
             #####################
             #\ 設定圖片
             #\ directory from where script was ran
-            # self.canvas = Canvas(self.LabelFrame_Canvas, height=180, width=380)
-            # self.canvas.background = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
-            # self.image = self.canvas.create_image(0, 0, anchor='nw', image=self.canvas.background)
             self.img_counter = 0
+            self.previous_img = None
             # put the image on a typical widget
             self.imglabel = tk.Label(self, bg='white',relief=FLAT, borderwidth=0, highlightthickness=0)
             self.imglabel.pack(padx=5, pady=5)
+            self.ini_while = False
             self.update_img()
 
 
@@ -1008,13 +1007,23 @@ class MainPage(tk.Frame):
             pil_image = Image.open(data_stream)
 
             # convert PIL image object to Tkinter PhotoImage object
-            pil_image = pil_image.resize((380, 180), Image.ANTIALIAS)
-            self.tk_image = ImageTk.PhotoImage(pil_image)
+            pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+
+            alpha = 0
+            while alpha < 1.0 and self.init_while:
+                self.previous_img = self.previous_img if self.previous_img != None else pil_image
+                blendImg = Image.blend(self.previous_img, pil_image, alpha)
+                self.tk_image = ImageTk.PhotoImage(blendImg)
+                alpha += 0.01
+                time.sleep(0.01)
+                self.imglabel.config(image=self.tk_image)
+                self.imglabel.update()
+            self.previous_img = pil_image
         except :
             self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+            self.imglabel.config(image=self.tk_image)
 
-
-
+        self.init_while = True
         self.imglabel.config(image=self.tk_image)
         self.img_counter += 1
         self.after(Index.img_change_time*1000, self.update_img)
