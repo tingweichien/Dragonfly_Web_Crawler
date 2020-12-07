@@ -25,6 +25,7 @@ import Plot_from_database as PFD
 from urllib.request import urlopen
 import io
 from PIL import Image, ImageTk
+import threading
 
 
 LARGEFONT =("Verdana", 35)
@@ -99,6 +100,7 @@ class tkinterApp(tk.Tk):
         frame.tkraise()
 
     #\ define the action when mouse hover on the button
+    #\ but it can be replace by ttk widget
     def B_HoverOn(self, event, color):
         event.widget['background'] = color
     def BHoverOn(self, w:tk.Widget, colorList:list):
@@ -266,7 +268,7 @@ class MainPage(tk.Frame):
             # put the image on a typical widget
             self.imglabel = tk.Label(self, bg='white',relief=FLAT, borderwidth=0, highlightthickness=0)
             self.imglabel.pack(padx=5, pady=5)
-            self.ini_while = False
+            self.init_while = False
             self.update_img()
 
 
@@ -995,33 +997,51 @@ class MainPage(tk.Frame):
         webbrowser.open(link)
 
 
-    #\ update the image cover
-    def update_img(self):
-        self.img_counter %= len(Index.img_url_list)
-        try:
-            image_bytes = urlopen( Index.img_url_list[self.img_counter]).read()
-            # internal data file
-            data_stream = io.BytesIO(image_bytes)
-
-            # open as a PIL image object
-            pil_image = Image.open(data_stream)
-
-            # convert PIL image object to Tkinter PhotoImage object
-            pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
-
+    def blending_img(self):
+        if (self.init_while):
             alpha = 0
-            while alpha < 1.0 and self.init_while:
-                self.previous_img = self.previous_img if self.previous_img != None else pil_image
-                blendImg = Image.blend(self.previous_img, pil_image, alpha)
+            while(alpha < 1.0):
+                self.previous_img = self.previous_img if self.previous_img != None else self.pil_image
+                blendImg = Image.blend(self.previous_img, self.pil_image, alpha)
                 self.tk_image = ImageTk.PhotoImage(blendImg)
                 alpha += 0.01
+                # self.thread_event.wait(0.01)
                 time.sleep(0.01)
                 self.imglabel.config(image=self.tk_image)
                 self.imglabel.update()
-            self.previous_img = pil_image
-        except :
+
+            # \ set the current image as previous
+            self.previous_img = self.pil_image
+
+
+    #\ update the image cover
+    def update_img(self):
+
+        #\ for init
+        if (not(self.init_while)):
             self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
-            self.imglabel.config(image=self.tk_image)
+        else:
+            self.img_counter %= len(Index.img_url_list)
+            try:
+                image_bytes = urlopen( Index.img_url_list[self.img_counter]).read()
+                # internal data file
+                data_stream = io.BytesIO(image_bytes)
+
+                # open as a PIL image object
+                self.pil_image = Image.open(data_stream)
+
+                # convert PIL image object to Tkinter PhotoImage object
+                self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+
+                #\ blending the picture in another thread
+                threading.Thread(target=self.blending_img()).start()
+                # self.thread_event = threading.Event()
+            except :
+                print("error")
+                self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+                self.previous_img = self.tk_image
+                self.imglabel.config(image=self.tk_image)
+
 
         self.init_while = True
         self.imglabel.config(image=self.tk_image)
