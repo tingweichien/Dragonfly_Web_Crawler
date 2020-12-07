@@ -471,6 +471,7 @@ reference :
     [Quick start guide](https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html#quick-start)
 
 3. Init some folder and file
+    - ![ReadTheDocs](https://i.imgur.com/vmKIAn6.png)  
     - mkdir ```docs``` folder
     - add ```.readthedocs.yml``` in the root directory
       - i.e.
@@ -516,6 +517,8 @@ reference :
     - (5) Write the content you want to show in the file ```index.rst```
     - (6) The setting on the web will be the following
     ![setting for the readthedoc](https://i.imgur.com/1j97wmf.png)
+
+
 
 ### git rebase
 
@@ -566,3 +569,11 @@ reference :
 4. Reference:
     - [How to create a timer using tkinter?](https://stackoverflow.com/questions/2400262/how-to-create-a-timer-using-tkinter)
     - [python使用Tkinter顯示網路圖片的方法](https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/371848/)
+
+## [2020/12/8]
+
+1. Using multithread to fix the problem that when start to blending the images, the program will stuck and wit until it finished.
+2. But still have a little bit problem on closing if it's in the thread, despite the fact that it will not have any effect currently.
+3. result
+![blending image](https://imgur.com/vIho7nB.gif)
+4. reference:[Threading With Tkinter - Python Tkinter GUI Tutorial #97](https://www.youtube.com/watch?v=jnrCpA1xJPQ&ab_channel=Codemy.com)
