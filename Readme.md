@@ -108,7 +108,7 @@
 
 #### (3) ***Mainpage***
 
-![Mainpage](https://i.imgur.com/2IDBYVc.png)
+![Mainpage](https://i.imgur.com/CJuAWTm.png)
 
 #### (4) ***Plot to Google map***
 

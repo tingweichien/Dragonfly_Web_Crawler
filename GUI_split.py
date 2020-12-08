@@ -26,6 +26,7 @@ from urllib.request import urlopen
 import io
 from PIL import Image, ImageTk
 import threading
+import random
 
 
 LARGEFONT =("Verdana", 35)
@@ -992,7 +993,7 @@ class MainPage(tk.Frame):
             if (self.var_Duration_year.get() not in ['0', "", " "]):
                 self.var_Time_start.set( (datetime.today() - relativedelta(years = int(self.var_Duration_year.get()))).strftime("%Y-%m-%d") )
 
-    #\ Hub open
+    #\ gitHub open
     def Hub_callback(self, link):
         webbrowser.open(link)
 
@@ -1024,13 +1025,13 @@ class MainPage(tk.Frame):
             self.img_counter %= len(Index.img_url_list)
             try:
                 image_bytes = urlopen( Index.img_url_list[self.img_counter]).read()
-                # internal data file
+                #\ internal data file
                 data_stream = io.BytesIO(image_bytes)
 
-                # open as a PIL image object
+                #\ open as a PIL image object
                 self.pil_image = Image.open(data_stream)
 
-                # convert PIL image object to Tkinter PhotoImage object
+                #\ convert PIL image object to Tkinter PhotoImage object
                 self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
 
                 #\ blending the picture in another thread
@@ -1045,7 +1046,7 @@ class MainPage(tk.Frame):
 
         self.init_while = True
         self.imglabel.config(image=self.tk_image)
-        self.img_counter += 1
+        self.img_counter += random.randrange(1, 8, 1) #\ random the number of picture
         self.after(Index.img_change_time*1000, self.update_img)
 
 
