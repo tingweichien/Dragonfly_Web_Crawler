@@ -40,7 +40,7 @@ pyinstaller -F -w  --icon=XXXX.ico .\XXXXXX.py
 
 4. 如果想要print值不要換行，print("XXXX", End= "\r")
 
-5. 正在想要怎麼加速爬蟲，可以試試用mutithread
+5. 正在想要怎麼加速爬蟲，可以試試用multithread
 
 6. selenium + chromedriver 蠻好用的，指令頗直覺，像是人類在瀏覽網頁，有按鈕，填寫等功能，
 其實再PTT那個範例就用過了。而session則是用url請求，也是不錯的用法
@@ -49,14 +49,14 @@ pyinstaller -F -w  --icon=XXXX.ico .\XXXXXX.py
 
 ## [2020/7/22]
 
-1. 原本一直是要用beautifulsoup find_all 的 return list當作arg輸入map_async， 但是不知道為甚麼一直顯示can't recover from stackover flow
-所以我改成值節傳一頁資訊進去，因為這樣就只需要將每個頁面的url傳進去當參數
+1. 原本一直是要用beautifulsoup find_all 的 return list當作arg輸入map_async， 但是不知道為甚麼一直顯示can't recover from stack overflow
+所以我改成直接傳一頁資訊進去，因為這樣就只需要將每個頁面的url傳進去當參數
 <https://morvanzhou.github.io/tutorials/data-manipulation/scraping/4-01-distributed-scraping/>
 
 2. 在住程式要加 \"__init\__" = \"__main\__"
 
 3. session 是可以當參數傳遞的，也就是說如果我想要將登入動作做一次就好了，那就將登入function的session return並且在下一個韓世忠當參數傳入，
-這樣那個函式就會是登入過的seesion
+這樣那個函式就會是登入過的session
 <https://stackoverflow.com/questions/26310467/python-requests-keep-session-between-function>
 
 4. 在用 global variable時，記得要init,不然一直錯，會吃不到multiprocessing 時的 share value
@@ -81,13 +81,13 @@ pyinstaller -F -w  --icon=XXXX.ico .\XXXXXX.py
 
 ## [2020/07/27]
 
-1. to guit the git in the terminal using command :q
+1. to quit the git in the terminal using command :q
 
-2. impliment the multiprocessing crawling in the GUI by using \"__inti\_\_" == \"__main\_\_"
-to avois breakdown of the program
+2. Implement the multiprocessing crawling in the GUI by using \"__inti\_\_" == \"__main\_\_"
+to avoid breakdown of the program
 
-3. Finally impliement the progress bar that can working independently, by using multithread
-using progressbar.step(size) and progressbar.stop(), the progressbar['value'] do not work in multithred
+3. Finally implement the progress bar that can working independently, by using multithread
+using progressbar.step(size) and progressbar.stop(), the progressbar['value'] do not work in multithread
 <https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/ttk-Progressbar.html>
 <https://stackoverflow.com/questions/33768577/tkinter-gui-with-progress-bar>
 
@@ -97,17 +97,17 @@ using progressbar.step(size) and progressbar.stop(), the progressbar['value'] do
 
 6. remember if you are going to access the label or entry or ... in one page, which is a class,
 just make sure the label is in self. (self.labelName =Label(root, ....)), and then add the
-method in that function for calling. Then you can access and change one widget attirbute without
+method in that function for calling. Then you can access and change one widget attribute without
 using global or input args.
 
-7. Finally, finishing formating the google map info window
+7. Finally, finishing formatting the google map info window
 <https://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html>
 
 8. remember that the callback function in combobox or Scale widget need 'event' as args, or else,
 it will not react
 <https://stackoverflow.com/questions/40070478/bind-combobox-to-function>
 
-9. all the page class are inherited from tk.Frame, thus, you simply mosify the Frame when defing the __init__ method
+9. all the page class are inherited from tk.Frame, thus, you simply modify the Frame when define the __init__ method
 <https://stackoverflow.com/questions/34817328/creating-frames-in-tkinter>
 
 10. the entry relief style are too few  that if you want a border , you need to add a frame outside of it
@@ -117,13 +117,13 @@ it will not react
 i.e. "command = lambda: your_function(input_args)"
 <https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter>
 
-12. when I move the code from old GUi to new one, the picture in canvas dissapeared. Then I found that
+12. when I move the code from old GUi to new one, the picture in canvas disappeared. Then I found that
 I do not bind my canvas to the PhotoImage
 <https://stackoverflow.com/questions/16846469/tkinter-canvas-image-is-not-displayed-in-class>
 
 ## [2020/08/03]
 
-1. use checkbox to select if you want to plot the data from databae to the map.
+1. use checkbox to select if you want to plot the data from database to the map.
 
 2. add the hidden password function
 
@@ -135,24 +135,23 @@ python file by just click the run.bat file . Although it works, it is quite stup
 
 5. Finally, someone help me on the issue of pyinstaller in github by using hook to hook the gmplot, so here is the thing :
 
-    (1)add the folder "hooks" and put "hooks-gmplot.py" inside.-->Replace gmplot to which you want to hook
-    (2) Inside the hoo.py write:
+    - (1) add the folder "hooks" and put "hooks-gmplot.py" inside.-->Replace gmplot to which you want to hook
+    - (2) Inside the hoo.py write:
 
     ```python
     from PyInstaller.utils.hooks import collect_data_files
     datas = collect_data_files('gmplot') #-->Replace gmplot to which you want to hook
-    #remember not to write datas = collect_data_files(C:\python\.....\gmplot) , it will raise error of invalid input
+    #remember not to write data = collect_data_files(C:\python\.....\gmplot) , it will raise error of invalid input
     ```
 
-    (3) In CMD type :
-    ```pyinstaller -F GUI_split.py --icon=.\image\dragonfly_ico.ico --addtional-hooks-dir=hooks --clean (clean can be optional)```
+    - (3) In CMD type :
+    ```pyinstaller -F GUI_split.py --icon=.\image\dragonfly_ico.ico --additional-hooks-dir=hooks --clean (clean can be optional)```
 I also see the library that show my error and will hook the gmplot in the future, so that will be typing ```pip install -U pyinstaller-hooks-contrib``` solve all the problem
-
-    (4)reference: <https://github.com/pyinstaller/pyinstaller-hooks-contrib/issues/20>
+    - (4)reference: <https://github.com/pyinstaller/pyinstaller-hooks-contrib/issues/20>
 
 ## [2020/08/04]
 
-1. Fix the problem for copnnecting to MySQL server
+1. Fix the problem for connecting to MySQL server
     (1) The connection to the MyAQL in VScode have some problem :
     ```Client does not support authentication protocol requested by server; consider upgrading MySQL client```
     (2) So to fix the error, type
@@ -191,7 +190,7 @@ I also see the library that show my error and will hook the gmplot in the future
         <https://docs.microsoft.com/en-us/typography/fonts/windows_10_font_list>
     (3)reference: <https://stackoverflow.com/questions/25561009/how-do-you-i-use-mandarin-characters-in-matplotlib>
 
-2. slect specific data in list of dictionary
+2. select specific data in list of dictionary
 
     ``` python
     list(filter(lambda res: res["YEAR(Dates)"] == check_year, result))
@@ -201,7 +200,7 @@ I also see the library that show my error and will hook the gmplot in the future
 
 ## [2020/08/19]
 
-1. successfully solved the normal distribution problem and plot the figure showing the record times in each month seperated by each year.
+1. successfully solved the normal distribution problem and plot the figure showing the record times in each month separated by each year.
 ![20200819](https://i.imgur.com/o27lGxy.png)
 
 2. the histogram function in numpy or matplotlib  will transfer the input array into the appearance of the number, therefore, the input data should be a raw data instead of the statistics data
@@ -209,7 +208,7 @@ I also see the library that show my error and will hook the gmplot in the future
     -->will be the desired row data to feed into hist or norm.pdf or guassin function
     ex: ```b = [4,1,2,1,3,1,1,1]```
     -->1 in```a``` show up 4 times, 2 in ```a``` show up 1 times, ......
-    -->the statistic data that add up the occurrance of each number in ```a``` which will not be desired data to feed into, since the function will do the statistics again, the data plotted will be the occurrance of the occurrance of the number in ```a```
+    -->the statistic data that add up the occurrence of each number in ```a``` which will not be desired data to feed into, since the function will do the statistics again, the data plotted will be the occurrence of the occurrence of the number in ```a```
 reference :
 (1) <https://stackoverflow.com/questions/33203645/how-to-plot-a-histogram-using-matplotlib-in-python-with-a-list-of-data>
 (2) <https://stackoverflow.com/questions/11315641/python-plotting-a-histogram-with-a-function-line-on-top>
@@ -227,7 +226,7 @@ reference :
 ## [2020/08/21]
 
 1. Using **matplotlib**
-2. Add the mark and the responsed text
+2. Add the mark and the responded text
    ![Imgur](https://i.imgur.com/6SgLY5v.png)
 3. add the pie chart
    ![Imgur](https://i.imgur.com/rD3qrCO.png)
@@ -274,7 +273,7 @@ reference :
 
 ### Finally figure out how to change the simplified chinese into tradition chinese in the map by pyecharts
 
-1. There are two version of the pyecharts, one is 0.5.11 and the        other is  v1. The 0.5.11 version is no longer maintain anymore, but   there are still  many lesson and example on the internet. The difference is that in 0.5.11 there are less feature and most of all, the v1 modify the API which group the arg or kwarg(key word arguements).
+1. There are two version of the pyecharts, one is 0.5.11 and the        other is  v1. The 0.5.11 version is no longer maintain anymore, but   there are still  many lesson and example on the internet. The difference is that in 0.5.11 there are less feature and most of all, the v1 modify the API which group the arg or kwarg(key word arguments).
 
 2. My problem is that I want to change the simplified chinese in the map into tradition chinese. So I start to look for maptype, and I found that in the pyecharts.datasets.map_filenames.json the "台灣" maptype is point to map\taiwan.js. However, I just couldn't find any way to get access to the file. So I turn into the older version which require plugin(pip install echart ....) from the map, and I finally can find the taiwan.js in the
    ```C:\Python37\Lib\site-packages\echarts_china_provinces_pypkg\resources\echarts-china-provinces-js```
@@ -435,7 +434,7 @@ reference :
 
 2. The ```.gitignore``` will ignore the ```Craw_data_clean``` after merging , so I am not able to merge them together
 
-    (1) Therefore I reset the current commit, delete the content in the gitigore and recommit again
+    (1) Therefore I reset the current commit, delete the content in the gitignore and recommit again
 
     (2) The following step shows how to do that, but one problem is that I wil not able to merge then after reset, it will do a new commit instead.
 
@@ -447,7 +446,7 @@ reference :
     $ git commit -c ORIG_HEAD                      # (4)
     ```
 
-    (4) When encounter the conflicts the vscode offer accept all imcomming or current settings. You can access it by right clicking the file **in the chaging block** not in the **original file block**
+    (4) When encounter the conflicts the vscode offer accept all incoming or current settings. You can access it by right clicking the file **in the chaging block** not in the **original file block**
     ![picture 2](https://i.imgur.com/2aPYnXr.png)
 
     (5) reference: <https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git>
@@ -456,7 +455,7 @@ reference :
 
 1. Add the Plot charts option GUI
 
-2. The command link to the ```Entry``` can be as the method of the ```StringVar``` : ```trace_Add("write", callbackFunc)``` , remember the call-back function should have three default input argumnets (var, index, mode)
+2. The command link to the ```Entry``` can be as the method of the ```StringVar``` : ```trace_Add("write", callbackFunc)``` , remember the call-back function should have three default input arguments (var, index, mode)
 
 3. If you want to merge the branch in non fast forward: ```--no-ff```
 
@@ -539,7 +538,7 @@ reference :
 2. The photoImage is pretty weired
 
    - Remember to use the ```.png``` file
-   - The instance of the photoimage should be start wit ```self.```
+   - The instance of the photo image should be start wit ```self.```
    - You should make the instance of the PhotoImage class or else it will failed to display
 
        ```python
@@ -558,11 +557,11 @@ reference :
     ```
 
 4. result
-![result add Github radthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
+![result add Github readthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
 
 ## [2020/12/3]
 
-1. Modify the find ID GUI: merge the latitude and logitude together
+1. Modify the find ID GUI: merge the latitude and longitude together
 
 2. Add the image cover from giving urls and make it change by time
 3. The website to upload image is [IMBB(https://imgbb.com/)](https://u7803223.imgbb.com/?list=images&sort=date_desc&page=1&params_hidden%5Buserid%5D=YFSvBC&params_hidden%5Bfrom%5D=user)

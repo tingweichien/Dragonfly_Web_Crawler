@@ -18,7 +18,6 @@ import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
 from update_chromedriver import *
-#from tkcalendar import *
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
