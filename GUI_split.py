@@ -673,7 +673,7 @@ class MainPage(tk.Frame):
             self.check = False
 
         self.button_popup['state'] = 'disabled'
-        UpdateGIF_thread = threading.Thread(target=self.UpdateGIF, args=(0,)).start()
+        threading.Thread(target=self.UpdateGIF, args=(0,)).start()
         threading.Thread(target=start_multithread).start()
 
     #\ pop up windows for progress
@@ -692,7 +692,7 @@ class MainPage(tk.Frame):
 
         progressbar_label = Label(self.progressLabelFrame, text="Progress")
         progressbar_label.pack(side=LEFT)
-        self.Load_image = [PhotoImage(file="image\LOAD.gif", format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
+        self.Load_image = [PhotoImage(file=Index.updateGIF, format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
         self.loading_label = Label(self.progressLabelFrame,)
         self.loading_label.pack(side=RIGHT)
 

@@ -49,6 +49,9 @@ ico_image_path = 'docs\image\\dragonfly_ico.ico'
 #\ statement in the login page
 copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
 
+#\ update GIF
+updateGIF = "docs\image\LOAD.gif"
+
 
 
 ###################################################

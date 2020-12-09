@@ -146,7 +146,7 @@ def Update_database(connection):
                 Species_table_name = Index.Species_class_key[S] + Index.Species_key[Sp]
                 create_species_info_table = create_species_info_table_first + Species_table_name + create_species_info_table_end
                 create_table(connection, create_species_info_table)
-                filepath = ".\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
+                filepath = ".\\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
                 with open(filepath, 'r', newline='', errors='ignore') as r:
                     CSVData_org = csv.DictReader(r)
                     CSVData = [line for line in CSVData_org]
