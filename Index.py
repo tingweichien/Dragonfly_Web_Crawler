@@ -7,6 +7,7 @@ import os
 from multiprocessing import Process
 import multiprocessing
 
+
 ##################################################
 # my account and password
 myaccount =  None
@@ -44,13 +45,13 @@ info_box_template = """
 
 
 #\ ico image path
-ico_image_path = 'docs\image\\dragonfly_ico.ico'
+ico_image_path = 'docs\\image\\dragonfly_ico.ico'
 
 #\ statement in the login page
 copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
 
 #\ update GIF
-updateGIF = "docs\image\LOAD.gif"
+updateGIF = "docs\\image\\LOAD.gif"
 
 
 
@@ -109,11 +110,21 @@ headers = {
 }
 
 
+#\ login proxy
+proxy = {
+    "https": 'https://220.135.64.51:8080',
+    "http": 'http://220.135.64.51:8080'
+}
+
+
+#\ chrome driver path
+chromedriver_path = ".\\Chromedriver\\chromedriver.exe"
+
 #\ file path
 current_path = os.getcwd()
 
 #\ image path
-Image_path = current_path + "\docs\image"
+Image_path = current_path + "\\docs\\image"
 
 #\ github image icons
 github_img_path = current_path + "\\docs\\image\\github.png"
@@ -160,7 +171,8 @@ coverImagHeight = 210
 
 
 #\ webdriver to crawl the total number of the record
-popup_chrome_web = False
+#\ let the chromedriver run in the background or not (Falswe --> yes, don't pop up)
+popup_chrome_web = False #True
 
 
 ##----crawl dtat to csv----
@@ -655,14 +667,14 @@ species_SubOrder_E = ["Zygoptera(damsefly)", "Anisozygoptera(dragonfly)"]
 ##############################################################################
 ##\ This is the params for the map plot in pyechart
 #\ simplified to tradition Dict
-s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'};
+s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'}
 t2s = {v : k for k, v in s2t.items()}
 
 #\ simplified to tradition function
 s2tFunc = lambda x : [t2s[i] for i in x]
 
 #\ the file to plot
-pyecharts_psc_html = ".\pyecharts_result\pyecharts_psc.html"
+pyecharts_psc_html = ".\\pyecharts_result\\pyecharts_psc.html"
 
 #\ init the condition of the web open state
 html_file_exist = False
@@ -680,3 +692,14 @@ DB_name =  'Dragonfly_DB'
 
 #\ init plot delta time showing on the GUI of the time start to end time (year)
 Plot_chart_init_delta_years = 10 #\ 10 years
+
+
+
+
+#\ weather data api
+#\ https://www.worldweatheronline.com/developer/my/subscription/
+weather_key = [#"190ec7d0ebfe4c7992f161552201012",
+                "339a4a4173774318846204731201912",
+                "fcca62f7fe39421bab3205329201912",
+                "4a28a928fa024ac6aa1174831201212",
+                ]

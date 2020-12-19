@@ -4,7 +4,6 @@
 
 import requests
 from bs4 import BeautifulSoup
-import DataClass
 from DataClass import *
 import re
 import Index
@@ -38,7 +37,7 @@ def Login_Web(Input_account, Input_password):
     }
     Login_state = True
     try:
-        r = requests.get(Index.Login_url)
+        r = requests.get(Index.Login_url, proxies=Index.proxy)
     except:
         return [None, None, None]
     else:
@@ -151,9 +150,8 @@ def DataCrawler(Login_Response, Input_ID):
 
     for obj in Data_List:
         print(obj, sep =' ')
-    '''
-
-    '''
+    
+    
     #\ 執行GUI input
     #\確認是否成功登入
     soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
@@ -179,9 +177,9 @@ def DataCrawler(Login_Response, Input_ID):
         response_Detailed_discriptions2 = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_Detailed_discriptions2.text, 'html.parser')
         Longitude = soup2.find(id = 'R_LNG').get('value')
-        #print('經度 : ' + Longitude)
+        print('經度 : ' + Longitude)
         Lateral = soup2.find(id = 'R_LAT').get('value')
-        #print('緯度 : ' + Lateral)
+        print('緯度 : ' + Lateral)
         ID_find_result = DetailedTableInfo(id,
                                             soup2.find(id ='日期').get('value'),
                                             soup2.find(id='時間').get('value'),
@@ -379,9 +377,11 @@ def Find_species_total_data():
     # 不開啟實體瀏覽器背景執行
     if not Index.popup_chrome_web:
         options.add_argument("--headless")
+        options.add_argument("--disable-extensions")
         options.add_argument('--disable-gpu')
 
-    driver = webdriver.Chrome(chrome_options = options)
+
+    driver = webdriver.Chrome(executable_path = Index.chromedriver_path, chrome_options = options)
     driver.get(Index.webdriver_Login_url)
     driver.find_element_by_name("account").send_keys(Index.myaccount)
     driver.find_element_by_name("password").send_keys(Index.mypassword)

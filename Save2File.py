@@ -8,13 +8,10 @@
 # https://stackoverflow.com/questions/4897359/output-to-the-same-line-overwriting-previous-output
 # https://stackoverflow.com/questions/29244286/how-to-flatten-a-2d-list-to-1d-without-using-numpy
 
-from tkinter import filedialog
-from tkinter import *
 from tkinter import messagebox
 import csv
 import os.path
 from os import path
-#from Index import *
 import Index
 from Dragonfly import *
 import codecs
@@ -140,7 +137,7 @@ def CleanDataTF(*args):
         os.makedirs(folder, exist_ok=True)
         for species in Index.Species_Name_Group[Index.Species_Family_Name.index(name)]:
             filepath = folder + "\\" + Index.Species_class_key[name] + Index.Species_key[species] + "_clean.csv"
-            oldfilepath = ".\Crawl_Data\\" + Index.Species_class_key[name] + "\\" +Index.Species_class_key[name] + Index.Species_key[species] + ".csv"
+            oldfilepath = ".\\Crawl_Data\\" + Index.Species_class_key[name] + "\\" +Index.Species_class_key[name] + Index.Species_key[species] + ".csv"
             old = ReadFromFile(oldfilepath)
             newData = []
             for row in old:
@@ -195,7 +192,7 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         # make sure the loop method will not redo this again and again
         if Index.parse_type == 'parse_one':
             # login
-            [session_S2F, Login_Response_S2F, Login_state_S2F] = Login_Web(Index.myaccount, Index.mypassword)
+            [session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)
 
             # find the total number of the species_input (expect executed one time)
             Species_total_num_Dict = Find_species_total_data()
@@ -247,7 +244,7 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
 
         # without multiprocessing
         else:
-            [DataTmpList, page] = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+            [DataTmpList, _] = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
 
 
         Data = []
@@ -284,14 +281,14 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         end = time.time()
         derivation = end - start
 
-        self.IStateLabel_text('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))#print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
+        self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
 
 
 
 #\ parse all species
 def parse_all(self):
     program_stop_check = False
-    [Session_S2F, Login_Response_S2F, Login_state_S2F] = Login_Web(Index.myaccount, Index.mypassword)   # login
+    [Session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)   # login
     Species_total_num_Dict = Find_species_total_data()  # find the total number of the species_input (expect executed one time)
     Update = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
     writeTotalNum2Json(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
@@ -303,7 +300,7 @@ def parse_all(self):
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
                 folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
-                program_check = Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
+                Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                 self.progressbar.step(100 / TotalSpeciesNumber)
                 self.pbLabel_text()
                 if program_stop_check:
@@ -321,7 +318,7 @@ def parse_all(self):
                 self.progressbar.step(100 / TotalSpeciesNumber)
                 self.pbLabel_text()
                 if (species_loop in Update) or (not file_check): # if the species is in the update list or the file doesn't exist
-                    program_check = Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
+                    Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     if program_stop_check:
                         return
 
@@ -362,9 +359,9 @@ def savefile(self, parsetype:str):
             parse_all(self)
 
         #\ not using
-        elif parsetype == 'parse_one':
-            Save2File(self, Index.parse_one_family_name, Index.parse_one_species_name, None, None)
-            print("\n---Finishing crawling {} ---".format(Index.parse_family_name))
+        # elif parsetype == 'parse_one':
+        #     Save2File(self, Index.parse_one_family_name, Index.parse_one_species_name, None, None)
+        #     print("\n---Finishing crawling {} ---".format(Index.parse_family_name))
         else:
             print("!!!! No parse type define !!!!!")
 
@@ -381,7 +378,7 @@ def savefile(self, parsetype:str):
         self.pbLabel_text()
         Time_interval = End - Start
         self.set_all_to_empty()
-        self.IUpdateNumLabel_text("--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
-        print("\n--- Finished crawling all the data ---  Totally spend: {}m {}s".format(int(Time_interval / 60), round(Time_interval % 60), 1))
+        self.IUpdateNumLabel_text(f"--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s")
+        print(f"\n--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s" )
 
 

@@ -17,7 +17,7 @@ from datetime import datetime
 import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
-from update_chromedriver import *
+from Chromedriver.update_chromedriver import *
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
@@ -996,20 +996,24 @@ class MainPage(tk.Frame):
 
 
     def blending_img(self):
-        if (self.init_while):
-            alpha = 0
-            while(alpha < 1.0):
-                self.previous_img = self.previous_img if self.previous_img != None else self.pil_image
-                blendImg = Image.blend(self.previous_img, self.pil_image, alpha)
-                self.tk_image = ImageTk.PhotoImage(blendImg)
-                alpha += 0.01
-                # self.thread_event.wait(0.01)
-                time.sleep(0.01)
-                self.imglabel.config(image=self.tk_image)
-                self.imglabel.update()
+        try:
+            if (self.init_while):
+                alpha = 0
+                while(alpha < 1.0):
+                    self.previous_img = self.previous_img if self.previous_img != None else self.pil_image
+                    blendImg = Image.blend(self.previous_img, self.pil_image, alpha)
+                    self.tk_image = ImageTk.PhotoImage(blendImg)
+                    alpha += 0.01
+                    # self.thread_event.wait(0.01)
+                    time.sleep(0.01)
+                    self.imglabel.config(image=self.tk_image)
+                    self.imglabel.update()
 
-            # \ set the current image as previous
-            self.previous_img = self.pil_image
+                # \ set the current image as previous
+                self.previous_img = self.pil_image
+        except:
+            print("Blending failed~")
+
 
 
     #\ update the image cover
@@ -1017,7 +1021,7 @@ class MainPage(tk.Frame):
 
         #\ for init
         if (not(self.init_while)):
-            self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
         else:
             self.img_counter %= len(Index.img_url_list)
             try:
@@ -1035,8 +1039,8 @@ class MainPage(tk.Frame):
                 threading.Thread(target=self.blending_img()).start()
                 # self.thread_event = threading.Event()
             except :
-                print("error")
-                self.tk_image  = PhotoImage(file = Index.Image_path + "\dragonfly_picture.gif")
+                print("update image error")
+                self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
                 self.previous_img = self.tk_image
                 self.imglabel.config(image=self.tk_image)
 

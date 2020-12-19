@@ -576,3 +576,51 @@ reference :
 3. result
 ![blending image](https://imgur.com/vIho7nB.gif)
 4. reference:[Threading With Tkinter - Python Tkinter GUI Tutorial #97](https://www.youtube.com/watch?v=jnrCpA1xJPQ&ab_channel=Codemy.com)
+
+## [2020/12/16]
+
+1. Successfully use the weather api to get the history data
+
+2. f format for using dictionary
+
+    ```python
+    f'My name {person["name"]} and my age {person["age"]}'
+    ```
+
+## [2020/12/187]
+
+1. Delete one of the column in the MySQL database.
+
+    ```SQL
+    ALTER TABLE posts
+    DROP COLUMN created_at,
+    DROP COLUMN updated_at;
+    ```
+
+2. Add new column to the MySQL database
+
+    ```SQL
+    ALTER TABLE posts
+    ADD COLUMN created_at;
+    ```
+
+3. Add the weather column in database. Insert the weather data in Json format. The data is get from the weather api from [World Weather Online](https://www.worldweatheronline.com/developer/my/)
+
+4. Since this is the only one free web api fro history data.
+
+## [2020/12/20]
+
+1. The debugging method for the query to mysql is to user
+   1. Try it on the MySQL app first by using apply.
+   2. Add the error printing
+    ![query debugging](https://i.imgur.com/J0ctfDX.png)
+
+2. Add the poxy to the login request since somehow the login may be expire or timeout
+    - code
+
+        ```python
+        r = requests.get(Index.Login_url, proxies=Index.proxy)
+        ```
+
+    - [ref](https://stackoverflow.com/questions/8287628/proxies-with-python-requests-module)
+
