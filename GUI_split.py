@@ -1028,36 +1028,17 @@ class MainPage(tk.Frame):
 
     #\ Blending the image
     def blending_img(self):
+
         try:
-            if (self.init_while):
-                alpha = 0
-                while(alpha < 1.0):
-                    self.previous_img = self.previous_img if self.previous_img != None else self.pil_image
-                    blendImg = Image.blend(self.previous_img, self.pil_image, alpha)
-                    self.tk_image = ImageTk.PhotoImage(blendImg)
-                    alpha += 0.01
-                    # self.thread_event.wait(0.01)
-                    time.sleep(0.01)
-                    self.imglabel.config(image=self.tk_image)
-                    self.imglabel.update()
+            #\ random the number of picture
+            self.img_counter = random.randrange(0, 9, 1)
 
-                # \ set the current image as previous
-                self.previous_img = self.pil_image
-        except:
-            print("[Warning] Blending failed~")
-
-
-
-    #\ update the image cover
-    def update_img(self):
-
-        #\ for init
-        if (not(self.init_while)):
-            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
-        else:
+            #\ limit the image counter within the range
             self.img_counter %= len(Index.img_url_list)
-            # try:
+
+            #\ open the image from url
             image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
+
             #\ internal data file
             data_stream = io.BytesIO(image_bytes)
 
@@ -1067,18 +1048,42 @@ class MainPage(tk.Frame):
             #\ convert PIL image object to Tkinter PhotoImage object
             self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
 
+            #\ Blending
+            if (self.init_while):
+                alpha = 0
+                while(alpha < 1.0):
+                    self.previous_img = self.previous_img if self.previous_img != None else self.pil_image
+                    blendImg = Image.blend(self.previous_img, self.pil_image, alpha)
+                    self.tk_image = ImageTk.PhotoImage(blendImg)
+                    alpha += Index.BlendingPrecision #\ decide how precise the blending is
+                    time.sleep(Index.BlendingTime) #\ decide how long between each frame
+                    self.imglabel.config(image=self.tk_image)
+                    self.imglabel.update()
+
+                # \ set the current image as previous
+                self.previous_img = self.pil_image
+
+        except:
+            print("[Warning] Blending failed~")
+            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+            self.imglabel.config(image=self.tk_image)
+
+
+
+    #\ update the image cover
+    def update_img(self):
+
+        if (self.init_while):
             #\ blending the picture in another thread
             threading.Thread(target=self.blending_img()).start()
 
-            # except :
-            #     print("[warning] update image error")
-            #     self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
-            #     self.previous_img = self.tk_image
-            #     self.imglabel.config(image=self.tk_image)
+        #\ for init
+        else:
+            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+            self.init_while = True
+            self.imglabel.config(image=self.tk_image)
 
-        self.init_while = True
-        self.imglabel.config(image=self.tk_image)
-        self.img_counter = random.randrange(0, 9, 1) #\ random the number of picture
+        #\ rerun the function every XXX second
         self.after(Index.img_change_time*1000, self.update_img)
 
 
