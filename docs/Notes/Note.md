@@ -619,8 +619,28 @@ reference :
     - code
 
         ```python
+        proxy = {
+           "https": 'https://220.135.64.51:8080',
+            "http": 'http://220.135.64.51:8080'
+        }
         r = requests.get(Index.Login_url, proxies=Index.proxy)
         ```
 
     - [ref](https://stackoverflow.com/questions/8287628/proxies-with-python-requests-module)
+    - proxy available website : [free proxy](http://free-proxy.cz/en/proxylist/country/TW/http/ping/level3)
 
+## [2020/12/21]
+
+1. The image update failed in urlopen.
+    - use timeout in the urlopen args to solve this
+
+        ```python
+        image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
+        ```
+
+    - [ref](https://www.itread01.com/content/1549305566.html)
+
+2. datetime
+   - **datetime.strftime** : means string formatter, this will format a datetime object to string format.
+   - **datetime.strptime** : means string parser, this will convert a string format to datetime.
+   - [ref](https://stackoverflow.com/questions/8142364/how-to-compare-two-dates)

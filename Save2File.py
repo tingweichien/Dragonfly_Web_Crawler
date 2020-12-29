@@ -14,7 +14,6 @@ import os.path
 from os import path
 import Index
 from Dragonfly import *
-import codecs
 from functools import reduce
 from operator import add
 from multiprocessing import Process, Value, Pool
@@ -26,7 +25,7 @@ from Database_function import *
 TotalSpeciesNumber = 0
 
 # read data from csv file
-def Read_check_File(File_name):
+def Read_check_File(File_name:str):
     oldData = []
     oldData_len = 0
     oldID = 0
@@ -48,7 +47,7 @@ def Read_check_File(File_name):
 
 
 #\ write data to csv file
-def Write2File(File_path, folder, file_check, file_size, CSV_Header, Data, oldData):
+def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_Header:List[str], Data:list, oldData:list):
     #\ auto make the directories
     newDir = Index.current_path + "\\" + folder
     if (not os.path.isdir(newDir)):
@@ -73,13 +72,13 @@ def Write2File(File_path, folder, file_check, file_size, CSV_Header, Data, oldDa
 
 
 #\ write species number to json file
-def writeTotalNum2Json(inputDict, filepath):
+def writeTotalNum2Json(inputDict:dict, filepath:str):
     with open(filepath, 'w', encoding='utf-8') as outputfile:
         json.dump(inputDict, outputfile, ensure_ascii=False, indent = 4) #ident =4 use for pretty print, write inputDict to the outputfile
 
 
 #\ read json file
-def ReadTotalNum2Json(filepath):
+def ReadTotalNum2Json(filepath:str):
     global TotalSpeciesNumber
     try:
         with open(filepath, 'r', errors='ignore', encoding='utf-8') as readfile:
@@ -92,7 +91,7 @@ def ReadTotalNum2Json(filepath):
 
 
 #\ check if there is any species need to be update by comparing the new species number in the web with old Snumber from json file
-def checkUpdateSpecies(NewNumberData, filepath):
+def checkUpdateSpecies(NewNumberData:dict, filepath:str)->list:
     Update = []
     OldNumberData = ReadTotalNum2Json(filepath)
     if not OldNumberData == []:
@@ -166,10 +165,11 @@ def CleanDataTF(*args):
 
 
 #\ main program
-def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_total_num_Dict, File_name, folder):
+#\ 1.get the data by web crawler by single or multi processing
+#\ 2.write to the csv file
+def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Species_total_num_Dict:dict, File_name:str, folder:str)->bool:
     if __name__ == 'Save2File':
-    #if __name__ == '__main__':
-        # setting
+        #\ setting
         oldID = 0
         oldData_len = 0
         file_size = 0
@@ -177,76 +177,89 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         oldData = []
         global DataCNT, TotalCount
 
-
+        #\ For displaying in GUI
         self.INameLabel_text(Input_species_famliy, Input_species)
         print("\n--Start crawling-- " + Input_species_famliy + " " + Input_species)
-
         self.IFileNameLabel_text(File_name)
         print("[File name]: " + File_name)
 
-        # <timing>
+        #\ <timing>
         start = time.time()
 
+        #\ Read the old data
         [oldData, oldData_len, oldID, file_check, file_size] = Read_check_File(File_name)
 
-        # make sure the loop method will not redo this again and again
-        if Index.parse_type == 'parse_one':
-            # login
-            [session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)
-
-            # find the total number of the species_input (expect executed one time)
-            Species_total_num_Dict = Find_species_total_data()
-
-
-        # get the data number
+        #\ get the total data number
         Total_num = int(Species_total_num_Dict[Input_species])
 
-        # choose to do the multiprocessing or not
+        #\ choose to do the multiprocessing or not
         if Index.do_multiprocessing :
-            expecting_CNT = Total_num - oldData_len  # get the total number of data need to be update ot crawl
 
-            self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))#print("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
+            #\ get the total number of data need to be update ot crawl
+            expecting_CNT = Total_num - oldData_len
+
+            #\ GUI display
+            self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
+
+            #\ check if the expecting update number is zero, which the don't need to update
             if expecting_CNT <= 0:
                 self.IStateLabel_text("No Data need to update~")
-                print("No Data need to update~")
+                print("[warning] No Data need to update~")
                 return False
 
-            expecting_page = int(expecting_CNT / Index.data_per_page)  # since it starts form page 0
+            #\ change page every ten counts
+            expecting_page = int(expecting_CNT / Index.data_per_page)
+
+            #\ since it starts form page 0, control the counter within the range 0~10 in each page
             renmaind_data_Last_page = expecting_CNT % Index.data_per_page
+
+            #\ Multi-processing pool
             pool = Pool(Index.cpus,
                         initializer=init,
                         initargs=(DataCNT,))
             func = partial( crawl_all_data_mp2,
-                            session_S2F, Input_species_famliy, Input_species, Total_num, expecting_CNT, expecting_page, renmaind_data_Last_page) # combine the not iterable value
+                            session_S2F,
+                            Input_species_famliy,
+                            Input_species,
+                            expecting_CNT,
+                            expecting_page,
+                            renmaind_data_Last_page) # combine the not iterable value
+
+            #\ result
             returnList = pool.map_async(func, list(range(expecting_page + 1)))
+
+            #\ Accumulate the counter by lock
             DataCNT_lock = Lock()
             with DataCNT_lock:
                 TotalCount += DataCNT.value
                 DataCNT.value = 0
 
-
+            #\ GUI display
             self.ICurrentNumLabel_text(TotalCount)
             print("[current total crawl]: {} data".format(TotalCount))
 
             #\ check if the total counts over the limit
+            #\ to prevent over crawling which will cause heavy load to the web owner
+            #\ set the limit yourself in Index.limit_cnt
             if TotalCount <= Index.limit_cnt:
                 if not (len(returnList.get()) == 0) :
+                    #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
                     DataTmpList = reduce(add, returnList.get())
                 else:
                     print("No Data need to update\n")
                     return False
             else:
-
                 self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
-                print("!!!Meet the limit for data counts!!!!\n")
+                print("[warning] !!!Meet the limit for data counts!!!!\n")
                 pool.terminate()
-                return True  #End the program
+                return True  #\End the program
 
-        # without multiprocessing
+        #\ without multiprocessing
+        #\ singal thread and singal process
         else:
-            [DataTmpList, _] = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+            DataTmpList = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
 
-
+        #\ reformat the data
         Data = []
         for Data_tmp in DataTmpList:
             Data.append([Data_tmp.SpeciesFamily,
@@ -263,10 +276,11 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
                     Data_tmp.Longitude,
                     Data_tmp.Description
                     ])
-        if len(Data) == 0:
 
+        #\ check if there is data need to update
+        if len(Data) == 0:
             self.IStateLabel_text("No Data need to update")
-            print("No Data need to update")
+            print("[warning] No Data need to update")
             return False
 
         #\ write the data to file
@@ -281,6 +295,7 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
         end = time.time()
         derivation = end - start
 
+        #\ GUI display
         self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
 
 
@@ -288,10 +303,20 @@ def Save2File(self, Input_species_famliy, Input_species, session_S2F, Species_to
 #\ parse all species
 def parse_all(self):
     program_stop_check = False
-    [Session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)   # login
-    Species_total_num_Dict = Find_species_total_data()  # find the total number of the species_input (expect executed one time)
+
+    #\ login
+    [Session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)
+
+    #\ find the total number of the species_input (expect for executing one time)
+    Species_total_num_Dict = Find_species_total_data()
+
+    #\ store the items that need to update in this variable
     Update = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
+
+    #\ write the total number to json file
     writeTotalNum2Json(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
+
+    #\ GUI display
     self.ICurrentNumLabel_text(0)
 
     #\ if there is no json file, which means parsing at the first time
@@ -306,38 +331,50 @@ def parse_all(self):
                 if program_stop_check:
                     return
 
-            self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))#print("\n---Finishing crawling {} --- ".format(species_family_loop))
+            #\ GUI display
+            self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))
 
-    #\ pasring for the second times
+    #\ pasring for the second times, after the json file been created
     else:
         for species_family_loop in Index.Species_Family_Name:
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
+
+                #\ file to write to
                 folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
-                file_check = path.exists(Index.current_path + "\\" + File_name) # check the file exist or not
+
+                #\ check the file exist or not
+                file_check = path.exists(Index.current_path + "\\" + File_name)
+
+                #\ GUI display - progress bar
                 self.progressbar.step(100 / TotalSpeciesNumber)
                 self.pbLabel_text()
-                if (species_loop in Update) or (not file_check): # if the species is in the update list or the file doesn't exist
+
+                #\ if the species is in the update list or the file doesn't exist
+                if (species_loop in Update) or (not file_check):
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     if program_stop_check:
                         return
 
-            self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))#print("\n---Finishing crawling {} --- ".format(species_family_loop))
+            #\ GUI display
+            self.IFinishStateLabel_text("---Finishing crawling {} --- ".format(species_family_loop))
 
     #\ update the file to the clean file which all of the data needs to have LAT and LNG information
     CleanDataTF()
 
 
 
+
 #\ read the file from csv database
-def ReadFromFile(file):
+def ReadFromFile(file:str)->List[DetailedTableInfo]:
     ReadFileList = []
     if (os.path.exists(file) == True):
         with open(file, 'r', newline="", errors='ignore') as r:
             ReadFile = csv.reader(r)
             for line in ReadFile:
                 ReadFileList.append(
-                    DetailedTableInfo(line[2],line[3],line[4], line[6],line[7],line[8],line[9], line[5], line[10], line[11], line[0], line[1], line[12])
+                    DetailedTableInfo(line[2], line[3], line[4], line[6], line[7], line[8], line[9],
+                                        line[5], line[10], line[11], line[0], line[1], line[12])
                 )
             del ReadFileList[0:1]
             if len(ReadFileList) == 0:
@@ -348,33 +385,36 @@ def ReadFromFile(file):
 
 #########################################################################
 #\ select the parsing type : all family or one
-def savefile(self, parsetype:str):
+def savefile(self, parsetype:str, Update_enable:List[bool]):
     # --main--
     if __name__ == 'Save2File':
-        # start timer
+        #\ start timer
         Start = time.time()
 
-
-        if parsetype == 'parse_all':
-            parse_all(self)
-
-        #\ not using
-        # elif parsetype == 'parse_one':
-        #     Save2File(self, Index.parse_one_family_name, Index.parse_one_species_name, None, None)
-        #     print("\n---Finishing crawling {} ---".format(Index.parse_family_name))
+        _, _, UpdateNewdata = Update_enable
+        if UpdateNewdata:
+            if parsetype == 'parse_all':
+                parse_all(self)
+            else:
+                print("[warning] !!!! No parse type define !!!!!")
         else:
-            print("!!!! No parse type define !!!!!")
+            print("[warning] Not going to Update new data from web !!!!!")
 
 
-        print("start writing to the MySQL database")
         #\ Build the MySQL connection
+        print("start writing to the MySQL database")
         connection_SF = create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
+
+
         #\ also insert to the data base
-        Update_database(connection_SF)
+        Update_database(self, connection_SF, Update_enable)
 
 
         #\ End timer
         End = time.time()
+
+
+        #\ GUI display
         self.pbLabel_text()
         Time_interval = End - Start
         self.set_all_to_empty()
