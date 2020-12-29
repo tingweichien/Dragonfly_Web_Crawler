@@ -161,13 +161,18 @@ img_url9 = "https://i.ibb.co/p374xrK/28181453671-2e53687ae3-c.jpg"
 img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5, img_url6, img_url7, img_url8, img_url9]
 
 
-#\ Img timeout
+#\ img timeout
 Img_timeout = 30
 
 
 #\ cover img change times(sec)
 img_change_time = 10
 
+#\ cover image blending slices, blending alpha = 0.01 each BlendingTime(next variable)
+BlendingPrecision = 0.01
+
+#\ cover image blending times
+BlendingTime = 0.05
 
 #\ cover image size setting
 coverImagWidth = 360
