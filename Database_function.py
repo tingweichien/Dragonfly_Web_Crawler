@@ -8,9 +8,12 @@ from typing import List
 from datetime import datetime
 
 
-
+#\ (GLOBAL)
 #\ weather api key count
 key_cnt = 0
+request_cnt = 0
+
+
 
 # establish the connection
 def create_connection(host_name, user_name, user_password, DB_name) -> mysql.connector :
@@ -23,7 +26,7 @@ def create_connection(host_name, user_name, user_password, DB_name) -> mysql.con
             database=DB_name)
         print("connect to MySQL DB successful")
     except Error as e:
-        print(f"The error'{e}' occurred")
+        print(f"[warning] The error'{e}' occurred")
 
     return connection
 
@@ -34,7 +37,7 @@ def create_database(connection:mysql.connector, query:str):
         cursor.execute(query)
         print("Database created successfully")
     except Error as e:
-        print(f"The error '{e}' occurred")
+        print(f"[warning] The error '{e}' occurred")
 
 
 # create Table
@@ -45,7 +48,7 @@ def create_table(connection:mysql.connector, query:str):
         connection.commit()
         print("Query executed successfully")
     except Error as e:
-        print(f"The error '{e}' occurred")
+        print(f"[warning] The error '{e}' occurred")
 
 
 # insert
@@ -71,7 +74,7 @@ def read_data(connection:mysql.connector, query:str)->List[dict]:
         # for row in result:
         #     print(row)
     except:
-        print("the species might not have any recorder")
+        print("[warning] The species might not have any recorder")
     return result
 
 
@@ -100,7 +103,7 @@ def ALTER_TABLE(connection: mysql.connector, column_name:str, column_type:str ,T
 # -- ALTER TABLE mytags
 # -- ADD COLUMN vendor int AFTER tags;
 # -- UPDATE mytags SET vendor = 333 WHERE id=1;
-def update_weather_data(connection:mysql.connector, Table:str, data_seperate_time:dict, species_info_id:int):
+def update_weather_data(self, connection:mysql.connector, Table:str, data_seperate_time:dict, species_info_id:int):
     #\ create if there is no such column
 
     value = f"""'{{"tempC" : { data_seperate_time["tempC"].replace(" ", "") }, \
@@ -109,16 +112,21 @@ def update_weather_data(connection:mysql.connector, Table:str, data_seperate_tim
 "winddirDegree" : { data_seperate_time["winddirDegree"].replace(" ", "") }, \
 "winddir16Point" : "{ data_seperate_time["winddir16Point"].replace(" ", "") }", \
 "humidity" : { data_seperate_time["humidity"].replace(" ", "") }}}'"""
+
     #\ Insert the data
     Insert_query =f"UPDATE {Index.DB_name}.{Table} SET weather = {value} WHERE species_info_id = {species_info_id};"
     print("Insert_query: ", Insert_query)
+
+    #\print on the GUI
+    self.IUpdateNumLabel_text(f"Insert_query: UPDATE {Index.DB_name}.{Table} \n{value} \nWHERE species_info_id = {species_info_id}")
+
     #\ MYSQL
     cursor = connection.cursor()
     try:
         cursor.execute(Insert_query)
         connection.commit()
     except Error as e:
-        print(f"The error '{e}' occurred")
+        print(f"[warning] The error '{e}' occurred")
 
 
 
@@ -127,10 +135,12 @@ def update_weather_data(connection:mysql.connector, Table:str, data_seperate_tim
 #\ link : https://www.worldweatheronline.com/developer/#
 #\ Loop through the different table (DB_species)
 #\ Check each row of the input table in this function
-def get_weather_data(connection:mysql.connector, DB_species:str):
-    global key_cnt
+def get_weather_data(self, connection:mysql.connector, DB_species:str):
+    global key_cnt, request_cnt
     current_parsing_date = 0 #\ this is the datetime buffer for check if the date change to avoid re-request the same day again on the online weather api
+    current_LATLNG =()
     weather_r = {}
+
 
     #\ create the new column
     ALTER_TABLE(connection, "weather", "JSON", DB_species)
@@ -150,48 +160,95 @@ def get_weather_data(connection:mysql.connector, DB_species:str):
                 #\ if the LAT and LNG is NULL then skip
                 if response["Latitude"] and response["Longitude"] is not None:
 
-                    data = {"key": Index.weather_key[key_cnt],
-                            "q" : f'{response["Latitude"]}, {response["Longitude"]}',
-                            "format" : "json",
-                            "date" : response["Dates"],
-                            "enddate" : response["Dates"]
-                        }
+                    #\ check if the request date is not over the earliest date
+                    if response["Dates"] > Index.Weather_earliest_date:
 
-                    #\ api
-                    #\ and check the parsing date is the same day or not
-                    if response["Dates"] != current_parsing_date:
-                        weather_r = requests.post(url="http://api.worldweatheronline.com/premium/v1/past-weather.ashx",data=data).json()
-                        current_parsing_date = response["Dates"] #\ update teh current data
+                        data = {"key": Index.weather_key[key_cnt],
+                                "q" : f'{response["Latitude"]}, {response["Longitude"]}',
+                                "format" : "json",
+                                "date" : response["Dates"],
+                                "enddate" : response["Dates"]
+                            }
+
+                        #\ API and check the parsing date is the same day and position is same or not
+                        #\ since the API only accept to seond in decimal, so we do the round()
+                        if (response["Dates"] != current_parsing_date) or ((round(response["Latitude"], 2), round(response["Longitude"], 2)) != current_LATLNG):
+
+                            # limit the request times
+                            if request_cnt <= Index.weather_request_limit:
+
+                                #\ this is the API
+                                weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+
+                                #\ count the request time
+                                request_cnt += 1
+                                print("request counts: ", str(request_cnt))
+                                self.IStateLabel_text("request counts: "+ str(request_cnt))
+
+                            else:
+                                changekey_Info(self)
+                                request_cnt = 0
+                                continue
+
+                            #\--- problem : if the noraml data will cause error here since there will be no such column or class or object
+                            #\ check if the error occurred
+                            # if weather_r["data"]["error"][0]["msg"] == Index.WRE_No_data_available:
+                            #     continue
+                            # else:
+
+                            #\ update the current data
+                            current_parsing_date = response["Dates"]
+                            current_LATLNG = ( round(response["Latitude"], 2), round(response["Longitude"], 2) )
 
 
-                    #\ Extract the data
-                    #\ extract by hour
-                    for data_seperate_time in weather_r["data"]["weather"][0]["hourly"]:
-                        #\ select the corresponding hour
-                        #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
-                        respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
-                        if int(response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
-                            update_weather_data(connection,
-                                                DB_species,
-                                                data_seperate_time,
-                                                response["species_info_id"]
-                                                )
-                            # print(json.dumps(data_seperate_time, indent=2))
+                        #\ Extract the data, extract by hour
+                        for data_seperate_time in weather_r["data"]["weather"][0]["hourly"]:
+                            #\ select the corresponding hour
+                            #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
+                            respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
+                            if int(response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
+                                update_weather_data(self,
+                                                    connection,
+                                                    DB_species,
+                                                    data_seperate_time,
+                                                    response["species_info_id"])
 
+                    #\ if the the date time over the earliest date
+                    else:
+                        print(f'[warning] The date({response["Dates"]}) is over the limit date{Index.Weather_earliest_date}!!!!')
+                        self.IUpdateNumLabel_text(f'[warning] The date({response["Dates"]}) is over the limit date{Index.Weather_earliest_date}!!!!')
         except:
-            key_cnt += 1  #\ move to the next key
-            print("\n\nChange Key\n")
+            changekey_Info(self)
+
+    #\ key had been run out
     else :
-        print("key counts overflow, no weather key is available")
+        print("[warning] key counts overflow, no weather key is available")
 
 
 
+
+def changekey_Info(self):
+    global key_cnt
+    key_cnt += 1  #\ move to the next key
+    print("\n--Change Key--\n")
+    self.IUpdateNumLabel_text("--Change Key--")
+    if key_cnt < len(Index.weather_key):
+        print(f"current key : {Index.weather_key[key_cnt-1]} to New key {Index.weather_key[key_cnt]}")
+        self.IUpdateNumLabel_text(f"current key : {Index.weather_key[key_cnt-1]} to New key {Index.weather_key[key_cnt]}")
 
 
 #\ read the json format
 # SELECT JSON_EXTRACT(name, "$.id") AS name
 # FROM table
 # WHERE JSON_EXTRACT(name, "$.id") > 3
+
+
+
+
+#\ change the table name to new name
+def update_header(connection:mysql.connector, Species_table_name:str):
+    Update_header_query = f"ALTER TABLE {Species_table_name} CHANGE Longitutde Longitude DOUBLE;"
+    read_data(connection, Update_header_query)
 
 
 
@@ -248,9 +305,18 @@ insertquery_SI_0_end = """ (species_family_id, species_id, Species_Name, ID, rec
 # create_database(connection, create_database_query)
 
 
+
+
 #\ auto update the data in csv into DATABASE
 #\ maybe the next sep will be update by the save2File
-def Update_database(connection):
+def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
+
+    #\ INIT the key
+    global request_cnt, key_cnt
+    request_cnt = 0
+    key_cnt = 0
+
+    #\ create connection
     create_table(connection, create_species_family_table)
     create_table(connection, create_species_table)
 
@@ -259,6 +325,9 @@ def Update_database(connection):
     # insertdatas_SF = [tuple([SFN]) for SFN in Index.Species_Family_Name]
     # insert_data(connection, insertquery_SF, insertdatas_SF)
 
+
+    #\ assign the enable bits
+    Update_MySQL, Update_weather, _ = Update_enable
 
     for S in Index.Species_Family_Name:
         #\ insert species name data into species table
@@ -274,40 +343,41 @@ def Update_database(connection):
             Species_table_name = Index.Species_class_key[S] + Index.Species_key[Sp]
 
             #\ change the table name to new name
-            Update_header_query = f"ALTER TABLE {Species_table_name} CHANGE Longitutde Longitude DOUBLE;"
-            read_data(connection, Update_header_query)
+            update_header(connection, Species_table_name)
 
-            try:
-                #\ query
-                create_species_info_table = create_species_info_table_first + Species_table_name + create_species_info_table_end
-                create_table(connection, create_species_info_table)
-                filepath = ".\\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
-                with open(filepath, 'r', newline='', errors='ignore') as r:
-                    CSVData_org = csv.DictReader(r)
-                    CSVData = [line for line in CSVData_org]
-                    currentData_Num = read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
-                    insertdata_SI = []
-                    #\ read the database to check the current data number and insert the data from csv file start from it.
-                    for SI in CSVData[currentData_Num: ]:
-                        # insert data
-                        if SI['Latitude'] == '' and SI['Longitude'] == '':
-                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Place'])
-                            insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_0_end
-                        else:
-                            insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Altitude'], SI['Place'], SI['Latitude'], SI['Longitude'])
-                            insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_end
+            #\ inseert the data to the MySQL database from excel file
+            if Update_MySQL:
+                try:
+                    #\ query
+                    create_species_info_table = create_species_info_table_first + Species_table_name + create_species_info_table_end
+                    create_table(connection, create_species_info_table)
+                    filepath = ".\\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
+                    with open(filepath, 'r', newline='', errors='ignore') as r:
+                        CSVData_org = csv.DictReader(r)
+                        CSVData = [line for line in CSVData_org]
+                        currentData_Num = read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
+                        insertdata_SI = []
+                        #\ read the database to check the current data number and insert the data from csv file start from it.
+                        for SI in CSVData[currentData_Num: ]:
+                            # insert data
+                            if SI['Latitude'] == '' and SI['Longitude'] == '':
+                                insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Place'])
+                                insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_0_end
+                            else:
+                                insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Altitude'], SI['Place'], SI['Latitude'], SI['Longitude'])
+                                insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_end
 
-                        #\ insert the data into database
-                        insert_single_data(connection, insertquery_SI, insertdata_SI)
-                print('create the {} table'.format(Species_table_name))
+                            #\ insert the data into database
+                            insert_single_data(connection, insertquery_SI, insertdata_SI)
+                    print('create the {} table'.format(Species_table_name))
 
+                except:
+                    print('create the table, but no such csv file or no such data')
 
-            except:
-                print('create the table, but no such csv file or no such data')
-
-            #\ This is to update the weather information from World weather online
-            get_weather_data(connection, Species_table_name)
-            print('\nUpdate the {} weather data\n'.format(Species_table_name))
+            if Update_weather:
+                #\ This is to update the weather information from World weather online
+                get_weather_data(self, connection, Species_table_name)
+                print('\nUpdate the {} weather data\n'.format(Species_table_name))
 
 
 

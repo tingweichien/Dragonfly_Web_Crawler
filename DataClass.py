@@ -19,7 +19,6 @@ class simplifyTableInfo:
         self.User = User
 
     def __str__(self):
-
         return ('\n[IdNumber]: ' + self.IdNumber +
                 '  [Dates]: ' + self.Dates +
                 '  [Times]: ' + self.Times +
@@ -28,6 +27,7 @@ class simplifyTableInfo:
                 '  [Altitude]: ' + self.Altitude +
                 '  [Place]: ' + self.Place,
                 '  [User]:' + self.User)
+
 
 # Data class for DetailedTable infomation
 class DetailedTableInfo(simplifyTableInfo):
@@ -60,6 +60,7 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [SpeciesFamily]: ' + self.SpeciesFamily +
                 '  [Description]: ' + self.Description)
 
+
 # table class for tk GUI
 # reference : https://www.geeksforgeeks.org/create-table-using-tkinter/
 class Table:
@@ -69,6 +70,7 @@ class Table:
                 self.e = Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
                 self.e.grid(row=i, column=j)
                 self.e.insert(END, list[i][j])
+
 
 
 # since tk doesnt have tooltip so use this thied party Method

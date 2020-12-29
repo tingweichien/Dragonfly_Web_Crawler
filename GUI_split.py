@@ -46,8 +46,7 @@ var_species = None
 # Plot_var_species = None
 
 
-#\ check and update the chromedriver
-check_chromedriver()
+
 
 
 ################################################################################
@@ -108,12 +107,14 @@ class tkinterApp(tk.Tk):
         w.bind("<Enter>", lambda event, color=colorList[1]: self.B_HoverOn(event, color))
 
 
-# first window frame LoginPage
-
+#\ first window frame LoginPage
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
+
+            #\ check and update the chromedriver
+            check_chromedriver()
 
             # label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
@@ -222,7 +223,7 @@ class LoginPage(tk.Frame):
         if self.Check_empty() > 0:
             return
         else:
-            [session, Login_Response, Login_state] = Login_Web(Index.myaccount, Index.mypassword)
+            [_, Login_Response, Login_state] = Login_Web(Index.myaccount, Index.mypassword)
             if (Login_state == False):
                 messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
             elif Login_Response == None and Login_state == None:
@@ -230,7 +231,7 @@ class LoginPage(tk.Frame):
             else:
                 Username = Index.myaccount
                 controller.show_frame(MainPage)
-                # and write the account and password to the Login_Filename
+                #\ and write the account and password to the Login_Filename
                 with open(Index.Login_Filename, 'w') as fp:
                     fp.write(','.join((Index.myaccount, Index.mypassword)))
 
@@ -304,7 +305,7 @@ class MainPage(tk.Frame):
                             #bg='gray80',
                             cursor="hand2",
                             command=lambda: self.IDEnterButton(self.ID.get()))
-                            # color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
+                            #\ color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
 
 
             #\ ---Species Find Frame---
@@ -349,7 +350,7 @@ class MainPage(tk.Frame):
             Save2file_LabelFrame_bg = "white"
             self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
             self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
-            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NM", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NO", font=label_font_style , bg=Species_Find_LabelFrame_bg)
             self.LabelFrame_Save2file.pack(fill="both", expand="yes") # fill both horizon and vertically
 
             #\ Entry
@@ -438,7 +439,7 @@ class MainPage(tk.Frame):
             #\ time selector
             self.VarTimeDuration_ckeckbox = BooleanVar(self.LabelFrame_Plot, value=False)
             self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="--", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
-            self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time duration or not")
+            self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time adjest or not")
 
             self.var_Duration_month = StringVar(self.LabelFrame_Plot, value=str(0))
             self.var_Duration_month.trace_add("write", self.Time_Duration_month_callback)
@@ -543,8 +544,6 @@ class MainPage(tk.Frame):
             self.Web_version_Label.pack(side=RIGHT, padx=15)
             self.Hub_parentF.pack(expand=True)
 
-
-
             #\ some initializing
             ####################
             self.Place_select_value = ''
@@ -556,17 +555,17 @@ class MainPage(tk.Frame):
     ###################################################################################
     #\ ---Method---
     #\ ID find
-    def IDEnterButton(self, ID):
+    def IDEnterButton(self, ID:str):
         # CHECK IF THE USER ENTER THE id OR NOT
-        if (ID == ''):
+        if ID == '':
             messagebox.showwarning('Warning!!!','ID should not be empty')
             return
 
         # Check if this data do not contain the Longitude and Latitude infomation
         map_key = True
         [_ID_find_result, _overflow, _Max_ID_Num] = DataCrawler(Login_Response, ID)
-        if (_overflow):
-            messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + _Max_ID_Num)  #ID number overflow
+        if _overflow:
+            messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + str(_Max_ID_Num))  #ID number overflow
             return
         else :
             if (_ID_find_result.Longitude == '' or _ID_find_result.Latitude == ''):
@@ -574,10 +573,10 @@ class MainPage(tk.Frame):
                 _ID_find_result.Latitude = 'No Data'
                 map_key = False
 
-        self.var_LNGLAT.set(f"({_ID_find_result.Longitude}, {_ID_find_result.Longitude})")
-        if (map_key):
+        self.var_LNGLAT.set(f"({_ID_find_result.Longitude}, {_ID_find_result.Latitude})")
+        if map_key:
             msg = messagebox.askyesno("info", "Do you want to plot it on map?")
-            if (msg):
+            if msg:
                 self.Show_on_map([_ID_find_result])
 
 
@@ -586,7 +585,7 @@ class MainPage(tk.Frame):
         if self.VarDatacheckbox.get() == True:
             map_result_list = ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[var_family] + "\\" + Index.Species_class_key[var_family] + Index.Species_key[var_species] + ".csv")
         else:
-            map_result_list = SpeiciesCrawler(Login_Response, var_family, var_species)
+            map_result_list = SpeiciesCrawler(var_family, var_species)
 
         if len(map_result_list) == 0:
             messagebox.showinfo("Infomation", "The selected species does not have any record")
@@ -606,34 +605,40 @@ class MainPage(tk.Frame):
         #\ init the dropdown list in the first element when the family changed
         var_species.set(tmp[0])
         self.Plot_var_species.set(tmp1[0])
-
         #print(var_family.get())
         #print(self.Family_drop_down_menu.current())
+
 
     #\ specify the crawling speed
     def Save2FileSliderValue(self, event):
         Index.cpus = self.Save2file_slider.get()
         #print("crawling speed : {}".format(Index.cpus))
 
+    #\ progress bar percentage
     def pbLabel_text(self):
         self.progressbar_label['text'] = str(self.pbVar.get()) + "%"
 
-
+    #\ text in line 1
     def INameLabel_text(self, speciesfamily, species):
         self.Info_Name_label['text'] = '[Start Crawing] {}  {}'.format(speciesfamily, species)
 
+    #\ text in line 2
     def IFileNameLabel_text(self, filename):
         self.Info_FileName_label['text'] = '[File Name]: {}'.format(filename)
 
+    #\ text in line 3
     def IUpdateNumLabel_text(self, updateInfo):
         self.Info_UpdateNum_label['text'] = updateInfo
 
+    #\ text in line 4
     def ICurrentNumLabel_text(self, currentNum):
         self.Info_CurrentNum_label['text'] = '[Current total crawl]: {}'.format(currentNum)
 
+    #\ text in line 5
     def IStateLabel_text(self, state_text):
         self.Info_State_label['text'] = state_text
 
+    #\ text in line 6
     def IFinishStateLabel_text(self, finish_text):
         self.Info_FinishState_label['text'] = finish_text
 
@@ -665,8 +670,8 @@ class MainPage(tk.Frame):
         def start_multithread():
             self.check = True
             self.Info_Name_label['text'] = "Updating~"
-            savefile(self, Index.parse_type)
-            self.pbVar.set(100)
+            savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
+            self.pbVar.set(100) #\ after finishing, force the bar number to 100%
             self.progressbar_label['text'] = '100%'
             self.progressbar.stop()
             self.button_popup['text'] = 'Finish'
@@ -676,66 +681,88 @@ class MainPage(tk.Frame):
         threading.Thread(target=self.UpdateGIF, args=(0,)).start()
         threading.Thread(target=start_multithread).start()
 
-    #\ pop up windows for progress
-    def popup(self):
+
+
+    #\ Save2File pop up windows for progress
+    def Save2File_popup(self):
+        #\ new root window
         self.check = True
         self.NewWindow = tk.Toplevel(app)
         self.NewWindow.title("Update data")
         self.NewWindow.geometry(Index.updateWinGeometry)
+        self.NewWindow.config(bg="white")
 
-        self.progressLabelFrame = Frame(self.NewWindow)
+
+        #\ Frame
+        self.progressLabelFrame = Frame(self.NewWindow, bg="white")
         self.progressLabelFrame.pack(side=TOP)
-        self.progressbarFrame = Frame(self.NewWindow)
+        self.progressbarFrame = Frame(self.NewWindow, bg="white")
         self.progressbarFrame.pack()
-        self.ButtonFrame = Frame(self.NewWindow)
+        self.ButtonFrame = Frame(self.NewWindow, bg="white")
         self.ButtonFrame.pack()
 
-        progressbar_label = Label(self.progressLabelFrame, text="Progress")
+
+        #\ Progress layer
+        progressbar_label = Label(self.progressLabelFrame, text="Progress", bg="white")
         progressbar_label.pack(side=LEFT)
         self.Load_image = [PhotoImage(file=Index.updateGIF, format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
-        self.loading_label = Label(self.progressLabelFrame,)
+        self.loading_label = Label(self.progressLabelFrame, bg="white")
         self.loading_label.pack(side=RIGHT)
-
         self.pbVar = IntVar(self.NewWindow)
         self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, length=300, mode="determinate", variable=self.pbVar, maximum=100)
         self.progressbar.pack(side=LEFT, pady=10)
-        self.progressbar_label = Label(self.progressbarFrame, text="0%")
+        self.progressbar_label = Label(self.progressbarFrame, text="0%", bg="white")
         self.progressbar_label.pack(side=RIGHT, padx=5)
 
-        button_popup_label = Label(self.ButtonFrame, text="Ready to update?")
+
+        #\ Button layer
+        button_popup_label = Label(self.ButtonFrame, text="Ready to update?", bg="white")
         button_popup_label.pack()
-        self.button_popup = Button(self.ButtonFrame, text="start", command=self.start_button)
+        self.button_popup = ttk.Button(self.ButtonFrame, text="start", command=self.start_button)
         self.button_popup.pack(pady=2)
+        #\ this specify whether to update MySQL database or not
+        self.Var_MySQL_enable = BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_MySQL = Checkbutton(self.ButtonFrame, text="MySQL-Enable", variable=self.Var_MySQL_enable, bg="white", cursor= "arrow")
+        self.checkbox_MySQL.pack(side="left")
+        #\ this specify whether to update weather from online weather api or not
+        self.Var_weather_enable = BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_weather = Checkbutton(self.ButtonFrame, text="Weather-Enable", variable=self.Var_weather_enable, bg="white", cursor= "arrow")
+        self.checkbox_weather.pack(side="left")
+        #\ this specify whether to update from web and save it to excel or not
+        self.Var_UpdatefWeb_enable = BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_UpdatefWeb = Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", variable=self.Var_UpdatefWeb_enable, bg="white", cursor= "arrow")
+        self.checkbox_UpdatefWeb.pack(side="left")
 
-
-        TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40)
+        #\ Update progress infomation
+        TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
         TextLabelFrame.pack(pady=10)
-        self.Info_Name_label = Label(TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w')
+        self.Info_Name_label = Label(TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white")
         self.Info_Name_label.pack(pady=3)
-        self.Info_FileName_label = Label(TextLabelFrame, anchor='w')
+        self.Info_FileName_label = Label(TextLabelFrame, anchor='w', bg="white")
         self.Info_FileName_label.pack(pady=3)
-        self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w')
+        self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w', bg="white")
         self.Info_UpdateNum_label.pack(pady=3)
-        self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w')
+        self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w', bg="white")
         self.Info_CurrentNum_label.pack(pady=3)
-        self.Info_State_label = Label(TextLabelFrame, anchor='w')
+        self.Info_State_label = Label(TextLabelFrame, anchor='w', bg="white")
         self.Info_State_label.pack(pady=3)
-        self.Info_FinishState_label = Label(TextLabelFrame, anchor='w')
+        self.Info_FinishState_label = Label(TextLabelFrame, anchor='w', bg="white")
         self.Info_FinishState_label.pack(pady=3)
 
 
+
     #\ crawl data
-    # read the flow from here to the top of the method in this class
+    #\ read the flow from here to the top of the method in this class
     def Save2FileButton(self):
         Index.limit_cnt = int(self.var_MC.get())
         print(f"limit count is {Index.limit_cnt}")
-        self.popup()
+        self.Save2File_popup()
 
 
     #\ Table
-    # bad since the flexibility of the option are limited
-    # this coded in PySimpleGUI library
-    def New_table(self, map_result_list):
+    #\ bad since the flexibility of the option are limited
+    #\ these are coded in PySimpleGUI library
+    def New_table(self, map_result_list:list):
         global var_species, var_family
         Data = [
             [index.Place,
@@ -813,7 +840,7 @@ class MainPage(tk.Frame):
 
         self.window = PYGUI.Window("Show Species info", layout=layout,resizable=True,)
 
-         # Event Loop
+        #\ Event Loop
         while True:
             event, values = self.window.Read()
             if event == None:
@@ -851,14 +878,15 @@ class MainPage(tk.Frame):
                     messagebox.showwarning('Warning!!!', 'Please set the positive integer value')
         self.window.Close()
 
+
+
     #\ map
     # https://github.com/gmplot/gmplot/blob/master/gmplot/google_map_plotter.py
     # https://stackoverflow.com/questions/40905703/how-to-open-an-html-file-in-the-browser-from-python/40905794
     # https://stackoverflow.com/questions/55515627/pysimplegui-call-a-function-when-pressing-button
     # marker title has some problem
-
     #\ show result on map
-    def Show_on_map(self, input_map_list):
+    def Show_on_map(self, input_map_list:list):
         map_list = []
         map_file_path = os.path.realpath(Index.mapfilename)
 
@@ -962,6 +990,7 @@ class MainPage(tk.Frame):
                         [self.var_Time_start.get(), self.var_Time_end.get()]
                     )
 
+
     #\ Plot by Pyechart
     def PyechartsPlotButton(self):
         PFD.PlotChart("Pyecharts",
@@ -981,6 +1010,7 @@ class MainPage(tk.Frame):
         if self.VarTimeDuration_ckeckbox.get() and (self.var_Duration_month.get() not in ["", " "]):
             self.var_Time_start.set((datetime.today() - relativedelta(years = int(self.var_Duration_year.get()), months = int(self.var_Duration_month.get()))).strftime("%Y-%m-%d"))
 
+
     #\ Time duraiton checkbutton
     def TimeDuration_checkbox_callback(self):
         if self.VarTimeDuration_ckeckbox.get():
@@ -990,11 +1020,13 @@ class MainPage(tk.Frame):
             if (self.var_Duration_year.get() not in ['0', "", " "]):
                 self.var_Time_start.set( (datetime.today() - relativedelta(years = int(self.var_Duration_year.get()))).strftime("%Y-%m-%d") )
 
+
     #\ gitHub open
-    def Hub_callback(self, link):
+    def Hub_callback(self, link:list):
         webbrowser.open(link)
 
 
+    #\ Blending the image
     def blending_img(self):
         try:
             if (self.init_while):
@@ -1012,7 +1044,7 @@ class MainPage(tk.Frame):
                 # \ set the current image as previous
                 self.previous_img = self.pil_image
         except:
-            print("Blending failed~")
+            print("[Warning] Blending failed~")
 
 
 
@@ -1024,30 +1056,29 @@ class MainPage(tk.Frame):
             self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
         else:
             self.img_counter %= len(Index.img_url_list)
-            try:
-                image_bytes = urlopen( Index.img_url_list[self.img_counter]).read()
-                #\ internal data file
-                data_stream = io.BytesIO(image_bytes)
+            # try:
+            image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
+            #\ internal data file
+            data_stream = io.BytesIO(image_bytes)
 
-                #\ open as a PIL image object
-                self.pil_image = Image.open(data_stream)
+            #\ open as a PIL image object
+            self.pil_image = Image.open(data_stream)
 
-                #\ convert PIL image object to Tkinter PhotoImage object
-                self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+            #\ convert PIL image object to Tkinter PhotoImage object
+            self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
 
-                #\ blending the picture in another thread
-                threading.Thread(target=self.blending_img()).start()
-                # self.thread_event = threading.Event()
-            except :
-                print("update image error")
-                self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
-                self.previous_img = self.tk_image
-                self.imglabel.config(image=self.tk_image)
+            #\ blending the picture in another thread
+            threading.Thread(target=self.blending_img()).start()
 
+            # except :
+            #     print("[warning] update image error")
+            #     self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+            #     self.previous_img = self.tk_image
+            #     self.imglabel.config(image=self.tk_image)
 
         self.init_while = True
         self.imglabel.config(image=self.tk_image)
-        self.img_counter += random.randrange(1, 8, 1) #\ random the number of picture
+        self.img_counter = random.randrange(0, 9, 1) #\ random the number of picture
         self.after(Index.img_change_time*1000, self.update_img)
 
 

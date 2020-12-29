@@ -9,6 +9,7 @@ import re
 import Index
 from multiprocessing import Process, Pool, Value, Lock
 from functools import partial
+from typing import List
 
 '''
 ErrorID = {
@@ -29,7 +30,7 @@ TotalCount = 0
 
 
 ##################################################################
-def Login_Web(Input_account, Input_password):
+def Login_Web(Input_account:str, Input_password:str):
     #\ Login account and password
     data = {
         'account' : Input_account,
@@ -37,14 +38,14 @@ def Login_Web(Input_account, Input_password):
     }
     Login_state = True
     try:
-        r = requests.get(Index.Login_url, proxies=Index.proxy)
+        requests.get(Index.Login_url, proxies=Index.proxy)
     except:
         return [None, None, None]
     else:
         #\ 執行登入
         Login_Response = session.post(Index.Login_url, headers=Index.headers, data=data)
 
-        #\確認是否成功登入
+        #\ 確認是否成功登入
         soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
         script = soup_login_ckeck.find("script").extract() # find the alert
         alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
@@ -55,7 +56,7 @@ def Login_Web(Input_account, Input_password):
 
 
 ###################################################################
-def DataCrawler(Login_Response, Input_ID):
+def DataCrawler(Login_Response, Input_ID:str)->list:
     '''
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
@@ -150,8 +151,8 @@ def DataCrawler(Login_Response, Input_ID):
 
     for obj in Data_List:
         print(obj, sep =' ')
-    
-    
+
+
     #\ 執行GUI input
     #\確認是否成功登入
     soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
@@ -162,39 +163,38 @@ def DataCrawler(Login_Response, Input_ID):
     '''
 
     #\先確ID認是否超處範圍
-    id = Input_ID
     overflow = False
     soup_ID_check = BeautifulSoup(All_Observation_Data_response.text, 'html.parser')
     All_Observation_Data_response_Data_Set = soup_ID_check.find(id='theRow')
     Max_All_Observation_Data_response_Data = All_Observation_Data_response_Data_Set.find_all('td')
     Max_ID_Num = Max_All_Observation_Data_response_Data[0].text
     #\check if the ID is out of the range
-    if (int(id) > int(Max_All_Observation_Data_response_Data[0].text) or int(id) < 0):
+    if (int(Input_ID) > int(Max_All_Observation_Data_response_Data[0].text) or int(Input_ID) < 0):
         overflow = True
         ID_find_result = []
     else:
         #\ 執行
-        response_Detailed_discriptions2 = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
+        response_Detailed_discriptions2 = session.post(Index.general_url + Index.Detailed_discriptions_url + Input_ID, headers=Index.headers)
         soup2 = BeautifulSoup(response_Detailed_discriptions2.text, 'html.parser')
         Longitude = soup2.find(id = 'R_LNG').get('value')
         print('經度 : ' + Longitude)
         Lateral = soup2.find(id = 'R_LAT').get('value')
         print('緯度 : ' + Lateral)
-        ID_find_result = DetailedTableInfo(id,
-                                            soup2.find(id ='日期').get('value'),
+        ID_find_result = DetailedTableInfo(Input_ID,
+                                            soup2.find(id='日期').get('value'),
                                             soup2.find(id='時間').get('value'),
                                             "",
                                             "",
                                             soup2.find(id='地點').get('value'),
                                             soup2.find(id='R_ELEVATION').get('value'),
                                             soup2.find(id='紀錄者').get('value'),
-                                            soup2.find(id ='R_LAT').get('value'),
+                                            soup2.find(id='R_LAT').get('value'),
                                             soup2.find(id='R_LNG').get('value'),
                                             "",
                                             "",
                                             soup2.find(id='R_MEMO').get('value'))
 
-    return [ID_find_result, overflow, Max_ID_Num]
+    return [ID_find_result, overflow, int(Max_ID_Num)]
 
 
 
@@ -210,7 +210,7 @@ def DataCrawler(Login_Response, Input_ID):
 # https://www.zhihu.com/question/26921730
 # https://stackoverflow.com/questions/2241348/what-is-unicode-utf-8-utf-16
 
-def SpeiciesCrawler(Login_Response, family_input, species_input):
+def SpeiciesCrawler(family_input:str, species_input:str)->list:
     '''
     family_input = '珈蟌科'
     species_input = '白痣珈蟌'
@@ -263,7 +263,7 @@ def SpeiciesCrawler(Login_Response, family_input, species_input):
 # crawl to the next is empty, the next page id show empty data in the table
 # multithread : https://www.maxlist.xyz/2020/03/20/multi-processing-pool/
 
-def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, Limit_CNT, oldID):
+def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, Total_num:int, Limit_CNT:int, oldID:int)->List[DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     page = 0
     DataCNT = 0
@@ -291,11 +291,18 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
             id = tmp_List[0].text
             if (len(id) == 0) or (int(id) == oldID) or (DataCNT == Limit_CNT):
                 #print(' --Finish crawl--' + ' crawl to page: '+ str(page) + ", ID: " + id + ", count: " + str(DataCNT))
-                return [Data_List, page]
+                return Data_List
 
             response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
             soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
-            Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
+            Data_List.append(DetailedTableInfo(tmp_List[0].text,
+                                                tmp_List[1].text,
+                                                tmp_List[2].text,
+                                                tmp_List[3].text,
+                                                tmp_List[4].text,
+                                                tmp_List[5].text,
+                                                tmp_List[7].text,
+                                                tmp_List[6].text,
                                                 soup2.find(id='R_LAT').get('value'),
                                                 soup2.find(id='R_LNG').get('value'),
                                                 Web_rawl_Species_family_name,
@@ -311,14 +318,14 @@ def crawl_all_data(Web_rawl_Species_family_name, Web_rawl_Species_name, Total_nu
 
 ###########################################################
 #\ multiprocessing ver
-# init pool
+#\ init pool
 def init(args):
     global DataCNT
     DataCNT = args
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name, Web_rawl_Species_name, Total_num, expecting_CNT, expecting_page, remain_data_Last_page, page):
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, page:int)->List[DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT
     tmp_List = []
@@ -386,7 +393,7 @@ def Find_species_total_data():
     driver.find_element_by_name("account").send_keys(Index.myaccount)
     driver.find_element_by_name("password").send_keys(Index.mypassword)
     driver.find_element_by_name("login").click()
-    driver.get(Index.general_url + Index.total_num_species_url) # "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
+    driver.get(Index.general_url + Index.total_num_species_url) #\ "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
     labe_list = driver.find_elements_by_tag_name("label")
     labe_list_text = [label_tmp.text for label_tmp in labe_list]
     td_list = driver.find_elements_by_tag_name("td")

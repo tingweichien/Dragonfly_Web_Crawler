@@ -6,7 +6,7 @@ from fake_useragent import UserAgent
 import os
 from multiprocessing import Process
 import multiprocessing
-
+from datetime import datetime, date
 
 ##################################################
 # my account and password
@@ -23,7 +23,9 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x680"
-updateWinGeometry = "500x350"
+updateWinGeometry = "600x350"
+
+
 
 #\ PY GUI setting
 Table_scroll_num = 10
@@ -157,6 +159,10 @@ img_url8 = "https://i.ibb.co/2FkyRcM/50347503451-9c1a57a74b-c.jpg"
 img_url9 = "https://i.ibb.co/p374xrK/28181453671-2e53687ae3-c.jpg"
 
 img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5, img_url6, img_url7, img_url8, img_url9]
+
+
+#\ Img timeout
+Img_timeout = 30
 
 
 #\ cover img change times(sec)
@@ -698,8 +704,23 @@ Plot_chart_init_delta_years = 10 #\ 10 years
 
 #\ weather data api
 #\ https://www.worldweatheronline.com/developer/my/subscription/
+#\ account = [tim960622@gmail,
+#             tim960622@yahoo,
+#             tim910442,
+#             iphoning6666]
 weather_key = [#"190ec7d0ebfe4c7992f161552201012",
-                "339a4a4173774318846204731201912",
                 "fcca62f7fe39421bab3205329201912",
+                "339a4a4173774318846204731201912",
                 "4a28a928fa024ac6aa1174831201212",
                 ]
+OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
+
+
+#\ Weather Request Error(WRE) code
+WRE_No_data_available = "There is no weather data available for the date provided." #\ the request date or place is not availabe somehow
+
+#\ weather api history date limit
+Weather_earliest_date = date(2008, 7, 1)
+
+#\ request limit
+weather_request_limit = 500
