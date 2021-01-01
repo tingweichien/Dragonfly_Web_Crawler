@@ -644,3 +644,11 @@ reference :
    - **datetime.strftime** : means string formatter, this will format a datetime object to string format.
    - **datetime.strptime** : means string parser, this will convert a string format to datetime.
    - [ref](https://stackoverflow.com/questions/8142364/how-to-compare-two-dates)
+
+
+
+## [2020/12/30]
+
+1. Merge the weather-data branch into master
+
+2. fix the lag effect when image blending, by moving the code into the thread function as much as possible.

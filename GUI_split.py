@@ -61,6 +61,10 @@ class tkinterApp(tk.Tk):
             # __init__ function for class Tk
             tk.Tk.__init__(self, *args, **kwargs)
 
+            #\ ---Menu Bar---
+            self.menubar = Menu(self)
+            self.Emptymenubar = Menu(self)
+            self.config(menu=self.menubar)
 
             # creating a container
             container = tk.Frame(self)
@@ -87,16 +91,25 @@ class tkinterApp(tk.Tk):
 
             self.show_frame(LoginPage)
 
-    # to display the current frame passed as
-    # parameter
+
+    #\ to display the current frame passed as
     def show_frame(self, cont):
         global Username
         frame = self.frames[cont]
-        #print(frame._name)
+
+        #\ menu setting
+        if frame._name == "!loginpage":
+            self.config(menu=self.Emptymenubar)
+        else:
+            self.config(menu=self.menubar)
+
+
+        print(frame._name)
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
         tk.Tk.wm_geometry(self, Index.MainPageGeometry)
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
         frame.tkraise()
+
 
     #\ define the action when mouse hover on the button
     #\ but it can be replace by ttk widget
@@ -107,6 +120,7 @@ class tkinterApp(tk.Tk):
         w.bind("<Enter>", lambda event, color=colorList[1]: self.B_HoverOn(event, color))
 
 
+
 #\ first window frame LoginPage
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -115,6 +129,7 @@ class LoginPage(tk.Frame):
 
             #\ check and update the chromedriver
             check_chromedriver()
+
 
             # label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
@@ -247,11 +262,29 @@ class LoginPage(tk.Frame):
             self.viewcheck.set(True)
 
 
-# second window frame MainPage
+
+
+#\ second window frame MainPage
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
+
+            #\ ---Menu Bar---
+            self.filemenu = Menu(controller.menubar, tearoff=0)
+            self.filemenu.add_command(label="New", command=self.donothing)
+            self.filemenu.add_command(label="Open", command=self.donothing)
+            self.filemenu.add_command(label="Save", command=self.donothing)
+            self.filemenu.add_separator()
+            self.filemenu.add_command(label="Exit", command=self.quit)
+            controller.menubar.add_cascade(label="File1", menu=self.filemenu)
+
+            self.helpmenu = Menu(controller.menubar, tearoff=0)
+            self.helpmenu.add_command(label="Help Index", command=self.donothing)
+            self.helpmenu.add_command(label="About...", command=self.donothing)
+            controller.menubar.add_cascade(label="Help1", menu=self.helpmenu)
+
+
 
             #\ Label frame and label setting
             labelframe_font_size = 10
@@ -554,6 +587,13 @@ class MainPage(tk.Frame):
 
     ###################################################################################
     #\ ---Method---
+
+    #\ Menu Bar
+    def donothing(self):
+        print("menu bar")
+
+
+
     #\ ID find
     def IDEnterButton(self, ID:str):
         # CHECK IF THE USER ENTER THE id OR NOT

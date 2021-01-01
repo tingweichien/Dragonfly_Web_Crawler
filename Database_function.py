@@ -90,10 +90,10 @@ def ALTER_TABLE(connection: mysql.connector, column_name:str, column_type:str ,T
 
         cursor.execute(create_query)
         connection.commit()
-        print("Create the weather column ")
+        print(f"Create the {column_name} column ")
 
     except:
-        print("The weather column has been created")
+        print(f"The {column_name} column has been created")
 
 
 
@@ -152,10 +152,10 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
             readqurery = f"SELECT species_info_id, Dates, HOUR(Times), Latitude, Longitude FROM {Index.DB_name}.{DB_species} WHERE weather is null;"
 
             #\ get all the row that do not have weather data
-            response_List = read_data(connection, readqurery)
+            database_return_List = read_data(connection, readqurery)
 
             #\ fill the weather data for each row
-            for response in response_List:
+            for response in database_return_List:
 
                 #\ if the LAT and LNG is NULL then skip
                 if response["Latitude"] and response["Longitude"] is not None:
@@ -178,7 +178,9 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
                             if request_cnt <= Index.weather_request_limit:
 
                                 #\ this is the API
+                                ########################################################################
                                 weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+                                ########################################################################
 
                                 #\ count the request time
                                 request_cnt += 1
@@ -226,7 +228,7 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
 
 
 
-
+#\ change the key 
 def changekey_Info(self):
     global key_cnt
     key_cnt += 1  #\ move to the next key

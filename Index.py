@@ -729,3 +729,9 @@ Weather_earliest_date = date(2008, 7, 1)
 
 #\ request limit
 weather_request_limit = 500
+
+
+#\ Open weahter api
+#\ https://openweathermap.org/api
+OpenWeahterURL = "https://api.openweathermap.org/data/2.5/onecall/timemachine"
+OpenWeatherKey = "ef759779eb91210f0c0207e5439fa748"

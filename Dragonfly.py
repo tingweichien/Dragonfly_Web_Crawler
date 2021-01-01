@@ -10,6 +10,9 @@ import Index
 from multiprocessing import Process, Pool, Value, Lock
 from functools import partial
 from typing import List
+from datetime import datetime
+from Database_function import update_weather_data
+
 
 '''
 ErrorID = {
@@ -262,7 +265,6 @@ def SpeiciesCrawler(family_input:str, species_input:str)->list:
 # from <23.各蜓種紀錄總筆數查詢>
 # crawl to the next is empty, the next page id show empty data in the table
 # multithread : https://www.maxlist.xyz/2020/03/20/multi-processing-pool/
-
 def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, Total_num:int, Limit_CNT:int, oldID:int)->List[DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     page = 0
@@ -354,6 +356,9 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
                                             Web_rawl_Species_family_name,
                                             Web_rawl_Species_name,
                                             soup2.find(id='R_MEMO').get('value')))
+
+
+        #\ counts for the crawling times
         DataCNT_lock = Lock()
         with DataCNT_lock:
             DataCNT.value += 1
@@ -364,6 +369,32 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
     return Data_List
 
 
+
+### <<< unsolve
+
+#\ update weather data while crawling the dragonfly data
+#\ crawl the dragonfly and weathe data and write both of them to the MySQL database onces.
+#\ Open weahter api at https://openweathermap.org/api
+def weatherData(self, connection, date, time, LAT, LNG):
+    dt_datetime = datetime.strptime(date+time, "%Y-%m-%d %H:%M:%S")
+    dt = datetime.timestamp(dt_datetime)
+    para = {"lat":LAT,
+            "lon":LNG,
+            "dt":dt,
+            "units":"metric",
+            "appid":Index.OpenWeatherKey}
+
+    #\ api request
+    response = requests.get(url = Index.OpenWeahterURL, params=para).json()
+    weather = f"""'{{"tempC" : { response["tempC"].replace(" ", "") }, \
+"FeelsLikeC" : { response["FeelsLikeC"].replace(" ", "") }, \
+"windspeedKmph" : { response["windspeedKmph"].replace(" ", "") }, \
+"winddirDegree" : { response["winddirDegree"].replace(" ", "") }, \
+"winddir16Point" : "{ response["winddir16Point"].replace(" ", "") }", \
+"humidity" : { response["humidity"].replace(" ", "") }}}'"""
+    return weather
+
+### >>>unsolve
 
 
 
