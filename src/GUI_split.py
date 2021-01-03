@@ -54,41 +54,40 @@ var_species = None
 #\ change page
 class tkinterApp(tk.Tk):
 
-    # __init__ function for class tkinterApp
+    #\ __init__ function for class tkinterApp
     def __init__(self, *args, **kwargs):
         if __name__ == '__main__':
 
-            # __init__ function for class Tk
+            #\ __init__ function for class Tk
             tk.Tk.__init__(self, *args, **kwargs)
 
-
-            # creating a container
+            #\ creating a container
             container = tk.Frame(self)
             container.pack(side = "top", fill = "both", expand = True)
 
             container.grid_rowconfigure(0, weight = 1)
             container.grid_columnconfigure(0, weight = 1)
 
-            # initializing frames to an empty array
+            #\ initializing frames to an empty array
             self.frames = {}
 
-            # iterating through a tuple consisting
-            # of the different page layouts
+            #\ iterating through a tuple consisting
+            #\ of the different page layouts
             for F in (LoginPage, MainPage):
 
                 frame = F(container, self)
 
-                # initializing frame of that object from
-                # LoginPage, MainPage respectively with
-                # for loop
+                #\ initializing frame of that object from
+                #\ LoginPage, MainPage respectively with
+                #\ for loop
                 self.frames[F] = frame
 
                 frame.grid(row = 0, column = 0, sticky ="nsew")
 
             self.show_frame(LoginPage)
 
-    # to display the current frame passed as
-    # parameter
+    #\ to display the current frame passed as
+    #\ parameter
     def show_frame(self, cont):
         global Username
         frame = self.frames[cont]
@@ -116,13 +115,13 @@ class LoginPage(tk.Frame):
             #\ check and update the chromedriver
             check_chromedriver()
 
-            # label of frame Layout 2
+            #\ label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
             self.AccountLabel = tk.Label(self, text="Account", bg="white")
             self.StatementLabel = tk.Label(self, text=Index.copyright_text,
                                         bg="white", fg = "gray", font = ("Arial", 8))
 
-            # putting the grid in its place by using
+            #\ putting the grid in its place by using
             self.VarName = StringVar(self, value='')
             self.VarPwd = StringVar(self, value='')
             self.accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
@@ -185,7 +184,7 @@ class LoginPage(tk.Frame):
             self.Loginbutton.pack(pady=20)
             self.StatementLabel.pack(pady=20)
 
-            # --try to auto fill the account and password--
+            #\ --try to auto fill the account and password--
             [n, p] = self.Auto_Fill()
             self.VarName.set(n)
             self.VarPwd.set(p)
@@ -202,7 +201,7 @@ class LoginPage(tk.Frame):
             return ['', '']
 
 
-    # Check if the user have entered the info (account and password) or not
+    #\ Check if the user have entered the info (account and password) or not
     def Check_empty(self):
         InputArgumentsLabel = ["Account", "Password"]
         index = 0
@@ -235,7 +234,7 @@ class LoginPage(tk.Frame):
                 with open(Index.Login_Filename, 'w') as fp:
                     fp.write(','.join((Index.myaccount, Index.mypassword)))
 
-
+    #\ the eye button that can hide the PW or show it
     def ViewPWButtonfunc(self):
         if self.viewcheck.get() == True:
             self.passwordEntry.config(show="")
