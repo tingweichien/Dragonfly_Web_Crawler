@@ -422,7 +422,7 @@ reference :
         * line_multiA
     * -- table0
 
-1. referece :
+8. referece :
 
    (1) <https://www.kesci.com/home/project/5eb7958f366f4d002d783d4a>
    (2) <https://gallery.pyecharts.org/#/Geo/geo_chart_countries_js>
@@ -652,3 +652,95 @@ reference :
 1. Merge the weather-data branch into master
 
 2. fix the lag effect when image blending, by moving the code into the thread function as much as possible.
+
+
+## [2021/1/1]
+
+1. Add the menu bar and a new page
+
+2. The menu bar should be base on the tk class, instead of adding in the frame class, it should be add at the tk class
+   - The wrong i.e.
+
+        ```python
+        class MainPage(tk.Frame):
+            def __init__(self, parent, controller):
+                if __name__ == '__main__':
+                    tk.Frame.__init__(self, parent, bg="white")
+                    self.menubar = Menu(self)
+                    self.config(menu = self.menubar)
+                    # --> error occur since the tk frame do not havr menu option
+        ```
+
+   - Add in each page
+
+        ```python
+        class MainPage(tk.Frame):
+            def __init__(self, parent, controller):
+                if __name__ == '__main__':
+                    tk.Frame.__init__(self, parent, bg="white")
+                    self.menu = Menu(controller)
+                    controller.config(menu = self.menubar)
+        ```
+
+   - Add in the parent (The final solution)
+        - In parent class
+
+            ```python
+            class tkinterApp(tk.Tk):
+
+                # __init__ function for class tkinterApp
+                def __init__(self, *args, **kwargs):
+                    if __name__ == '__main__':
+
+                        # __init__ function for class Tk
+                        tk.Tk.__init__(self, *args, **kwargs)
+
+                        #\ ---Menu Bar---
+                        self.menubar = Menu(self)
+                        self.Emptymenubar = Menu(self)
+                        self.config(menu=self.menubar)
+            ```
+
+        - In each page
+
+            ```python
+            class MainPage(tk.Frame):
+                def __init__(self, parent, controller):
+                    if __name__ == '__main__':
+                        tk.Frame.__init__(self, parent, bg="white")
+
+                        #\ ---Menu Bar---
+                        self.filemenu = Menu(controller.menubar, tearoff=0)
+                        self.filemenu.add_command(label="API&Key", command=lambda : controller.show_frame(SettingPage))
+                        self.filemenu.add_command(label="Image url", command=self.donothing)
+                        self.filemenu.add_separator()
+                        self.filemenu.add_command(label="Exit", command=self.quit)
+                        controller.menubar.add_cascade(label="Settings", menu=self.filemenu)
+
+                        self.helpmenu = Menu(controller.menubar, tearoff=0)
+                        self.helpmenu.add_command(label="Help Index", command=self.donothing)
+                        self.helpmenu.add_command(label="About...", command=self.donothing)
+                        controller.menubar.add_cascade(label="Help", menu=self.helpmenu)
+            ```
+
+        - Hidden menu bar in some page
+
+            ```python
+            def show_frame(self, cont):
+                global Username
+                frame = self.frames[cont]
+
+                #\ menu setting
+                if frame._name == "!loginpage":
+                    self.config(menu=self.Emptymenubar)
+                else:
+                    self.config(menu=self.menubar)
+            ```
+
+3. Final result
+![menu bar](https://i.imgur.com/9I4s0QO.png)
+
+
+4. I am tired, so the content in the setup will be implemented in other day.
+
+5. The image thread will cause some problem on menu bar selection. Maybe dfix it later.

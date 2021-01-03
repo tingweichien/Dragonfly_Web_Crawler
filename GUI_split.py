@@ -78,7 +78,7 @@ class tkinterApp(tk.Tk):
 
             # iterating through a tuple consisting
             # of the different page layouts
-            for F in (LoginPage, MainPage):
+            for F in (LoginPage, MainPage, SettingPage):
 
                 frame = F(container, self)
 
@@ -121,6 +121,7 @@ class tkinterApp(tk.Tk):
 
 
 
+#\ --- Login Page ---
 #\ first window frame LoginPage
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -263,7 +264,20 @@ class LoginPage(tk.Frame):
 
 
 
+#\ --- Setting Page ---
+class SettingPage(tk.Frame):
+    def __init__(self, parent, controller):
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
+            self.SettingTitle = Label(self, text="Setting", background="white")
+            self.returnbutton = ttk.Button(self, text="Return", command=lambda: controller.show_frame(MainPage))
+            self.SettingTitle.pack()
+            self.returnbutton.pack()
 
+
+
+
+#\ --- Main Page ---
 #\ second window frame MainPage
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -272,17 +286,16 @@ class MainPage(tk.Frame):
 
             #\ ---Menu Bar---
             self.filemenu = Menu(controller.menubar, tearoff=0)
-            self.filemenu.add_command(label="New", command=self.donothing)
-            self.filemenu.add_command(label="Open", command=self.donothing)
-            self.filemenu.add_command(label="Save", command=self.donothing)
+            self.filemenu.add_command(label="API&Key", command=lambda : controller.show_frame(SettingPage))
+            self.filemenu.add_command(label="Image url", command=self.donothing)
             self.filemenu.add_separator()
             self.filemenu.add_command(label="Exit", command=self.quit)
-            controller.menubar.add_cascade(label="File1", menu=self.filemenu)
+            controller.menubar.add_cascade(label="Settings", menu=self.filemenu)
 
             self.helpmenu = Menu(controller.menubar, tearoff=0)
             self.helpmenu.add_command(label="Help Index", command=self.donothing)
             self.helpmenu.add_command(label="About...", command=self.donothing)
-            controller.menubar.add_cascade(label="Help1", menu=self.helpmenu)
+            controller.menubar.add_cascade(label="Help", menu=self.helpmenu)
 
 
 
@@ -344,7 +357,7 @@ class MainPage(tk.Frame):
             #\ ---Species Find Frame---
             ###########################
             Species_Find_LabelFrame_bg = "white"
-            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Species_Find = LabelFrame(self, text="Find Species on Map", fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
             self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
 
             #\ Label
@@ -1134,5 +1147,5 @@ class MainPage(tk.Frame):
 if __name__ == '__main__':
     app = tkinterApp()
     app.geometry(Index.Login_geometry)
-    app.title(" Please Login")
+    app.title("Please Login")
     app.mainloop()
