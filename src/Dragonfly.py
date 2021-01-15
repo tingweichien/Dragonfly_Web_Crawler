@@ -10,6 +10,9 @@ import Index
 from multiprocessing import Process, Pool, Value, Lock
 from functools import partial
 from typing import List
+import proxyscrape
+
+
 
 '''
 ErrorID = {
@@ -30,29 +33,74 @@ TotalCount = 0
 
 
 ##################################################################
+
+#\ Proxy auto crawling
+#\ by proxyscrape 0.3.0
+#\ https://pypi.org/project/proxyscrape/
+def get_proxy()->list:
+    collector = proxyscrape.create_collector('default', 'https')  # Create a collector for http resources
+    proxy = collector.get_proxy({'country': 'united states'})  # Retrieve a united states proxy
+    print(f"proxy: {proxy}")
+    return proxy
+
+
+
+#\ Login
+"""
+params:
+    account
+    password
+return:
+    session
+    Login_Response
+    Login_state
+"""
 def Login_Web(Input_account:str, Input_password:str):
     #\ Login account and password
     data = {
         'account' : Input_account,
         'password' : Input_password,
     }
+
     Login_state = True
-    try:
-        requests.get(Index.Login_url, proxies=Index.proxy)
-    except:
-        return [None, None, None]
-    else:
-        #\ 執行登入
-        Login_Response = session.post(Index.Login_url, headers=Index.headers, data=data)
+    re_try = 0
+    #\ retry for certain times if failed
+    while re_try < Index.re_try_limit:
+        try:
+            #\ auto get the proxy
+            #get_proxy()
+            try:
+                list_len = len(Index.proxy_list)
+                loginStatus = requests.get(Index.Login_url, proxies=Index.proxy_list[re_try % list_len])
+                Login_type = "proxy"
+            except:
+                loginStatus = requests.get(Index.Login_url)
+                Login_type = "No proxy"
 
-        #\ 確認是否成功登入
-        soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
-        script = soup_login_ckeck.find("script").extract() # find the alert
-        alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
-        if (len(alert) > 0):
-            Login_state = False # to show the error that the password or account might be wrong
-        return [session, Login_Response, Login_state]
+            print(f"login type: {Login_type}, login status: {loginStatus}")
 
+
+        except:
+            #\ print the retry
+            re_try += 1
+            print(f"retry: {re_try}")
+
+
+        else:
+            #\ 執行登入
+            Login_Response = session.post(Index.Login_url, headers=Index.headers, data=data)
+
+            #\ 確認是否成功登入
+            soup_login_ckeck = BeautifulSoup(Login_Response.text, 'html.parser')
+            script = soup_login_ckeck.find("script").extract() # find the alert
+            alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
+            if (len(alert) > 0):
+                Login_state = False # to show the error that the password or account might be wrong
+            return [session, Login_Response, Login_state]
+
+    #\ retry failed
+    print("[waning] Login failed")
+    return [None, None, None]
 
 
 ###################################################################

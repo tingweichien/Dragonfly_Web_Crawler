@@ -8,6 +8,9 @@ from multiprocessing import Process
 import multiprocessing
 from datetime import datetime, date
 
+
+
+
 ##################################################
 # my account and password
 myaccount =  None
@@ -113,14 +116,26 @@ headers = {
 
 
 #\ login proxy
-proxy = {
-    "https": 'https://220.135.64.51:8080',
-    "http": 'http://220.135.64.51:8080'
-}
+proxy_list = [
+    {
+        "https": 'https://118.163.91.247:80',
+        "http": 'http://220.135.64.51:80'
+    },
+    {
+        "https": 'https://59.127.27.243:8080',
+        "http": 'http://59.127.27.243:8080'
+    },
+
+]
+
+
+
+#\ re-login limits
+re_try_limit = 4
 
 
 #\ chrome driver path
-chromedriver_path = ".\\Chromedriver\\chromedriver.exe"
+chromedriver_path = ".\\src\\Chromedriver\\chromedriver.exe"
 
 #\ file path
 current_path = os.getcwd()
@@ -729,3 +744,15 @@ Weather_earliest_date = date(2008, 7, 1)
 
 #\ request limit
 weather_request_limit = 500
+
+
+#\ the update progress bar progressbar_portion
+Var_MySQL_enable_percentage = 0.01
+Var_weather_enable_percentage = 0.5
+Var_UpdatefWeb_enable_percentage = 1 - Var_MySQL_enable_percentage - Var_weather_enable_percentage
+
+
+#\ timer for the progress bar
+#\ datetime.now().microsecond = XXXXXX
+pb_microsecond_ndigits = 6
+pb_showing_digit = 2

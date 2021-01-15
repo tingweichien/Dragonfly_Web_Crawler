@@ -319,6 +319,9 @@ def parse_all(self):
     #\ GUI display
     self.ICurrentNumLabel_text(0)
 
+    #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
+    progressbar_portion = self.progressbar_portion_calc()
+
     #\ if there is no json file, which means parsing at the first time
     if len(Update) == 0:
         for species_family_loop in Index.Species_Family_Name:
@@ -326,7 +329,7 @@ def parse_all(self):
                 folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
                 Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
-                self.progressbar.step(100 / TotalSpeciesNumber)
+                self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
                 if program_stop_check:
                     return
@@ -347,7 +350,7 @@ def parse_all(self):
                 file_check = path.exists(Index.current_path + "\\" + File_name)
 
                 #\ GUI display - progress bar
-                self.progressbar.step(100 / TotalSpeciesNumber)
+                self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
 
                 #\ if the species is in the update list or the file doesn't exist

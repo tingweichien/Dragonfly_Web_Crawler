@@ -141,6 +141,8 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
     current_LATLNG =()
     weather_r = {}
 
+    #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
+    progressbar_portion = self.progressbar_portion_calc()
 
     #\ create the new column
     ALTER_TABLE(connection, "weather", "JSON", DB_species)
@@ -178,12 +180,16 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
                             if request_cnt <= Index.weather_request_limit:
 
                                 #\ this is the API
+                                ######################################################################
                                 weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+                                #######################################################################
 
                                 #\ count the request time
                                 request_cnt += 1
                                 print("request counts: ", str(request_cnt))
                                 self.IStateLabel_text("request counts: "+ str(request_cnt))
+                                self.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
+                                self.pbLabel_text()
 
                             else:
                                 changekey_Info(self)

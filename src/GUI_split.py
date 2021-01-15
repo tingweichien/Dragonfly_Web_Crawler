@@ -18,7 +18,6 @@ import threading
 from multiprocessing import Process, Value, Pool
 import gmplot
 from Chromedriver.update_chromedriver import *
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
 from urllib.request import urlopen
@@ -26,6 +25,8 @@ import io
 from PIL import Image, ImageTk
 import threading
 import random
+from ttkthemes import ThemedStyle
+
 
 
 LARGEFONT =("Verdana", 35)
@@ -214,8 +215,13 @@ class LoginPage(tk.Frame):
             messagebox.showwarning('Warning!!!', string + "should not be empty!!!!")
         return len(string)
 
+
     #\ Login action
     def LoginButtonFunc(self, controller):
+        threading.Thread(target=self.LoginButtonFuncthread(controller)).start()
+
+    #\ Login thread
+    def LoginButtonFuncthread(self, controller):
         global Login_Response, Login_state, Username
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
@@ -234,6 +240,7 @@ class LoginPage(tk.Frame):
                 with open(Index.Login_Filename, 'w') as fp:
                     fp.write(','.join((Index.myaccount, Index.mypassword)))
 
+
     #\ the eye button that can hide the PW or show it
     def ViewPWButtonfunc(self):
         if self.viewcheck.get() == True:
@@ -244,6 +251,7 @@ class LoginPage(tk.Frame):
             self.passwordEntry.config(show="*")
             self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
             self.viewcheck.set(True)
+
 
 
 # second window frame MainPage
@@ -615,10 +623,10 @@ class MainPage(tk.Frame):
 
     #\ progress bar percentage
     def pbLabel_text(self):
-        self.progressbar_label['text'] = str(self.pbVar.get()) + "%"
+        self.progressbar_label['text'] = f'{self.pbVar.get()}% '
 
     #\ text in line 1
-    def INameLabel_text(self, speciesfamily, species):
+    def INameLabel_text(self, speciesfamily:str, species:str):
         self.Info_Name_label['text'] = '[Start Crawing] {}  {}'.format(speciesfamily, species)
 
     #\ text in line 2
@@ -657,6 +665,13 @@ class MainPage(tk.Frame):
                 index = 0
             frame = self.Load_image[index]
             self.loading_label.config(image=frame)
+
+            #\ update the timer
+            delta_time = datetime.now() - self.start_time
+            sec = delta_time.seconds
+            milisec = delta_time.microseconds
+            self.progressbar_label_time["text"] = "(%02d:%02d.%02d)" % (sec//60, sec%60, milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit))
+
             #self.progressbarFrame.after(100, self.UpdateGIF,(index, True))
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
         else:
@@ -666,9 +681,11 @@ class MainPage(tk.Frame):
 
     # very important!!! using thread makes the progressbar move outside the main thread
     def start_button(self):
+        self.start_time = datetime.now()
         def start_multithread():
             self.check = True
             self.Info_Name_label['text'] = "Updating~"
+            self.NewWindow.title = "Update data - updating~"
             savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
             self.pbVar.set(100) #\ after finishing, force the bar number to 100%
             self.progressbar_label['text'] = '100%'
@@ -708,8 +725,10 @@ class MainPage(tk.Frame):
         self.loading_label = Label(self.progressLabelFrame, bg="white")
         self.loading_label.pack(side=RIGHT)
         self.pbVar = IntVar(self.NewWindow)
-        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, length=300, mode="determinate", variable=self.pbVar, maximum=100)
+        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, phase=1, length=300, mode="determinate", variable=self.pbVar, maximum=100)
         self.progressbar.pack(side=LEFT, pady=10)
+        self.progressbar_label_time = Label(self.progressbarFrame, text="00:00", bg="white")
+        self.progressbar_label_time.pack(side=RIGHT, padx=5)
         self.progressbar_label = Label(self.progressbarFrame, text="0%", bg="white")
         self.progressbar_label.pack(side=RIGHT, padx=5)
 
@@ -719,6 +738,9 @@ class MainPage(tk.Frame):
         button_popup_label.pack()
         self.button_popup = ttk.Button(self.ButtonFrame, text="start", command=self.start_button)
         self.button_popup.pack(pady=2)
+
+
+        #\ Check button
         #\ this specify whether to update MySQL database or not
         self.Var_MySQL_enable = BooleanVar(self.ButtonFrame, value=True)
         self.checkbox_MySQL = Checkbutton(self.ButtonFrame, text="MySQL-Enable", variable=self.Var_MySQL_enable, bg="white", cursor= "arrow")
@@ -732,29 +754,45 @@ class MainPage(tk.Frame):
         self.checkbox_UpdatefWeb = Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", variable=self.Var_UpdatefWeb_enable, bg="white", cursor= "arrow")
         self.checkbox_UpdatefWeb.pack(side="left")
 
+
         #\ Update progress infomation
-        TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
-        TextLabelFrame.pack(pady=10)
-        self.Info_Name_label = Label(TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white")
+        self.TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
+        self.TextLabelFrame.pack(pady=10)
+        self.Info_Name_label_Var = StringVar(self.TextLabelFrame)
+        self.Info_Name_label = Label(self.TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white", textvariable=self.Info_Name_label_Var)
         self.Info_Name_label.pack(pady=3)
-        self.Info_FileName_label = Label(TextLabelFrame, anchor='w', bg="white")
+        self.Info_FileName_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FileName_label.pack(pady=3)
-        self.Info_UpdateNum_label = Label(TextLabelFrame, anchor='w', bg="white")
+        self.Info_UpdateNum_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_UpdateNum_label.pack(pady=3)
-        self.Info_CurrentNum_label = Label(TextLabelFrame, anchor='w', bg="white")
+        self.Info_CurrentNum_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_CurrentNum_label.pack(pady=3)
-        self.Info_State_label = Label(TextLabelFrame, anchor='w', bg="white")
+        self.Info_State_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_State_label.pack(pady=3)
-        self.Info_FinishState_label = Label(TextLabelFrame, anchor='w', bg="white")
+        self.Info_FinishState_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FinishState_label.pack(pady=3)
 
 
 
-    #\ crawl data
+    #\ progreebar portion base on the number of checkbox that indicates different update type you choose
+    def progressbar_portion_calc(self)->dict:
+        result = dict()
+        result["MySQL_portion"] = 1 - int(self.Var_weather_enable.get()) * Index.Var_weather_enable_percentage \
+                                    - int(self.Var_UpdatefWeb_enable.get()) * Index.Var_UpdatefWeb_enable_percentage
+        result["weather_portion"] = 1 - int(self.Var_MySQL_enable.get()) * Index.Var_MySQL_enable_percentage \
+                                        - int(self.Var_UpdatefWeb_enable.get()) * Index.Var_UpdatefWeb_enable_percentage
+        result["UpdatefWeb_portion"] = 1 - int(self.Var_MySQL_enable.get()) * Index.Var_MySQL_enable_percentage \
+                                        - int(self.Var_weather_enable.get()) * Index.Var_weather_enable_percentage
+        return result
+
+
+    #\ Button to open pop up window for updating
     #\ read the flow from here to the top of the method in this class
     def Save2FileButton(self):
         Index.limit_cnt = int(self.var_MC.get())
         print(f"limit count is {Index.limit_cnt}")
+
+        #\ pop up window
         self.Save2File_popup()
 
 
@@ -1093,5 +1131,13 @@ class MainPage(tk.Frame):
 if __name__ == '__main__':
     app = tkinterApp()
     app.geometry(Index.Login_geometry)
+
+    #\ set the title
     app.title(" Please Login")
+
+    #\ Specify the style1
+    style = ThemedStyle(app)
+    style.set_theme("xpnative")
+
+    #\ Let the main loop running
     app.mainloop()
