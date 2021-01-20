@@ -197,6 +197,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
             #\ get the total number of data need to be update ot crawl
             expecting_CNT = Total_num - oldData_len
+            self.epecting_CNT = expecting_CNT
 
             #\ GUI display
             self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
@@ -319,6 +320,9 @@ def parse_all(self):
     #\ GUI display
     self.ICurrentNumLabel_text(0)
 
+    #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
+    progressbar_portion = self.progressbar_portion_calc()
+
     #\ if there is no json file, which means parsing at the first time
     if len(Update) == 0:
         for species_family_loop in Index.Species_Family_Name:
@@ -326,7 +330,7 @@ def parse_all(self):
                 folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
                 Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
-                self.progressbar.step(100 / TotalSpeciesNumber)
+                self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
                 if program_stop_check:
                     return
@@ -347,7 +351,7 @@ def parse_all(self):
                 file_check = path.exists(Index.current_path + "\\" + File_name)
 
                 #\ GUI display - progress bar
-                self.progressbar.step(100 / TotalSpeciesNumber)
+                self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
 
                 #\ if the species is in the update list or the file doesn't exist
@@ -417,8 +421,14 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         #\ GUI display
         self.pbLabel_text()
         Time_interval = End - Start
-        self.set_all_to_empty()
+        self.Update_Block_set_all_to_empty()
+        self.progressbar_partial.stop()
         self.IUpdateNumLabel_text(f"--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s")
         print(f"\n--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s" )
+
+        #\ End info message box
+        messagebox_Flag = messagebox.showinfo("Finished updating~", "Finished updating the data~")
+        if messagebox_Flag:
+            self.Save2File_popup_closeWindow()
 
 

@@ -643,4 +643,42 @@ reference :
 2. datetime
    - **datetime.strftime** : means string formatter, this will format a datetime object to string format.
    - **datetime.strptime** : means string parser, this will convert a string format to datetime.
-   - [ref](https://stackoverflow.com/questions/8142364/how-to-compare-two-dates)
+   - 2 datetime difference
+
+    ```python
+    import datetime
+
+    # datetime(year, month, day, hour, minute, second)
+    a = datetime.datetime(2017, 6, 21, 18, 25, 30)
+    b = datetime.datetime(2017, 5, 16, 8, 21, 10)
+
+    # returns a timedelta object
+    c = a-b
+    print('Difference: ', c)
+
+    minutes = c.total_seconds() / 60
+    print('Total difference in minutes: ', minutes)
+
+    # returns the difference of the time of the day
+    minutes = c.seconds / 60
+    print('Difference in minutes: ', minutes)
+    ```
+
+    result will be
+
+    ```shell
+    Difference:  36 days, 10:04:20
+    Difference in minutes:  604 minutes 20 seconds
+    ```
+
+   - <https://stackoverflow.com/questions/8142364/how-to-compare-two-dates>
+   - <https://www.geeksforgeeks.org/python-difference-between-two-dates-in-minutes-using-datetime-timedelta-method/>
+
+## [2021/1/15]
+
+1. Tk theme
+   1. <https://stackoverflow.com/questions/24367710/how-do-i-change-the-overall-theme-of-a-tkinter-application>
+
+   2. <https://wiki.tcl-lang.org/page/List+of+ttk+Themes>
+
+   3. <https://github.com/TkinterEP/ttkthemes/blob/master/docs/themes.rst>

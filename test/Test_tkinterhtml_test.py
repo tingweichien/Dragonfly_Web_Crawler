@@ -162,61 +162,108 @@ if __name__ == '__main__':
 # root.mainloop()
 
 
-import io
-# allows for image formats other than gif
-from PIL import Image, ImageTk
-import tkinter as tk
-from urllib.request import urlopen
+
+########################################################################
+# import io
+# # allows for image formats other than gif
+# from PIL import Image, ImageTk
+# import tkinter as tk
+# from urllib.request import urlopen
 
 
 
-# find yourself a picture on an internet web page you like
-# (right click on the picture, under properties copy the address)
-url = "http://www.google.com/intl/en/images/logo.gif"
-url3="https://i.ibb.co/3mQF3Jt/32585369723-e87b06b042-c.jpg"
-url4="https://i.ibb.co/z5jBfvN/34077780896-32c563c964-c.jpg"
-url5="https://i.ibb.co/G7r55jC/gradonfly-2.jpg"
-url6="https://i.ibb.co/bWTSXdg/gragonfly-3.jpg"
-# or use image previously downloaded to tinypic.com
-#url = "http://i48.tinypic.com/w6sjn6.jpg"
-#url = "http://i50.tinypic.com/34g8vo5.jpg"
+# # find yourself a picture on an internet web page you like
+# # (right click on the picture, under properties copy the address)
+# url = "http://www.google.com/intl/en/images/logo.gif"
+# url3="https://i.ibb.co/3mQF3Jt/32585369723-e87b06b042-c.jpg"
+# url4="https://i.ibb.co/z5jBfvN/34077780896-32c563c964-c.jpg"
+# url5="https://i.ibb.co/G7r55jC/gradonfly-2.jpg"
+# url6="https://i.ibb.co/bWTSXdg/gragonfly-3.jpg"
+# # or use image previously downloaded to tinypic.com
+# #url = "http://i48.tinypic.com/w6sjn6.jpg"
+# #url = "http://i50.tinypic.com/34g8vo5.jpg"
 
-url_list = [url, url3, url4, url5, url6]
-
-
-
-
-class App():
-    def __init__(self):
-        self.root = tk.Tk()
-        self.counter = 0
-        # put the image on a typical widget
-        self.label = tk.Label(self.root, bg='brown')
-        self.label.pack(padx=5, pady=5)
-        self.update_img()
-        self.root.mainloop()
-
-
-    def update_img(self):
-        image_bytes = urlopen(url_list[self.counter % len(url_list)]).read()
-        # internal data file
-        data_stream = io.BytesIO(image_bytes)
-        # open as a PIL image object
-        pil_image = Image.open(data_stream)
-        # optionally show image info
-        # get the size of the image
-        w, h = pil_image.size
-        # split off image file name
-        fname = url_list[self.counter % len(url_list)].split('/')[-1]
-        sf = "{} ({}x{})".format(fname, w, h)
-        self.root.title(sf)
-        # convert PIL image object to Tkinter PhotoImage object
-        pil_image = pil_image.resize((800, 534), Image.ANTIALIAS)
-        self.tk_image = ImageTk.PhotoImage(pil_image)
-        self.label.config(image=self.tk_image)
-        self.counter += 1
-        self.root.after(5*1000, self.update_img)
+# url_list = [url, url3, url4, url5, url6]
 
 
 
-app=App()
+
+# class App():
+#     def __init__(self):
+#         self.root = tk.Tk()
+#         self.counter = 0
+#         # put the image on a typical widget
+#         self.label = tk.Label(self.root, bg='brown')
+#         self.label.pack(padx=5, pady=5)
+#         self.update_img()
+#         self.root.mainloop()
+
+
+#     def update_img(self):
+#         image_bytes = urlopen(url_list[self.counter % len(url_list)]).read()
+#         # internal data file
+#         data_stream = io.BytesIO(image_bytes)
+#         # open as a PIL image object
+#         pil_image = Image.open(data_stream)
+#         # optionally show image info
+#         # get the size of the image
+#         w, h = pil_image.size
+#         # split off image file name
+#         fname = url_list[self.counter % len(url_list)].split('/')[-1]
+#         sf = "{} ({}x{})".format(fname, w, h)
+#         self.root.title(sf)
+#         # convert PIL image object to Tkinter PhotoImage object
+#         pil_image = pil_image.resize((800, 534), Image.ANTIALIAS)
+#         self.tk_image = ImageTk.PhotoImage(pil_image)
+#         self.label.config(image=self.tk_image)
+#         self.counter += 1
+#         self.root.after(5*1000, self.update_img)
+
+
+
+# app=App()
+
+
+
+########################################################################################
+try:
+  import Tkinter              # Python 2
+  import ttk
+except ImportError:
+  import tkinter as Tkinter   # Python 3
+  import tkinter.ttk as ttk
+
+
+def main():
+
+  root = Tkinter.Tk()
+  ttk.Style().theme_use('xpnative') # <--- Change default to whichever theme you want to use.
+
+  ft = ttk.Frame()
+  fb = ttk.Frame()
+
+  ft.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+  fb.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+
+  pb_hd = ttk.Progressbar(ft, orient='horizontal', mode='determinate', phase=20, maximum=50)
+  pb_hD = ttk.Progressbar(ft, orient='horizontal', mode='indeterminate')
+  pb_vd = ttk.Progressbar(fb, orient='vertical', mode='determinate')
+  pb_vD = ttk.Progressbar(fb, orient='vertical', mode='indeterminate')
+
+  pb_hd.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+  pb_hD.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+  pb_vd.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.LEFT)
+  pb_vD.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.LEFT)
+
+  pb_hd.start(50)
+  pb_hD.start(50)
+  pb_vd.start(50)
+  pb_vD.start(50)
+
+
+  root.mainloop()
+  
+
+
+if __name__ == '__main__':
+  main()

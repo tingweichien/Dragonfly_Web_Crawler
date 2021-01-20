@@ -6,6 +6,9 @@ import csv
 import requests
 from typing import List
 from datetime import datetime
+import queue
+import weather_data_class
+from tkinter import messagebox
 
 
 #\ (GLOBAL)
@@ -129,6 +132,29 @@ def update_weather_data(self, connection:mysql.connector, Table:str, data_sepera
         print(f"[warning] The error '{e}' occurred")
 
 
+#\ Thread for the get-weather-data
+#\ (G)et (W)eather (D)ata
+def GetWeatherDataThread():
+    #\ create the queue
+    print("Start the thread Queue to get weather data")
+    GWD_queue = queue.Queue()
+
+    #\ create the workers
+    worker_list = []
+    for num in range(Index.MaxQueueNum):
+        worker_list.append(weather_data_class.WeatherDataWorker(GWD_queue, num))
+
+    #\ start the thread
+    for number in range(len(worker_list)):
+        worker_list[number].start()
+
+
+
+    #\ wait for the thread to join to show the result
+    for number in range(len(worker_list)):
+        worker_list[number].join()
+
+
 
 
 #\ Send the request to get the weather data
@@ -141,6 +167,10 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
     current_LATLNG =()
     weather_r = {}
 
+    #\ show the crawling species information
+
+    #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
+    progressbar_portion = self.progressbar_portion_calc()
 
     #\ create the new column
     ALTER_TABLE(connection, "weather", "JSON", DB_species)
@@ -163,6 +193,7 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
                     #\ check if the request date is not over the earliest date
                     if response["Dates"] > Index.Weather_earliest_date:
 
+                        #\ request data format
                         data = {"key": Index.weather_key[key_cnt],
                                 "q" : f'{response["Latitude"]}, {response["Longitude"]}',
                                 "format" : "json",
@@ -178,12 +209,19 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
                             if request_cnt <= Index.weather_request_limit:
 
                                 #\ this is the API
+                                ######################################################################
                                 weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+                                #######################################################################
 
                                 #\ count the request time
                                 request_cnt += 1
                                 print("request counts: ", str(request_cnt))
+
+                                #\ GUI display
+                                self.Info_FileName_label['text']  = Index.Species_key_fullname_E2C[DB_species]
                                 self.IStateLabel_text("request counts: "+ str(request_cnt))
+                                self.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
+                                self.pbLabel_text()
 
                             else:
                                 changekey_Info(self)
@@ -309,6 +347,7 @@ insertquery_SI_0_end = """ (species_family_id, species_id, Species_Name, ID, rec
 
 #\ auto update the data in csv into DATABASE
 #\ maybe the next sep will be update by the save2File
+#\ contain update weather data
 def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
     #\ INIT the key
@@ -339,8 +378,11 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
     #\ build species info table
         for Sp in Index.Species_Name_Group[Id]:
+
             #\ This is to update the infomation from dragonfly recording web
+            ##########################################################################
             Species_table_name = Index.Species_class_key[S] + Index.Species_key[Sp]
+            ##########################################################################
 
             #\ change the table name to new name
             update_header(connection, Species_table_name)
@@ -374,11 +416,20 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 except:
                     print('create the table, but no such csv file or no such data')
 
+
+            #\ This is to update the weather information from World weather online
             if Update_weather:
-                #\ This is to update the weather information from World weather online
+
+                #\ clear the update infomation block and reset the information
+                self.Update_Block_set_all_to_empty()
+
+                #\ set the progress in this update section
+                self.progressbar_partial["mode"] = "indeterminate"
+                self.progressbar_partial.start(50)
+
+                #\ The weather data update main function
                 get_weather_data(self, connection, Species_table_name)
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
-
 
 
 
