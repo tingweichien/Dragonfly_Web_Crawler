@@ -682,3 +682,12 @@ reference :
    2. <https://wiki.tcl-lang.org/page/List+of+ttk+Themes>
 
    3. <https://github.com/TkinterEP/ttkthemes/blob/master/docs/themes.rst>
+
+## [2021/1/21]
+
+1. Add sub-progressbar to show the detailed information
+   1. In Crawling date from web to the .csv file, it will show the progress of the number of each species crawling
+   2. In weahter data update, it will become indeterminate mode for fun. For there are no more info need to show.
+    ![update window](https://i.imgur.com/Y8sPA1U.png)
+
+2. Add the info messagebox at the end of the crawling to info the user and to let the windows closed by pressing the button.
