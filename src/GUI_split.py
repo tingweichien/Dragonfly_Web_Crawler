@@ -649,7 +649,7 @@ class MainPage(tk.Frame):
     def IFinishStateLabel_text(self, finish_text):
         self.Info_FinishState_label['text'] = finish_text
 
-    def set_all_to_empty(self):
+    def Update_Block_set_all_to_empty(self):
         self.Info_FinishState_label['text'] = ""
         self.Info_State_label['text'] = ""
         self.Info_CurrentNum_label['text'] = ""
@@ -657,8 +657,12 @@ class MainPage(tk.Frame):
         self.Info_FileName_label['text'] = ""
         self.Info_Name_label['text'] = ""
 
+
+    #\ thread to update gif
+    #\ also for update the update timer
+    #\ the sub-progressbar will also included
     def UpdateGIF(self, index):
-        if self.check == True :
+        if self.GIFcheck == True :
             if index < Index.GIFMAXFRAME-1:
                 index += 1
             elif index == Index.GIFMAXFRAME-1:
@@ -670,9 +674,14 @@ class MainPage(tk.Frame):
             delta_time = datetime.now() - self.start_time
             sec = delta_time.seconds
             milisec = delta_time.microseconds
-            self.progressbar_label_time["text"] = "(%02d:%02d.%02d)" % (sec//60, sec%60, milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit))
+            #self.progressbar_label_time["text"] = "(%02d:%02d.%02d)" % (sec//60, sec%60, milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit))
+            self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
 
-            #self.progressbarFrame.after(100, self.UpdateGIF,(index, True))
+            #\update the sub progressbar
+            if self.epecting_CNT != 0:
+                self.pbVar_partial.set(100*DataCNT.value/self.epecting_CNT)
+
+
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
         else:
             self.loading_label.config(image=self.Load_image[10])
@@ -683,7 +692,7 @@ class MainPage(tk.Frame):
     def start_button(self):
         self.start_time = datetime.now()
         def start_multithread():
-            self.check = True
+            self.GIFcheck = True
             self.Info_Name_label['text'] = "Updating~"
             self.NewWindow.title = "Update data - updating~"
             savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
@@ -691,7 +700,7 @@ class MainPage(tk.Frame):
             self.progressbar_label['text'] = '100%'
             self.progressbar.stop()
             self.button_popup['text'] = 'Finish'
-            self.check = False
+            self.GIFcheck = False
 
         self.button_popup['state'] = 'disabled'
         threading.Thread(target=self.UpdateGIF, args=(0,)).start()
@@ -702,7 +711,7 @@ class MainPage(tk.Frame):
     #\ Save2File pop up windows for progress
     def Save2File_popup(self):
         #\ new root window
-        self.check = True
+        self.GIFcheck = True
         self.NewWindow = tk.Toplevel(app)
         self.NewWindow.title("Update data")
         self.NewWindow.geometry(Index.updateWinGeometry)
@@ -714,6 +723,8 @@ class MainPage(tk.Frame):
         self.progressLabelFrame.pack(side=TOP)
         self.progressbarFrame = Frame(self.NewWindow, bg="white")
         self.progressbarFrame.pack()
+        self.progressbarSubFrame = Frame(self.NewWindow, bg="white")
+        self.progressbarSubFrame.pack()
         self.ButtonFrame = Frame(self.NewWindow, bg="white")
         self.ButtonFrame.pack()
 
@@ -724,9 +735,11 @@ class MainPage(tk.Frame):
         self.Load_image = [PhotoImage(file=Index.updateGIF, format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
         self.loading_label = Label(self.progressLabelFrame, bg="white")
         self.loading_label.pack(side=RIGHT)
+
         self.pbVar = IntVar(self.NewWindow)
-        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, phase=1, length=300, mode="determinate", variable=self.pbVar, maximum=100)
+        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, phase=1, length=350, mode="determinate", variable=self.pbVar, maximum=100)
         self.progressbar.pack(side=LEFT, pady=10)
+
         self.progressbar_label_time = Label(self.progressbarFrame, text="00:00", bg="white")
         self.progressbar_label_time.pack(side=RIGHT, padx=5)
         self.progressbar_label = Label(self.progressbarFrame, text="0%", bg="white")
@@ -771,6 +784,24 @@ class MainPage(tk.Frame):
         self.Info_State_label.pack(pady=3)
         self.Info_FinishState_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FinishState_label.pack(pady=3)
+
+        # s = ttk.Style()
+        # s.theme_use('clam')
+        # s.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
+        self.epecting_CNT = 0
+        self.pbVar_partial = IntVar(self.NewWindow)
+        self.progressbar_partial = ttk.Progressbar(self.NewWindow, orient=HORIZONTAL,
+                                                    phase=1, length=300, mode="determinate",
+                                                    # style="red.Horizontal.TProgressbar",
+                                                    variable=self.pbVar_partial, maximum=100)
+        self.progressbar_partial.pack()
+
+
+
+    #\ Save2File_popup close window event
+    def Save2File_popup_closeWindow(self):
+        self.NewWindow.destroy()
+
 
 
 
@@ -1065,7 +1096,6 @@ class MainPage(tk.Frame):
 
     #\ Blending the image
     def blending_img(self):
-
         try:
             #\ random the number of picture
             self.img_counter = random.randrange(0, 9, 1)
@@ -1108,8 +1138,16 @@ class MainPage(tk.Frame):
 
 
     #\ update the image cover
+    #\ this is because recalling this function by after or use the thread for this function
+    #\ will cause the program to hang. Apply the thread to it will cause the error showing that
+    #\ the mian thread is not in the main loop, so I add a wrap up function for it to let this work
     def update_img(self):
+        threading.Thread(target=self.update_img_thread()).start()
 
+
+
+    #\ update image thread to call the finction again by using after function
+    def update_img_thread(self):
         if (self.init_while):
             #\ blending the picture in another thread
             threading.Thread(target=self.blending_img()).start()
@@ -1121,9 +1159,7 @@ class MainPage(tk.Frame):
             self.imglabel.config(image=self.tk_image)
 
         #\ rerun the function every XXX second
-        self.after(Index.img_change_time*1000, self.update_img)
-
-
+        self.after(Index.img_change_time*1000, self.update_img_thread)
 
 
 

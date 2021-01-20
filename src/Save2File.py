@@ -197,6 +197,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
             #\ get the total number of data need to be update ot crawl
             expecting_CNT = Total_num - oldData_len
+            self.epecting_CNT = expecting_CNT
 
             #\ GUI display
             self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
@@ -420,8 +421,14 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         #\ GUI display
         self.pbLabel_text()
         Time_interval = End - Start
-        self.set_all_to_empty()
+        self.Update_Block_set_all_to_empty()
+        self.progressbar_partial.stop()
         self.IUpdateNumLabel_text(f"--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s")
         print(f"\n--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s" )
+
+        #\ End info message box
+        messagebox_Flag = messagebox.showinfo("Finished updating~", "Finished updating the data~")
+        if messagebox_Flag:
+            self.Save2File_popup_closeWindow()
 
 

@@ -260,7 +260,9 @@ def main():
   pb_vd.start(50)
   pb_vD.start(50)
 
+
   root.mainloop()
+  
 
 
 if __name__ == '__main__':

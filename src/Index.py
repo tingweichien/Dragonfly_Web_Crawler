@@ -26,7 +26,7 @@ Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
 MainPageGeometry = "380x680"
-updateWinGeometry = "600x350"
+updateWinGeometry = "600x420"
 
 
 
@@ -184,10 +184,12 @@ Img_timeout = 30
 img_change_time = 10
 
 #\ cover image blending slices, blending alpha = 0.01 each BlendingTime(next variable)
+#\ 0.1~1 will be acceptable
 BlendingPrecision = 0.01
 
-#\ cover image blending times
-BlendingTime = 0.05
+#\ cover image blending times between each blending frame
+#\ 0.1~0.01 will be acceptable
+BlendingTime = 0.025
 
 #\ cover image size setting
 coverImagWidth = 360
@@ -745,6 +747,8 @@ Weather_earliest_date = date(2008, 7, 1)
 #\ request limit
 weather_request_limit = 500
 
+#\ thread queue limit
+MaxQueueNum = 10
 
 #\ the update progress bar progressbar_portion
 Var_MySQL_enable_percentage = 0.01
@@ -755,4 +759,6 @@ Var_UpdatefWeb_enable_percentage = 1 - Var_MySQL_enable_percentage - Var_weather
 #\ timer for the progress bar
 #\ datetime.now().microsecond = XXXXXX
 pb_microsecond_ndigits = 6
-pb_showing_digit = 2
+
+#\ show n digit 0.XXXXX.....
+pb_showing_digit = 1
