@@ -102,12 +102,25 @@ class tkinterApp(tk.Tk):
     #\ but it can be replace by ttk widget
     def B_HoverOn(self, event, color):
         event.widget['background'] = color
-    def BHoverOn(self, w:tk.Widget, colorList:list):
+
+    def BHoverOn(self, w:tk, colorList:list):
         w.bind("<Leave>", lambda event, color=colorList[0]: self.B_HoverOn(event, color))
         w.bind("<Enter>", lambda event, color=colorList[1]: self.B_HoverOn(event, color))
 
+    def B_HoverOnGroup(self, event, color, groupmember:list):
+         event.widget['background'] = color
+         for i in range(len(groupmember)):
+            groupmember[i]['background'] = color
+
+    def BHoverOnGroup(self, trigger:tk, beenTrigger:list, colorList:list):
+        trigger.bind("<Leave>", lambda event, color=colorList[0], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
+        trigger.bind("<Enter>", lambda event, color=colorList[1], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
+
+
+
 
 #\ first window frame LoginPage
+#\ controller is the parent class
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
@@ -254,7 +267,7 @@ class LoginPage(tk.Frame):
 
 
 
-# second window frame MainPage
+#\ second window frame MainPage
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
@@ -273,7 +286,7 @@ class MainPage(tk.Frame):
             #\ directory from where script was ran
             self.img_counter = 0
             self.previous_img = None
-            # put the image on a typical widget
+            #\ put the image on a typical widget
             self.imglabel = tk.Label(self, bg='white',relief=FLAT, borderwidth=0, highlightthickness=0)
             self.imglabel.pack(padx=5, pady=5)
             self.init_while = False
@@ -282,8 +295,9 @@ class MainPage(tk.Frame):
 
             #\ ---ID Find Frame---
             ######################
+            #\ label frame
             ID_LabelFrame_bg = "white"
-            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', fg="red", font=LabelFrame_font, bg=ID_LabelFrame_bg)
+            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', fg="red", font=LabelFrame_font, bg=ID_LabelFrame_bg, highlightbackground="red", takefocus=True)
 
             #\ Label
             self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
@@ -315,10 +329,15 @@ class MainPage(tk.Frame):
                             #\ color info : http://www.science.smith.edu/dftwiki/index.php/File:TkInterColorCharts.png
 
 
+            #\ list to get the label and labelfrme in ID Find frame
+            self.IDFindLabelList = [self.LabelFrame_ID_Find, self.APIKEY_label, self.id_label, self.latitude_label]
+
+
+
             #\ ---Species Find Frame---
             ###########################
             Species_Find_LabelFrame_bg = "white"
-            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg)
+            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg, highlightbackground="red", takefocus=True)
             self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
 
             #\ Label
@@ -352,10 +371,18 @@ class MainPage(tk.Frame):
                                         command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
 
 
+            #\ list to get the label and labelfrme in Species Find frame
+            self.SpeciesFindLabelList = [self.LabelFrame_Species_Find, self.Species_label, self.Datacheckbox]
+
+
+
             #\ ---Save2file Frame---
             ########################
+            #\ frame
             Save2file_LabelFrame_bg = "white"
-            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg)
+            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg, highlightbackground="red", takefocus=True)
+
+            #\ Label
             self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
             self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NO", font=label_font_style , bg=Species_Find_LabelFrame_bg)
             self.LabelFrame_Save2file.pack(fill="both", expand="yes") # fill both horizon and vertically
@@ -366,6 +393,7 @@ class MainPage(tk.Frame):
             self.MaxCrawling_width = 10
             self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
             self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width, justify="center")
+            self.MaxCrawlingTLTP = CreateToolTip(self.MaxCrawling, "This will limit the max number of data shown")
 
             #\ Button
             self.Save2file_button = ttk.Button(self.LabelFrame_Save2file,
@@ -378,18 +406,24 @@ class MainPage(tk.Frame):
 
             #\ Slider
             self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
-                                        orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1,
+                                        orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1, cursor="hand2",
                                         length=250, sliderrelief=GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
-            #self.Save2file_slider.set(int(maxcpus / 2))
-            self.Save2file_slider.set(Index.maxcpus)
+            self.Save2file_slider.set(Index.maxcpus)#self.Save2file_slider.set(int(maxcpus / 2))
+
+
+            #\ list to get the label and labelfrme in Save2file frame
+            self.Save2fileLabelList = [self.LabelFrame_Save2file, self.Save2file_label, self.MaxCrawling_label, self.Save2file_slider]
+
 
 
             #\ ---Plot Chart---
             ###################
             #\ Label Frame
             Plot_LabelFrame_bg = "white"
-            self.LabelFrame_Plot = LabelFrame(self, text="Plot Chart", font=LabelFrame_font, bg=Plot_LabelFrame_bg, fg="blue")
+            self.LabelFrame_Plot = LabelFrame(self, text="Plot Chart", font=LabelFrame_font, bg=Plot_LabelFrame_bg, fg="blue", highlightbackground="red", takefocus=True)
             self.LabelFrame_Plot.pack(fill="both", expand="yes") # fill both horizon and vertically
+
+            #\ Label
             self.Time_range_from_label = Label(self.LabelFrame_Plot, text="From", bg=Plot_LabelFrame_bg)
             self.Time_range_to_label = Label(self.LabelFrame_Plot, text="to", bg=Plot_LabelFrame_bg)
             self.Time_Duration_Year_label = Label(self.LabelFrame_Plot, text="Year", bg=Plot_LabelFrame_bg)
@@ -471,30 +505,45 @@ class MainPage(tk.Frame):
                                          )
 
 
-            #\ The link to my Github and doc
+            #\ list to get the label and labelfrme in Save2file frame
+            self.PlotChartLabelList = [self.LabelFrame_Plot, self.Time_range_from_label, self.Time_range_to_label, self.Time_Duration_Year_label,
+                                        self.Time_Duration_Month_label, self.TimeDuration_checkbox]
+
+
+
+            #\ ---The link to my Github and doc---
+            ########################################
+            #\ frame
             Hub_LabelFrame_bg = "White"
-            self.Hub_Frame = LabelFrame(self, text="", font=LabelFrame_font, bg=Hub_LabelFrame_bg)
+            self.Hub_Frame = LabelFrame(self, text="", font=LabelFrame_font, bg=Hub_LabelFrame_bg, highlightbackground="red", takefocus=True)
             self.Hub_Frame.pack(fill="both", expand="yes")
             self.Hub_parentF = Frame(self.Hub_Frame, bg=Hub_LabelFrame_bg)
+
+            #\ Github Label Image
             self.githubImg = PhotoImage(file=Index.github_img_path)
             Label_bg_color = "white"
             self.Hub_Label = Label(self.Hub_parentF, text="github", cursor="hand2", image=self.githubImg, bg=Label_bg_color)
             self.Hub_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://github.com/tingweichien/Dragonfly_Web_Crawler"))
             self.Hub_Label_tooltip = CreateToolTip(self.Hub_Label, "Go to Github", window_y=-15)
 
+            #\ Web-version Label Image
             self.web_versionImg = PhotoImage(file=Index.web_version_img_path)
             self.Web_version_Label = Label(self.Hub_parentF, text="web version", cursor="hand2", image=self.web_versionImg, bg=Label_bg_color)
             self.Web_version_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://flask-web-training.herokuapp.com/"))
             self.Web_version_tooltip = CreateToolTip(self.Web_version_Label, "Go to Web version of this app", window_y=-15)
 
+            #\ ReadtheDoc Label Image
             self.ReadthedocsImg = PhotoImage(file=Index.Readthedocs_img_path)
             self.Readthedocs_Label = Label(self.Hub_parentF, text="read the docs", cursor="hand2", image=self.ReadthedocsImg, bg=Label_bg_color)
             self.Readthedocs_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://dragonfly-web-crawler.readthedocs.io/en/latest/"))
             self.Readthedocs_tooltip = CreateToolTip(self.Readthedocs_Label, "Go to read the docs for more detail info", window_y=-10)
 
+            #\ list to get the label and labelfrme in Save2file frame
+            # self.LinkLabelList = [self.Hub_Frame, self.Hub_parentF]
+
 
             #\ ---grid---
-            ############
+            #############
 
             #\ ID Find
             self.APIKEY_label.grid(row=3)
@@ -551,16 +600,44 @@ class MainPage(tk.Frame):
             self.Web_version_Label.pack(side=RIGHT, padx=15)
             self.Hub_parentF.pack(expand=True)
 
+
+
             #\ some initializing
             ####################
             self.Place_select_value = ''
             self.User_select_value = ''
             self.Map_spec_method_or_and = ''
 
+            #\ All of the label, checkboxes, Labelframe List
+            #\ remember when you add new group here, also add the corresponding color at the Index.py
+            self.MainPageLabelList:list =  [ self.IDFindLabelList,
+                                        self.SpeciesFindLabelList,
+                                        self.Save2fileLabelList,
+                                        self.PlotChartLabelList,
+                                        # self.LinkLabelList
+                                        ]
+
+            #\ make the label and label frame change background when mouse hover on it
+            self.Hover_ChangeBackgroundColor(controller)
+
+
 
 
     ###################################################################################
     #\ ---Method---
+    #\ make the label and label frame change background when mouse hover on it
+    def Hover_ChangeBackgroundColor(self, controller):
+        for idx, FrameLabelList in enumerate(self.MainPageLabelList):
+            #\ the last args in the BHoverOn is list of the color for original and changed
+            #\ the second arg is to pass all the elements in this Frame-list without the element pass in the first args.
+            #\ get the current widget backgroundcolor : use b.cget("bg") or b["bg"] where i.e. b = Label(self, .....)
+            tmpList = []
+            for element in FrameLabelList:
+                tmpList = FrameLabelList.copy()
+                tmpList.remove(element)
+                controller.BHoverOnGroup(element, tmpList, [element["bg"], Index.var_HCNgColorList[idx]])
+
+
     #\ ID find
     def IDEnterButton(self, ID:str):
         # CHECK IF THE USER ENTER THE id OR NOT

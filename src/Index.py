@@ -29,6 +29,9 @@ MainPageGeometry = "380x680"
 updateWinGeometry = "600x420"
 
 
+#\ Background color when mouse hover on it
+var_HCNgColorList = ["mistyrose", "lightyellow", "honeydew", "lavender"]
+
 
 #\ PY GUI setting
 Table_scroll_num = 10
@@ -741,13 +744,13 @@ OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.as
 #\ Weather Request Error(WRE) code
 WRE_No_data_available = "There is no weather data available for the date provided." #\ the request date or place is not availabe somehow
 
-#\ weather api history date limit
+#\ weather api history date limit, the limit from the api server
 Weather_earliest_date = date(2008, 7, 1)
 
-#\ request limit
+#\ weather request limit
 weather_request_limit = 500
 
-#\ thread queue limit
+#\ weather thread queue limit
 MaxQueueNum = 10
 
 #\ the update progress bar progressbar_portion
@@ -756,9 +759,9 @@ Var_weather_enable_percentage = 0.5
 Var_UpdatefWeb_enable_percentage = 1 - Var_MySQL_enable_percentage - Var_weather_enable_percentage
 
 
-#\ timer for the progress bar
+#\ timer for the progress bar in update
 #\ datetime.now().microsecond = XXXXXX
 pb_microsecond_ndigits = 6
 
-#\ show n digit 0.XXXXX.....
+#\ show n digit 0.XXXXX..... in update timer
 pb_showing_digit = 1
