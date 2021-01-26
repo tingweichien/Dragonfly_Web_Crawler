@@ -122,6 +122,7 @@ def update_weather_data(self, connection:mysql.connector, Table:str, data_sepera
 
     #\print on the GUI
     self.IUpdateNumLabel_text(f"Insert_query: UPDATE {Index.DB_name}.{Table} \n{value} \nWHERE species_info_id = {species_info_id}")
+    self.Info_UpdateNum_label["justify"] = "left"
 
     #\ MYSQL
     cursor = connection.cursor()

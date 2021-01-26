@@ -726,6 +726,7 @@ class MainPage(tk.Frame):
     def IFinishStateLabel_text(self, finish_text):
         self.Info_FinishState_label['text'] = finish_text
 
+    #\ clear all the block
     def Update_Block_set_all_to_empty(self):
         self.Info_FinishState_label['text'] = ""
         self.Info_State_label['text'] = ""
@@ -748,11 +749,11 @@ class MainPage(tk.Frame):
             self.loading_label.config(image=frame)
 
             #\ update the timer
-            delta_time = datetime.now() - self.start_time
-            sec = delta_time.seconds
-            milisec = delta_time.microseconds
-            #self.progressbar_label_time["text"] = "(%02d:%02d.%02d)" % (sec//60, sec%60, milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit))
-            self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
+            if self.update_timer_flag:
+                delta_time = datetime.now() - self.start_time
+                sec = delta_time.seconds
+                milisec = delta_time.microseconds
+                self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
 
             #\update the sub progressbar
             if self.epecting_CNT != 0:
@@ -773,13 +774,15 @@ class MainPage(tk.Frame):
             self.Info_Name_label['text'] = "Updating~"
             self.NewWindow.title = "Update data - updating~"
             savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
-            self.pbVar.set(100) #\ after finishing, force the bar number to 100%
-            self.progressbar_label['text'] = '100%'
-            self.progressbar.stop()
-            self.button_popup['text'] = 'Finish'
             self.GIFcheck = False
 
+        #\ disable the button1
         self.button_popup['state'] = 'disabled'
+
+        #\ start the timer
+        self.update_timer_flag = True
+
+        #\ start the thread
         threading.Thread(target=self.UpdateGIF, args=(0,)).start()
         threading.Thread(target=start_multithread).start()
 
@@ -862,6 +865,7 @@ class MainPage(tk.Frame):
         self.Info_FinishState_label = Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FinishState_label.pack(pady=3)
 
+        #\ the sub bar for the progress bar
         # s = ttk.Style()
         # s.theme_use('clam')
         # s.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
@@ -877,6 +881,11 @@ class MainPage(tk.Frame):
 
     #\ Save2File_popup close window event
     def Save2File_popup_closeWindow(self):
+
+        #\ stop the update timer
+        self.update_timer_flag = False
+
+        #\ destroy the window
         self.NewWindow.destroy()
 
 
@@ -892,6 +901,7 @@ class MainPage(tk.Frame):
         result["UpdatefWeb_portion"] = 1 - int(self.Var_MySQL_enable.get()) * Index.Var_MySQL_enable_percentage \
                                         - int(self.Var_weather_enable.get()) * Index.Var_weather_enable_percentage
         return result
+
 
 
     #\ Button to open pop up window for updating

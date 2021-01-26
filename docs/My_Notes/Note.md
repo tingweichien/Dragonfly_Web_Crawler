@@ -691,3 +691,8 @@ reference :
     ![update window](https://i.imgur.com/Y8sPA1U.png)
 
 2. Add the info messagebox at the end of the crawling to info the user and to let the windows closed by pressing the button.
+
+## [2020/1/22]
+
+1. Add the effect that will change color when mouse hover on that frame
+    ![blending_result_hover_animation](https://imgur.com/8UFWOI1.gif)
