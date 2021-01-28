@@ -602,7 +602,7 @@ class MainPage(tk.Frame):
 
 
 
-            #\ some initializing
+            #\ some initialization
             ####################
             self.Place_select_value = ''
             self.User_select_value = ''

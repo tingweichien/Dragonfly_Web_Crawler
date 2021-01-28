@@ -7,7 +7,7 @@ import requests
 from typing import List
 from datetime import datetime
 import queue
-import weather_data_class
+# import weather_data_class
 from tkinter import messagebox
 
 
@@ -135,7 +135,7 @@ def update_weather_data(self, connection:mysql.connector, Table:str, data_sepera
 
 #\ Thread for the get-weather-data
 #\ (G)et (W)eather (D)ata
-def GetWeatherDataThread():
+def GetWeatherDataThread(dataList):
     #\ create the queue
     print("Start the thread Queue to get weather data")
     GWD_queue = queue.Queue()
@@ -143,7 +143,7 @@ def GetWeatherDataThread():
     #\ create the workers
     worker_list = []
     for num in range(Index.MaxQueueNum):
-        worker_list.append(weather_data_class.WeatherDataWorker(GWD_queue, num))
+        worker_list.append(weather_data_class.WeatherDataWorker(GWD_queue, num, dataList[num]))
 
     #\ start the thread
     for number in range(len(worker_list)):
@@ -188,74 +188,63 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
             #\ fill the weather data for each row
             for response in response_List:
 
-                #\ if the LAT and LNG is NULL then skip
-                if response["Latitude"] and response["Longitude"] is not None:
+                #\ Add the weather multithread here
+                #\
 
-                    #\ check if the request date is not over the earliest date
-                    if response["Dates"] > Index.Weather_earliest_date:
+                #\ check the weather request data is vaild or not
+                if check_weather_data(self, response):
 
-                        #\ request data format
-                        data = {"key": Index.weather_key[key_cnt],
-                                "q" : f'{response["Latitude"]}, {response["Longitude"]}',
-                                "format" : "json",
-                                "date" : response["Dates"],
-                                "enddate" : response["Dates"]
-                            }
+                    #\ request data format
+                    data = {"key": Index.weather_key[key_cnt],
+                            "q" : f'{response["Latitude"]}, {response["Longitude"]}',
+                            "format" : "json",
+                            "date" : response["Dates"],
+                            "enddate" : response["Dates"]
+                        }
 
-                        #\ API and check the parsing date is the same day and position is same or not
-                        #\ since the API only accept to seond in decimal, so we do the round()
-                        if (response["Dates"] != current_parsing_date) or ((round(response["Latitude"], 2), round(response["Longitude"], 2)) != current_LATLNG):
+                    #\ API and check the parsing date is the same day and position is same or not
+                    #\ since the API only accept to seond in decimal, so we do the round()
+                    if (response["Dates"] != current_parsing_date) or ((round(response["Latitude"], 2), round(response["Longitude"], 2)) != current_LATLNG):
 
-                            # limit the request times
-                            if request_cnt <= Index.weather_request_limit:
+                        #\ this is the API
+                        ######################################################################
+                        weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+                        #######################################################################
 
-                                #\ this is the API
-                                ######################################################################
-                                weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
-                                #######################################################################
+                        #\ count the request time
+                        request_cnt += 1
+                        print("request counts: ", str(request_cnt))
 
-                                #\ count the request time
-                                request_cnt += 1
-                                print("request counts: ", str(request_cnt))
-
-                                #\ GUI display
-                                self.Info_FileName_label['text']  = Index.Species_key_fullname_E2C[DB_species]
-                                self.IStateLabel_text("request counts: "+ str(request_cnt))
-                                self.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
-                                self.pbLabel_text()
-
-                            else:
-                                changekey_Info(self)
-                                request_cnt = 0
-                                continue
-
-                            #\--- problem : if the noraml data will cause error here since there will be no such column or class or object
-                            #\ check if the error occurred
-                            # if weather_r["data"]["error"][0]["msg"] == Index.WRE_No_data_available:
-                            #     continue
-                            # else:
-
-                            #\ update the current data
-                            current_parsing_date = response["Dates"]
-                            current_LATLNG = ( round(response["Latitude"], 2), round(response["Longitude"], 2) )
+                        #\ GUI display
+                        self.Info_FileName_label['text']  = Index.Species_key_fullname_E2C[DB_species]
+                        self.IStateLabel_text("request counts: "+ str(request_cnt))
+                        self.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
+                        self.pbLabel_text()
 
 
-                        #\ Extract the data, extract by hour
-                        for data_seperate_time in weather_r["data"]["weather"][0]["hourly"]:
-                            #\ select the corresponding hour
-                            #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
-                            respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
-                            if int(response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
-                                update_weather_data(self,
-                                                    connection,
-                                                    DB_species,
-                                                    data_seperate_time,
-                                                    response["species_info_id"])
+                        #\--- problem : if the noraml data will cause error here since there will be no such column or class or object
+                        #\ check if the error occurred
+                        # if weather_r["data"]["error"][0]["msg"] == Index.WRE_No_data_available:
+                        #     continue
+                        # else:
 
-                    #\ if the the date time over the earliest date
-                    else:
-                        print(f'[warning] The date({response["Dates"]}) is over the limit date{Index.Weather_earliest_date}!!!!')
-                        self.IUpdateNumLabel_text(f'[warning] The date({response["Dates"]}) is over the limit date{Index.Weather_earliest_date}!!!!')
+                        #\ update the current data
+                        current_parsing_date = response["Dates"]
+                        current_LATLNG = ( round(response["Latitude"], 2), round(response["Longitude"], 2) )
+
+
+                    #\ Extract the data, extract by hour
+                    for data_seperate_time in weather_r["data"]["weather"][0]["hourly"]:
+                        #\ select the corresponding hour
+                        #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
+                        respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
+                        if int(response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
+                            update_weather_data(self,
+                                                connection,
+                                                DB_species,
+                                                data_seperate_time,
+                                                response["species_info_id"])
+
         except:
             changekey_Info(self)
 
@@ -265,7 +254,7 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str):
 
 
 
-
+#\ change key infomation
 def changekey_Info(self):
     global key_cnt
     key_cnt += 1  #\ move to the next key
@@ -274,6 +263,39 @@ def changekey_Info(self):
     if key_cnt < len(Index.weather_key):
         print(f"current key : {Index.weather_key[key_cnt-1]} to New key {Index.weather_key[key_cnt]}")
         self.IUpdateNumLabel_text(f"current key : {Index.weather_key[key_cnt-1]} to New key {Index.weather_key[key_cnt]}")
+
+
+
+#\ check the data is vaild or not
+def check_weather_data(self, response)->bool:
+    global request_cnt
+
+    #\ if the LAT and LNG is NULL then skip
+    if response["Latitude"] and response["Longitude"] is not None:
+
+        #\ check if the request date is not over the earliest date
+        if response["Dates"] > Index.Weather_earliest_date:
+
+            #\ limit the request times
+            if request_cnt <= Index.weather_request_limit:
+                return True
+
+            #\ over the limit
+            else:
+                changekey_Info(self)
+                request_cnt = 0
+
+        #\ if the the date time over the earliest date
+        else:
+            print(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!')
+            self.IUpdateNumLabel_text(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!')
+            return  False
+
+    #\ if the LAT and LNG is NULL
+    else:
+        print("[warning] Latitude and Longitutde is Null")
+        return  False
+
 
 
 #\ read the json format
@@ -345,7 +367,7 @@ insertquery_SI_0_end = """ (species_family_id, species_id, Species_Name, ID, rec
 
 
 
-
+'''2021/1/28 move to Update_database.py
 #\ auto update the data in csv into DATABASE
 #\ maybe the next sep will be update by the save2File
 #\ contain update weather data
@@ -432,6 +454,6 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 get_weather_data(self, connection, Species_table_name)
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
 
-
+'''
 
 

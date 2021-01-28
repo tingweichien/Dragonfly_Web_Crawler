@@ -19,7 +19,7 @@ from operator import add
 from multiprocessing import Process, Value, Pool
 import time
 import json
-from Database_function import *
+from Update_Database import *
 
 
 TotalSpeciesNumber = 0

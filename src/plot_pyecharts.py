@@ -7,7 +7,7 @@ from pyecharts.components import Table
 from pyecharts.options import ComponentTitleOpts
 from pyecharts.commons.utils import JsCode
 from pyecharts.globals import ThemeType
-from Database_function import *
+from Update_Database import *
 from Index import *
 import webbrowser
 from selenium import webdriver
