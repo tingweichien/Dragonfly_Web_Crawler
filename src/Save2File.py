@@ -19,7 +19,7 @@ from operator import add
 from multiprocessing import Process, Value, Pool
 import time
 import json
-from Database_function import *
+from Update_Database import *
 
 
 TotalSpeciesNumber = 0
@@ -425,6 +425,12 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         self.progressbar_partial.stop()
         self.IUpdateNumLabel_text(f"--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s")
         print(f"\n--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s" )
+
+        #\ after finishing, force the bar number to 100%
+        self.pbVar.set(100)
+        self.progressbar_label['text'] = '100%'
+        self.progressbar.stop()
+        self.button_popup['text'] = 'Finish'
 
         #\ End info message box
         messagebox_Flag = messagebox.showinfo("Finished updating~", "Finished updating the data~")

@@ -682,3 +682,27 @@ reference :
    2. <https://wiki.tcl-lang.org/page/List+of+ttk+Themes>
 
    3. <https://github.com/TkinterEP/ttkthemes/blob/master/docs/themes.rst>
+
+## [2021/1/21]
+
+1. Add sub-progressbar to show the detailed information
+   1. In Crawling date from web to the .csv file, it will show the progress of the number of each species crawling
+   2. In weahter data update, it will become indeterminate mode for fun. For there are no more info need to show.
+    ![update window](https://i.imgur.com/Y8sPA1U.png)
+
+2. Add the info messagebox at the end of the crawling to info the user and to let the windows closed by pressing the button.
+
+## [2021/1/22]
+
+1. Add the effect that will change color when mouse hover on that frame
+    ![blending_result_hover_animation](https://imgur.com/8UFWOI1.gif)
+
+## [2021/3/6]
+
+1. Successfully finished the code for the mutithread for weather data parsing.
+
+2. The main problem is that when writing data to the MySQL database, although there are lock to protect different thread from commit to the
+    same database, it is inside the class. This means that each instance will has it's own lock , not the lock everyone need to line up.
+    So use the global lock to lwt every thread line up for the same key
+
+3. Add a messageinfo to show if the weather crawling meet the daily limit counts.

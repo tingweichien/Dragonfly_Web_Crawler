@@ -11,7 +11,7 @@ from operator import add
 from scipy.stats import norm
 import scipy.stats as st
 import matplotlib.colors as mcolors
-from Database_function import *
+from Update_Database import *
 
 piecolors = list(mcolors.TABLEAU_COLORS.values())+list(mcolors.BASE_COLORS.values())
 

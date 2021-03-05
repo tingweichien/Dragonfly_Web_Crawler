@@ -29,6 +29,9 @@ MainPageGeometry = "380x680"
 updateWinGeometry = "600x420"
 
 
+#\ Background color when mouse hover on it
+var_HCNgColorList = ["mistyrose", "lightyellow", "honeydew", "lavender"]
+
 
 #\ PY GUI setting
 Table_scroll_num = 10
@@ -729,26 +732,45 @@ Plot_chart_init_delta_years = 10 #\ 10 years
 #\ account = [tim960622@gmail,
 #             tim960622@yahoo,
 #             tim910442,
-#             iphoning6666]
-weather_key = [#"190ec7d0ebfe4c7992f161552201012",
-                "fcca62f7fe39421bab3205329201912",
-                "339a4a4173774318846204731201912",
-                "4a28a928fa024ac6aa1174831201212",
+#             iphoning6666,
+#             test6666]
+weather_key = [ "2ee5762c23b4433a81b174850210103",
+                "e719dd9aec3e47df90d174438210103",
+                "2ee5762c23b4433a81b174850210103",
+                "13558b3b23d540e18af170642210203",
                 ]
 OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
+
+weather_Key_expire_date = [date(2021, 4, 30),
+                            date(2021, 4, 30),
+                            date(2021, 4, 30),
+                            date(2021, 5, 2),
+                            ]
 
 
 #\ Weather Request Error(WRE) code
 WRE_No_data_available = "There is no weather data available for the date provided." #\ the request date or place is not availabe somehow
 
-#\ weather api history date limit
+#\ weather api history date limit, the limit from the api server
 Weather_earliest_date = date(2008, 7, 1)
 
-#\ request limit
+#\ weather request limit
 weather_request_limit = 500
 
-#\ thread queue limit
+#\ weather thread queue limit
 MaxQueueNum = 10
+
+#\ Enable or Disable weather multithreading
+weather_multithread = True #False
+
+#\ over weather api oldest time limit
+overtimelimit = True
+
+#\ (GLOBAL)
+#\ weather api key count
+key_cnt = 0
+request_cnt = 0
+WeatherTimeOverLimitStatus = False
 
 #\ the update progress bar progressbar_portion
 Var_MySQL_enable_percentage = 0.01
@@ -756,9 +778,9 @@ Var_weather_enable_percentage = 0.5
 Var_UpdatefWeb_enable_percentage = 1 - Var_MySQL_enable_percentage - Var_weather_enable_percentage
 
 
-#\ timer for the progress bar
+#\ timer for the progress bar in update
 #\ datetime.now().microsecond = XXXXXX
 pb_microsecond_ndigits = 6
 
-#\ show n digit 0.XXXXX.....
+#\ show n digit 0.XXXXX..... in update timer
 pb_showing_digit = 1
