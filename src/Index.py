@@ -734,13 +734,18 @@ Plot_chart_init_delta_years = 10 #\ 10 years
 #             tim910442,
 #             iphoning6666,
 #             test6666]
-weather_key = [#"190ec7d0ebfe4c7992f161552201012",
-                "fcca62f7fe39421bab3205329201912",
-                "339a4a4173774318846204731201912",
-                "4a28a928fa024ac6aa1174831201212",
-                "98b710706e4a457daab181236212701",
+weather_key = [ "2ee5762c23b4433a81b174850210103",
+                "e719dd9aec3e47df90d174438210103",
+                "2ee5762c23b4433a81b174850210103",
+                "13558b3b23d540e18af170642210203",
                 ]
 OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
+
+weather_Key_expire_date = [date(2021, 4, 30),
+                            date(2021, 4, 30),
+                            date(2021, 4, 30),
+                            date(2021, 5, 2),
+                            ]
 
 
 #\ Weather Request Error(WRE) code
@@ -754,6 +759,18 @@ weather_request_limit = 500
 
 #\ weather thread queue limit
 MaxQueueNum = 10
+
+#\ Enable or Disable weather multithreading
+weather_multithread = True #False
+
+#\ over weather api oldest time limit
+overtimelimit = True
+
+#\ (GLOBAL)
+#\ weather api key count
+key_cnt = 0
+request_cnt = 0
+WeatherTimeOverLimitStatus = False
 
 #\ the update progress bar progressbar_portion
 Var_MySQL_enable_percentage = 0.01

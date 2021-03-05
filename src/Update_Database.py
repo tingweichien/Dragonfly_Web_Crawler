@@ -8,9 +8,8 @@ from Database_function import *
 def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
     #\ INIT the key
-    global request_cnt, key_cnt
-    request_cnt = 0
-    key_cnt = 0
+    Index.request_cnt = 0
+    Index.key_cnt = 0
 
     #\ create connection
     create_table(connection, create_species_family_table)
@@ -85,5 +84,10 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 self.progressbar_partial.start(50)
 
                 #\ The weather data update main function
-                get_weather_data(self, connection, Species_table_name)
+                state = get_weather_data(self, connection, Species_table_name)
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
+
+                #\ Stop update the weather data due to key problem or calling limit per day.
+                if state == False:
+                    messagebox.showwarning("Weather Crawling warning", f"Weather data crawling warning\n{weather_data_class.ErrorLog}")
+                    return

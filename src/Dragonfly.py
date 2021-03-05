@@ -442,15 +442,15 @@ def Find_species_total_data():
     driver.find_element_by_name("password").send_keys(Index.mypassword)
     driver.find_element_by_name("login").click()
     driver.get(Index.general_url + Index.total_num_species_url) #\ "http://dragonfly.idv.tw/dragonfly/kind_total_records.php"
-    labe_list = driver.find_elements_by_tag_name("label")
-    labe_list_text = [label_tmp.text for label_tmp in labe_list]
+    label_list = driver.find_elements_by_tag_name("label")
+    label_list_text = [label_tmp.text for label_tmp in label_list]
     td_list = driver.find_elements_by_tag_name("td")
     td_list_text = [td_tmp.text for td_tmp in td_list]
 
     Dictionary = dict()
 
     for td_list_text_tmp in td_list_text:
-        if td_list_text_tmp in labe_list_text:
+        if td_list_text_tmp in label_list_text:
             number = td_list_text[(td_list_text.index(td_list_text_tmp)) + 1]
             if number == ' ' :
                 number = '0'
