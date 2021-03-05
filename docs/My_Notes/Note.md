@@ -422,7 +422,7 @@ reference :
         * line_multiA
     * -- table0
 
-1. referece :
+8. referece :
 
    (1) <https://www.kesci.com/home/project/5eb7958f366f4d002d783d4a>
    (2) <https://gallery.pyecharts.org/#/Geo/geo_chart_countries_js>

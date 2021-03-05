@@ -255,10 +255,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 pool.terminate()
                 return True  #\End the program
 
+
         #\ without multiprocessing
         #\ singal thread and singal process
         else:
             DataTmpList = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+
 
         #\ reformat the data
         Data = []
@@ -356,7 +358,9 @@ def parse_all(self):
 
                 #\ if the species is in the update list or the file doesn't exist
                 if (species_loop in Update) or (not file_check):
+                    ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
+                    ##########################################################################################################
                     if program_stop_check:
                         return
 

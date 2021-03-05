@@ -62,7 +62,12 @@ class tkinterApp(tk.Tk):
             #\ __init__ function for class Tk
             tk.Tk.__init__(self, *args, **kwargs)
 
-            #\ creating a container
+            #\ ---Menu Bar---
+            self.menubar = Menu(self)
+            self.Emptymenubar = Menu(self)
+            self.config(menu=self.menubar)
+
+            # creating a container
             container = tk.Frame(self)
             container.pack(side = "top", fill = "both", expand = True)
 
@@ -72,9 +77,9 @@ class tkinterApp(tk.Tk):
             #\ initializing frames to an empty array
             self.frames = {}
 
-            #\ iterating through a tuple consisting
-            #\ of the different page layouts
-            for F in (LoginPage, MainPage):
+            # iterating through a tuple consisting
+            # of the different page layouts
+            for F in (LoginPage, MainPage, SettingPage):
 
                 frame = F(container, self)
 
@@ -92,11 +97,20 @@ class tkinterApp(tk.Tk):
     def show_frame(self, cont):
         global Username
         frame = self.frames[cont]
-        #print(frame._name)
+
+        #\ menu setting
+        if frame._name == "!loginpage":
+            self.config(menu=self.Emptymenubar)
+        else:
+            self.config(menu=self.menubar)
+
+
+        print(frame._name)
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
         tk.Tk.wm_geometry(self, Index.MainPageGeometry)
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
         frame.tkraise()
+
 
     #\ define the action when mouse hover on the button
     #\ but it can be replace by ttk widget
@@ -119,6 +133,8 @@ class tkinterApp(tk.Tk):
 
 
 
+
+#\ --- Login Page ---
 #\ first window frame LoginPage
 #\ controller is the parent class
 class LoginPage(tk.Frame):
@@ -267,11 +283,40 @@ class LoginPage(tk.Frame):
 
 
 
+#\ --- Setting Page ---
+class SettingPage(tk.Frame):
+    def __init__(self, parent, controller):
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
+            self.SettingTitle = Label(self, text="Setting", background="white")
+            self.returnbutton = ttk.Button(self, text="Return", command=lambda: controller.show_frame(MainPage))
+            self.SettingTitle.pack()
+            self.returnbutton.pack()
+
+
+
+
+#\ --- Main Page ---
 #\ second window frame MainPage
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
+
+            #\ ---Menu Bar---
+            self.filemenu = Menu(controller.menubar, tearoff=0)
+            self.filemenu.add_command(label="API&Key", command=lambda : controller.show_frame(SettingPage))
+            self.filemenu.add_command(label="Image url", command=self.donothing)
+            self.filemenu.add_separator()
+            self.filemenu.add_command(label="Exit", command=self.quit)
+            controller.menubar.add_cascade(label="Settings", menu=self.filemenu)
+
+            self.helpmenu = Menu(controller.menubar, tearoff=0)
+            self.helpmenu.add_command(label="Help Index", command=self.donothing)
+            self.helpmenu.add_command(label="About...", command=self.donothing)
+            controller.menubar.add_cascade(label="Help", menu=self.helpmenu)
+
+
 
             #\ Label frame and label setting
             labelframe_font_size = 10
@@ -636,6 +681,11 @@ class MainPage(tk.Frame):
                 tmpList = FrameLabelList.copy()
                 tmpList.remove(element)
                 controller.BHoverOnGroup(element, tmpList, [element["bg"], Index.var_HCNgColorList[idx]])
+
+    #\ Menu Bar
+    def donothing(self):
+        print("menu bar")
+
 
 
     #\ ID find

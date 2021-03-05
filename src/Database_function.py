@@ -92,10 +92,10 @@ def ALTER_TABLE(connection: mysql.connector, column_name:str, column_type:str ,T
 
         cursor.execute(create_query)
         connection.commit()
-        print("Create the weather column ")
+        print(f"Create the {column_name} column ")
 
     except:
-        print("The weather column has been created")
+        print(f"The {column_name} column has been created")
 
 
 
