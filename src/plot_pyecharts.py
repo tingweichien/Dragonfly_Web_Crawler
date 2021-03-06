@@ -7,8 +7,8 @@ from pyecharts.components import Table
 from pyecharts.options import ComponentTitleOpts
 from pyecharts.commons.utils import JsCode
 from pyecharts.globals import ThemeType
-from Update_Database import *
-from Index import *
+import Database_function
+import Index
 import webbrowser
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,7 +16,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 #\ simplified to tradition Dict
-s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'};
+s2t = {'新北市':'新北市', '基隆市':'基隆市','台北市':'台北市','桃园市':'桃園市','新竹市':'新竹市','台中市':'台中市','台南市':'台南市','高雄市':'高雄市','彰化县':'彰化縣','嘉义市':'嘉義市','屏东县':'屏東縣','云林县':'雲林縣','苗栗县':'苗栗縣','新竹县':'新竹縣','嘉义县':'嘉義縣','宜兰县':'宜蘭縣','花莲县':'花蓮縣','台东县':'台東縣','南投县':'南投縣','金门县':'金門縣','连江县':'連江縣','中国属钓鱼岛':'釣魚島','澎湖县':'澎湖縣'}
 t2s = {v : k for k, v in s2t.items()}
 
 
@@ -86,7 +86,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     query = "SELECT YEAR(Dates), City, COUNT(*) FROM " +  DB_species + " WHERE Dates BETWEEN \'" + time[0]+ "\' AND \'" + time[1] + "\' GROUP BY YEAR(Dates), City"
 
     #\ return the vlaue from database , the return will be list of dictionary
-    result = read_data(connection, query)
+    result = Database_function.read_data(connection, query)
 
 
     #\ query 2
@@ -94,7 +94,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     query_multi = "SELECT YEAR(Dates), MONTH(Dates), COUNT(*) FROM " +  DB_species + " WHERE Dates BETWEEN \'" + time[0]+ "\' AND \'" + time[1] + "\' GROUP BY YEAR(Dates), MONTH(Dates) ORDER BY YEAR(Dates), MONTH(Dates)"
 
     #\ return from MySQL
-    result_multi = read_data(connection, query_multi)
+    result_multi = Database_function.read_data(connection, query_multi)
 
     #\ To avoid that that the spoecies might not have any record
     if result == [] or result_multi == []:
@@ -114,7 +114,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     x_mon = ['Jan','Feb','Mar','Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
     #\ title
-    Title = Species_key_fullname_E2C[DB_species.split(".")[1]]
+    Title = Index.Species_key_fullname_E2C[DB_species.split(".")[1]]
 
 
     #\ time line create
@@ -375,10 +375,10 @@ def plot_species_city(connection, DB_species:str, time:list):
     )
 
     #\ Save and render to the following file
-    tab.render(pyecharts_psc_html)
+    tab.render(Index.pyecharts_psc_html)
 
     #\ open  in the browser
-    webbrowser.open(pyecharts_psc_html, new = 2, autoraise=False)
+    webbrowser.open(Index.pyecharts_psc_html, new = 2, autoraise=False)
 
 
     # browser = webdriver.Chrome()

@@ -1,4 +1,3 @@
-from tkinter import *
 try:
     # for Python2
     import Tkinter as tk
@@ -71,9 +70,9 @@ class Table:
     def __init__(self, root, list, row_start, column_start):
         for i in range(row_start, len(list)):
             for j in range(column_start, len(list[0])):
-                self.e = Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
+                self.e = tk.Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
                 self.e.grid(row=i, column=j)
-                self.e.insert(END, list[i][j])
+                self.e.insert(tk.END, list[i][j])
 
 
 
@@ -92,7 +91,7 @@ class CreateToolTip(object):
         self.widget.bind("<Leave>", self.close)
     def enter(self, event=None):
         x = y = 0
-        x, y, cx, cy = self.widget.bbox("insert")
+        x, y, _, _ = self.widget.bbox("insert")
         x += self.widget.winfo_rootx() + self.window_x
         y += self.widget.winfo_rooty() + self.window_y  #use minus to make the infobox shown above the cursor
         # creates a toplevel window
