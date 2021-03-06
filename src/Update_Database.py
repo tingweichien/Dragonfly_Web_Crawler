@@ -1,5 +1,10 @@
 import Index
-from Database_function import *
+import Database_function
+from typing import List
+import mysql.connector
+from tkinter import messagebox
+import csv
+import weather_data_class
 
 
 #\ auto update the data in csv into DATABASE
@@ -12,8 +17,8 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
     Index.key_cnt = 0
 
     #\ create connection
-    create_table(connection, create_species_family_table)
-    create_table(connection, create_species_table)
+    Database_function.create_table(connection, Database_function.create_species_family_table)
+    Database_function.create_table(connection, Database_function.create_species_table)
 
     #\ buld species family table
     # insertquery_SF = "INSERT INTO Species_Family_table (species_family_name) VALUES (%s)"
@@ -41,32 +46,32 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             ##########################################################################
 
             #\ change the table name to new name
-            update_header(connection, Species_table_name)
+            Database_function.update_header(connection, Species_table_name)
 
             #\ inseert the data to the MySQL database from excel file
             if Update_MySQL:
                 try:
                     #\ query
-                    create_species_info_table = create_species_info_table_first + Species_table_name + create_species_info_table_end
-                    create_table(connection, create_species_info_table)
+                    create_species_info_table = Database_function.create_species_info_table_first + Species_table_name + Database_function.create_species_info_table_end
+                    Database_function.create_table(connection, create_species_info_table)
                     filepath = ".\\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
                     with open(filepath, 'r', newline='', errors='ignore') as r:
                         CSVData_org = csv.DictReader(r)
                         CSVData = [line for line in CSVData_org]
-                        currentData_Num = read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
+                        currentData_Num = Database_function.read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
                         insertdata_SI = []
                         #\ read the database to check the current data number and insert the data from csv file start from it.
                         for SI in CSVData[currentData_Num: ]:
                             # insert data
                             if SI['Latitude'] == '' and SI['Longitude'] == '':
                                 insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Place'])
-                                insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_0_end
+                                insertquery_SI = Database_function.insertquery_SI_first + Species_table_name + Database_function.insertquery_SI_0_end
                             else:
                                 insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Altitude'], SI['Place'], SI['Latitude'], SI['Longitude'])
-                                insertquery_SI = insertquery_SI_first + Species_table_name + insertquery_SI_end
+                                insertquery_SI = Database_function.insertquery_SI_first + Species_table_name + Database_function.insertquery_SI_end
 
                             #\ insert the data into database
-                            insert_single_data(connection, insertquery_SI, insertdata_SI)
+                            Database_function.insert_single_data(connection, insertquery_SI, insertdata_SI)
                     print('create the {} table'.format(Species_table_name))
 
                 except:
@@ -84,7 +89,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 self.progressbar_partial.start(50)
 
                 #\ The weather data update main function
-                state = get_weather_data(self, connection, Species_table_name)
+                state = Database_function.get_weather_data(self, connection, Species_table_name)
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
 
                 #\ Stop update the weather data due to key problem or calling limit per day.

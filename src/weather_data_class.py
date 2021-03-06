@@ -87,8 +87,8 @@ class WeatherDataWorker(threading.Thread):
 
       #\ something wrong with the weather api
       except:
-        print(f"[warning] API warning : {weather_r}")
-        ErrorLog = weather_r
+        ErrorLog = f"[warning] API warning : {weather_r}"
+        print(ErrorLog)
         self.KeyChange = True
 
 
