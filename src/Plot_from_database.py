@@ -1,17 +1,17 @@
-from plot_matplotlib import plot_species_time_bar
-from Update_Database import *
-from Index import *
-from plot_pyecharts import plot_species_city
+import plot_matplotlib
+import mysql.connector
+import Index
+import plot_pyecharts
 
 
 #\ The function to be call for plotting the chart from database
 def PlotChart(PlotType:str, DB_species:str, time:list):
 
     connection = mysql.connector.connect(
-        host=hostaddress,
-        user=username,
-        passwd=password,
-        database=DB_name)
+        host=Index.hostaddress,
+        user=Index.username,
+        passwd=Index.password,
+        database=Index.DB_name)
 
     #\ read
     # readquery = "SELECT * FROM dragonfly_db.aeshnidae01 WHERE Dates BETWEEN '2020-01-01' AND '2020-07-19'"
@@ -23,11 +23,11 @@ def PlotChart(PlotType:str, DB_species:str, time:list):
     if PlotType == "Matplotlib":
         #\ plot from matplotlib
         #\ plot the species appearance among the years
-        plot_species_time_bar(connection, DB_species, time)
+        plot_matplotlib.plot_species_time_bar(connection, DB_species, time)
     elif PlotType == "Pyecharts":
         #\ plot from pyecharts
         #\ plot the distribution of the dragonfly in Taiwan
-        plot_species_city(connection, DB_species, time)
+        plot_pyecharts.plot_species_city(connection, DB_species, time)
     else :
         print("No plot type specified")
 
@@ -37,10 +37,10 @@ def PlotChart(PlotType:str, DB_species:str, time:list):
 ##### test #####
 def test():
     connection = mysql.connector.connect(
-        host=hostaddress,
-        user=username,
-        passwd=password,
-        database=DB_name)
+        host=Index.hostaddress,
+        user=Index.username,
+        passwd=Index.password,
+        database=Index.DB_name)
 
     #\ read
     '''readquery = "SELECT * FROM dragonfly_db.aeshnidae01 WHERE Dates BETWEEN '2020-01-01' AND '2020-07-19'"
@@ -57,7 +57,7 @@ def test():
 
     #\ plot from pyecharts
     #\ plot the distribution of the dragonfly in Taiwan
-    plot_species_city(connection, DB_species, time)
+    plot_pyecharts.plot_species_city(connection, DB_species, time)
 
 
 

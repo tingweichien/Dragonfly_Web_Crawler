@@ -4,11 +4,11 @@
 
 import requests
 from bs4 import BeautifulSoup
-from DataClass import *
+import DataClass
 import re
 import Index
 from multiprocessing import Process, Pool, Value, Lock
-from functools import partial
+
 from typing import List
 import proxyscrape
 
@@ -184,7 +184,7 @@ def DataCrawler(Login_Response, Input_ID:str)->list:
 
 
     #\ 解析資料
-    '''
+    """
     Data_List = []
     tmp_List = []
     soup = BeautifulSoup(All_Observation_Data_response.text, 'html.parser')
@@ -208,7 +208,7 @@ def DataCrawler(Login_Response, Input_ID:str)->list:
     alert = re.findall(r'(?<=alert\(\").+(?=\")', script.text) #\r\n    alert("登入失敗，請重新登入");\r\n
     if (len(alert) > 0):
         return [ErrorID["Login_error"], ErrorID["Login_error"]] # to show the error that the password or account might be wrong
-    '''
+    """
 
     #\先確ID認是否超處範圍
     overflow = False
@@ -228,7 +228,7 @@ def DataCrawler(Login_Response, Input_ID:str)->list:
         print('經度 : ' + Longitude)
         Lateral = soup2.find(id = 'R_LAT').get('value')
         print('緯度 : ' + Lateral)
-        ID_find_result = DetailedTableInfo(Input_ID,
+        ID_find_result = DataClass.DetailedTableInfo(Input_ID,
                                             soup2.find(id='日期').get('value'),
                                             soup2.find(id='時間').get('value'),
                                             "",
@@ -298,7 +298,7 @@ def SpeiciesCrawler(family_input:str, species_input:str)->list:
             map_result.append(Date_Time.split('\\u3000')[1])  # Time
             map_result.append(re.findall(r'(?<=\\u6d77\\u3000\\u62d4 ).+(?=\\u7d00)', map_script)[0]) # Altitude
             map_result.append(re.findall(r'(?<=\\u7d00\\u9304\\u8005 ).+(?=<)', map_script)[0].encode('utf-8').decode('unicode_escape'))  #Recorder
-            map_result_List.append(DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], family_input, species_input, '-'))
+            map_result_List.append(DataClass.DetailedTableInfo('-', map_result[3], map_result[4], '-', '-', map_result[2], map_result[5], map_result[6], map_result[0], map_result[1], family_input, species_input, '-'))
             map_result.clear()
 
     return map_result_List
@@ -310,8 +310,7 @@ def SpeiciesCrawler(family_input:str, species_input:str)->list:
 # from <23.各蜓種紀錄總筆數查詢>
 # crawl to the next is empty, the next page id show empty data in the table
 # multithread : https://www.maxlist.xyz/2020/03/20/multi-processing-pool/
-
-def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, Total_num:int, Limit_CNT:int, oldID:int)->List[DetailedTableInfo]:
+def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, Total_num:int, Limit_CNT:int, oldID:int)->List[DataClass.DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     page = 0
     DataCNT = 0
@@ -343,7 +342,7 @@ def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, 
 
             response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
             soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
-            Data_List.append(DetailedTableInfo(tmp_List[0].text,
+            Data_List.append(DataClass.DetailedTableInfo(tmp_List[0].text,
                                                 tmp_List[1].text,
                                                 tmp_List[2].text,
                                                 tmp_List[3].text,
@@ -373,7 +372,7 @@ def init(args):
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, page:int)->List[DetailedTableInfo]:
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, page:int)->List[DataClass.DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT
     tmp_List = []
@@ -396,12 +395,15 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
         id = tmp_List[0].text
         response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
-        Data_List.append(DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
+        Data_List.append(DataClass.DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
                                             soup2.find(id='R_LAT').get('value'),
                                             soup2.find(id='R_LNG').get('value'),
                                             Web_rawl_Species_family_name,
                                             Web_rawl_Species_name,
                                             soup2.find(id='R_MEMO').get('value')))
+
+
+        #\ counts for the crawling times
         DataCNT_lock = Lock()
         with DataCNT_lock:
             DataCNT.value += 1
@@ -412,6 +414,32 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
     return Data_List
 
 
+
+### <<< unsolve
+
+#\ update weather data on web2 while crawling the dragonfly data
+#\ crawl the dragonfly and weathe data and write both of them to the MySQL database onces.
+#\ Open weahter api at https://openweathermap.org/api
+# def weatherData(self, connection, date, time, LAT, LNG):
+#     dt_datetime = datetime.strptime(date+time, "%Y-%m-%d %H:%M:%S")
+#     dt = datetime.timestamp(dt_datetime)
+#     para = {"lat":LAT,
+#             "lon":LNG,
+#             "dt":dt,
+#             "units":"metric",
+#             "appid":Index.OpenWeatherKey}
+
+#     #\ api request
+#     response = requests.get(url = Index.OpenWeahterURL, params=para).json()
+#     weather = f"""'{{"tempC" : { response["tempC"].replace(" ", "") }, \
+# "FeelsLikeC" : { response["FeelsLikeC"].replace(" ", "") }, \
+# "windspeedKmph" : { response["windspeedKmph"].replace(" ", "") }, \
+# "winddirDegree" : { response["winddirDegree"].replace(" ", "") }, \
+# "winddir16Point" : "{ response["winddir16Point"].replace(" ", "") }", \
+# "humidity" : { response["humidity"].replace(" ", "") }}}'"""
+#     return weather
+
+### >>>unsolve
 
 
 

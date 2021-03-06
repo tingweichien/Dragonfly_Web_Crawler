@@ -11,15 +11,17 @@
 from tkinter import messagebox
 import csv
 import os.path
-from os import path
 import Index
-from Dragonfly import *
+import Dragonfly
+import DataClass
 from functools import reduce
 from operator import add
-from multiprocessing import Process, Value, Pool
+import multiprocessing
 import time
 import json
-from Update_Database import *
+import Update_Database
+from functools import partial
+from typing import List
 
 
 TotalSpeciesNumber = 0
@@ -31,7 +33,7 @@ def Read_check_File(File_name:str):
     oldID = 0
     file_size = -1 #means no such file
     # check the file exist or not
-    file_check = path.exists(Index.current_path + "\\" + File_name)
+    file_check = os.path.exists(Index.current_path + "\\" + File_name)
 
     # get the Old ID
     if file_check:
@@ -175,7 +177,6 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         file_size = 0
         DataTmpList = []
         oldData = []
-        global DataCNT, TotalCount
 
         #\ For displaying in GUI
         self.INameLabel_text(Input_species_famliy, Input_species)
@@ -215,10 +216,10 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
             renmaind_data_Last_page = expecting_CNT % Index.data_per_page
 
             #\ Multi-processing pool
-            pool = Pool(Index.cpus,
-                        initializer=init,
-                        initargs=(DataCNT,))
-            func = partial( crawl_all_data_mp2,
+            pool = multiprocessing.Pool(Index.cpus,
+                        initializer=Dragonfly.init,
+                        initargs=(Dragonfly.DataCNT,))
+            func = partial( Dragonfly.crawl_all_data_mp2,
                             session_S2F,
                             Input_species_famliy,
                             Input_species,
@@ -230,19 +231,19 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
             returnList = pool.map_async(func, list(range(expecting_page + 1)))
 
             #\ Accumulate the counter by lock
-            DataCNT_lock = Lock()
+            DataCNT_lock = multiprocessing.Lock()
             with DataCNT_lock:
-                TotalCount += DataCNT.value
-                DataCNT.value = 0
+                Dragonfly.TotalCount += Dragonfly.DataCNT.value
+                Dragonfly.DataCNT.value = 0
 
             #\ GUI display
-            self.ICurrentNumLabel_text(TotalCount)
-            print("[current total crawl]: {} data".format(TotalCount))
+            self.ICurrentNumLabel_text(Dragonfly.TotalCount)
+            print("[current total crawl]: {} data".format(Dragonfly.TotalCount))
 
             #\ check if the total counts over the limit
             #\ to prevent over crawling which will cause heavy load to the web owner
             #\ set the limit yourself in Index.limit_cnt
-            if TotalCount <= Index.limit_cnt:
+            if Dragonfly.TotalCount <= Index.limit_cnt:
                 if not (len(returnList.get()) == 0) :
                     #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
                     DataTmpList = reduce(add, returnList.get())
@@ -255,10 +256,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 pool.terminate()
                 return True  #\End the program
 
+
         #\ without multiprocessing
         #\ singal thread and singal process
         else:
-            DataTmpList = crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+            DataTmpList = Dragonfly.crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+
 
         #\ reformat the data
         Data = []
@@ -306,10 +309,10 @@ def parse_all(self):
     program_stop_check = False
 
     #\ login
-    [Session_S2F, _, _] = Login_Web(Index.myaccount, Index.mypassword)
+    [Session_S2F, _, _] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
 
     #\ find the total number of the species_input (expect for executing one time)
-    Species_total_num_Dict = Find_species_total_data()
+    Species_total_num_Dict = Dragonfly.Find_species_total_data()
 
     #\ store the items that need to update in this variable
     Update = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
@@ -348,7 +351,7 @@ def parse_all(self):
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
 
                 #\ check the file exist or not
-                file_check = path.exists(Index.current_path + "\\" + File_name)
+                file_check = os.path.exists(Index.current_path + "\\" + File_name)
 
                 #\ GUI display - progress bar
                 self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
@@ -356,7 +359,9 @@ def parse_all(self):
 
                 #\ if the species is in the update list or the file doesn't exist
                 if (species_loop in Update) or (not file_check):
+                    ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
+                    ##########################################################################################################
                     if program_stop_check:
                         return
 
@@ -370,14 +375,14 @@ def parse_all(self):
 
 
 #\ read the file from csv database
-def ReadFromFile(file:str)->List[DetailedTableInfo]:
+def ReadFromFile(file:str)->List[DataClass.DetailedTableInfo]:
     ReadFileList = []
     if (os.path.exists(file) == True):
         with open(file, 'r', newline="", errors='ignore') as r:
             ReadFile = csv.reader(r)
             for line in ReadFile:
                 ReadFileList.append(
-                    DetailedTableInfo(line[2], line[3], line[4], line[6], line[7], line[8], line[9],
+                    DataClass.DetailedTableInfo(line[2], line[3], line[4], line[6], line[7], line[8], line[9],
                                         line[5], line[10], line[11], line[0], line[1], line[12])
                 )
             del ReadFileList[0:1]
@@ -407,11 +412,11 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
 
         #\ Build the MySQL connection
         print("start writing to the MySQL database")
-        connection_SF = create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
+        connection_SF = Update_Database.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
 
 
         #\ also insert to the data base
-        Update_database(self, connection_SF, Update_enable)
+        Update_Database.Update_database(self, connection_SF, Update_enable)
 
 
         #\ End timer

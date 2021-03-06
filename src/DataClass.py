@@ -1,4 +1,3 @@
-from tkinter import *
 try:
     # for Python2
     import Tkinter as tk
@@ -31,13 +30,16 @@ class simplifyTableInfo:
 
 # Data class for DetailedTable infomation
 class DetailedTableInfo(simplifyTableInfo):
-    def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User, Latitude, Longitude, SpeciesFamily ,Species, Description):
+    def __init__(self, IdNumber:str, Dates:str, Times:str, City:str, Dictrict:str, Place:str,
+                Altitude:str, User:str, Latitude:str, Longitude:str, SpeciesFamily:str,
+                Species:str, Description:str, weather=None):
         super(DetailedTableInfo, self).__init__(IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User)
-        self.Latitude = Latitude
-        self.Longitude = Longitude
-        self.Species = Species
-        self.SpeciesFamily = SpeciesFamily
-        self.Description = Description
+        self.Latitude       = Latitude
+        self.Longitude      = Longitude
+        self.SpeciesFamily  = SpeciesFamily
+        self.Species        = Species
+        self.Description    = Description
+        self.weather        = weather
     def __str__(self):
         '''
         return (super(DetailedTableInfo, self).__str__()+
@@ -58,7 +60,8 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Longitude]: ' + self.Longitude +
                 '  [Species]: ' + self.Species +
                 '  [SpeciesFamily]: ' + self.SpeciesFamily +
-                '  [Description]: ' + self.Description)
+                '  [Description]: ' + self.Description +
+                '  [weather]: ' + self.weather)
 
 
 # table class for tk GUI
@@ -67,9 +70,9 @@ class Table:
     def __init__(self, root, list, row_start, column_start):
         for i in range(row_start, len(list)):
             for j in range(column_start, len(list[0])):
-                self.e = Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
+                self.e = tk.Entry(root, width=20, fg='blue', font=('Arial', 16, 'bold'))
                 self.e.grid(row=i, column=j)
-                self.e.insert(END, list[i][j])
+                self.e.insert(tk.END, list[i][j])
 
 
 
@@ -88,7 +91,7 @@ class CreateToolTip(object):
         self.widget.bind("<Leave>", self.close)
     def enter(self, event=None):
         x = y = 0
-        x, y, cx, cy = self.widget.bbox("insert")
+        x, y, _, _ = self.widget.bbox("insert")
         x += self.widget.winfo_rootx() + self.window_x
         y += self.widget.winfo_rooty() + self.window_y  #use minus to make the infobox shown above the cursor
         # creates a toplevel window

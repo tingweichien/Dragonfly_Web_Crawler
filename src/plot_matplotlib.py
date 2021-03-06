@@ -1,8 +1,8 @@
 #\ use the plot of matplotlib
-
-import matplotlib as mp
+from matplotlib import cm
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
+import matplotlib.colors as mcolors
 import numpy as np
 import re
 import Index
@@ -10,8 +10,7 @@ import calendar
 from operator import add
 from scipy.stats import norm
 import scipy.stats as st
-import matplotlib.colors as mcolors
-from Update_Database import *
+import Database_function
 
 piecolors = list(mcolors.TABLEAU_COLORS.values())+list(mcolors.BASE_COLORS.values())
 
@@ -38,8 +37,10 @@ def NormalizeFun(xlist, mu, sigma):
 #\ plot pie
 def plot_species_time_pie(InputData: list, title:str, title_fontP:dict):
     piefont = {'size': '8'}
-    piecolors = plt.cm.BuPu(np.linspace(0, 1, 12))
-    fig = plt.figure(num = 'pie plot')
+    # piecolors = cm.coolwarm(np.linspace(0, 1, 12))
+    cmap = cm.get_cmap("coolwarm")
+    piecolors = cmap(np.linspace(0, 1, 12))
+    plt.figure(num = 'pie plot')
     data = []
     label = []
     for count, d in enumerate(InputData):
@@ -52,7 +53,7 @@ def plot_species_time_pie(InputData: list, title:str, title_fontP:dict):
 
 #\ plot the pie with notation
 def plot_species_time_pie_notation(InputData: list, title: str, title_font: dict):
-    fig = plt.figure(num="pie chart with notation")
+    plt.figure(num="pie chart with notation")
     data = []
     label = []
     TextList = ["{} ({})".format(MON, SUM) for MON, SUM in zip(calendar.month_abbr, InputData) if SUM > 0]
@@ -64,7 +65,7 @@ def plot_species_time_pie_notation(InputData: list, title: str, title_font: dict
         if d > 0:
             data.append(d)
             label.append(calendar.month_abbr[count + 1])
-    wedge, texts = plt.pie( data,
+    wedge, _ = plt.pie( data,
                             wedgeprops=dict(width=0.5),
                             startangle=startangle,
                             radius=Rpie,
@@ -108,7 +109,7 @@ def plot_species_time_bar(connection, DB_species:str, time:list):
     #\ QUERY
     readqurery = "SELECT YEAR(Dates), MONTH(Dates), COUNT(*) FROM " + DB_species + " WHERE Dates BETWEEN \'" + time[0] + "\' AND \'" + time[1]\
                    + "\' GROUP BY YEAR(Dates), MONTH(Dates)" + " ORDER BY YEAR(Dates), MONTH(Dates);"
-    result = read_data(connection, readqurery)
+    result = Database_function.read_data(connection, readqurery)
 
     #\ To avoid that that the spoecies might not have any record
     if result == []:
@@ -157,7 +158,7 @@ def plot_species_time_bar(connection, DB_species:str, time:list):
         cellColors_tmp = ['w'] * month_in_year
 
         #\ plot bar
-        bar = plt.bar(monthList, countList, bottom=bottom)
+        plt.bar(monthList, countList, bottom=bottom)
 
         #\ modify the next bottom
         if bottom == None:
@@ -212,7 +213,7 @@ def plot_species_time_bar(connection, DB_species:str, time:list):
     #\ bottom will be the sum of all the data
     #normalY = NormalizeFun(bottom, np.mean(bottom), np.std(bottom, ddof=1))
     NData = []
-    shift = 0 #\ this is due to the prevoius shifting to align the table
+    # shift = 0 #\ this is due to the prevoius shifting to align the table
 
     #\ specify the data
     for count, i in enumerate(bottom):

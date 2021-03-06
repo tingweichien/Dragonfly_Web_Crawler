@@ -1,31 +1,28 @@
 # this is GUI split program
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+from ttkthemes import ThemedStyle
 from PySimpleGUI.PySimpleGUI import RELIEF_FLAT, RELIEF_GROOVE, RELIEF_SUNKEN
-from Dragonfly import *
-from tkinter import messagebox
-from tkinter.messagebox import *
+import Dragonfly
+import DataClass
 import os
-import os.path
 import PySimpleGUI as PYGUI
-from gmplot import *
+import gmplot
 import webbrowser
 import Index
-from Save2File import *
+import Save2File
 from datetime import datetime
 import threading
-from multiprocessing import Process, Value, Pool
 import gmplot
-from Chromedriver.update_chromedriver import *
+import Chromedriver.update_chromedriver
 from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
 from urllib.request import urlopen
 import io
 from PIL import Image, ImageTk
-import threading
 import random
-from ttkthemes import ThemedStyle
+import time
 
 
 
@@ -62,7 +59,12 @@ class tkinterApp(tk.Tk):
             #\ __init__ function for class Tk
             tk.Tk.__init__(self, *args, **kwargs)
 
-            #\ creating a container
+            #\ ---Menu Bar---
+            self.menubar = tk.Menu(self)
+            self.Emptymenubar = tk.Menu(self)
+            self.config(menu=self.menubar)
+
+            # creating a container
             container = tk.Frame(self)
             container.pack(side = "top", fill = "both", expand = True)
 
@@ -72,9 +74,9 @@ class tkinterApp(tk.Tk):
             #\ initializing frames to an empty array
             self.frames = {}
 
-            #\ iterating through a tuple consisting
-            #\ of the different page layouts
-            for F in (LoginPage, MainPage):
+            # iterating through a tuple consisting
+            # of the different page layouts
+            for F in (LoginPage, MainPage, SettingPage):
 
                 frame = F(container, self)
 
@@ -92,11 +94,20 @@ class tkinterApp(tk.Tk):
     def show_frame(self, cont):
         global Username
         frame = self.frames[cont]
-        #print(frame._name)
+
+        #\ menu setting
+        if frame._name == "!loginpage":
+            self.config(menu=self.Emptymenubar)
+        else:
+            self.config(menu=self.menubar)
+
+
+        print(frame._name)
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
         tk.Tk.wm_geometry(self, Index.MainPageGeometry)
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
         frame.tkraise()
+
 
     #\ define the action when mouse hover on the button
     #\ but it can be replace by ttk widget
@@ -119,6 +130,8 @@ class tkinterApp(tk.Tk):
 
 
 
+
+#\ --- Login Page ---
 #\ first window frame LoginPage
 #\ controller is the parent class
 class LoginPage(tk.Frame):
@@ -127,7 +140,7 @@ class LoginPage(tk.Frame):
             tk.Frame.__init__(self, parent, bg="white")
 
             #\ check and update the chromedriver
-            check_chromedriver()
+            Chromedriver.update_chromedriver.check_chromedriver()
 
             #\ label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
@@ -136,20 +149,20 @@ class LoginPage(tk.Frame):
                                         bg="white", fg = "gray", font = ("Arial", 8))
 
             #\ putting the grid in its place by using
-            self.VarName = StringVar(self, value='')
-            self.VarPwd = StringVar(self, value='')
-            self.accountFrame =Frame(self, bg="black", borderwidth = 1, relief = "sunken")
-            self.accountEntry = Entry(self.accountFrame, textvariable=self.VarName, relief=FLAT)
-            self.password_eyeFrame = Frame(self, bg='white')
-            self.passwordFrame =Frame(self.password_eyeFrame, bg="black", borderwidth = 1, relief = "sunken")
-            self.passwordEntry = Entry(self.passwordFrame, textvariable=self.VarPwd, relief=FLAT, show="*")
+            self.VarName = tk.StringVar(self, value='')
+            self.VarPwd = tk.StringVar(self, value='')
+            self.accountFrame = tk.Frame(self, bg="black", borderwidth = 1, relief = "sunken")
+            self.accountEntry = tk.Entry(self.accountFrame, textvariable=self.VarName, relief=tk.FLAT)
+            self.password_eyeFrame = tk.Frame(self, bg='white')
+            self.passwordFrame = tk.Frame(self.password_eyeFrame, bg="black", borderwidth = 1, relief = "sunken")
+            self.passwordEntry = tk.Entry(self.passwordFrame, textvariable=self.VarPwd, relief=tk.FLAT, show="*")
             self.PasswordPadLabel = tk.Label(self.password_eyeFrame, bg="white")
             self.PasswordLabel = tk.Label(self.password_eyeFrame, text="Password", bg="white")
 
 
             #\ --Button--
             #\ log in
-            self.Loginbutton = Button(self,
+            self.Loginbutton = tk.Button(self,
                                     text="Login",
                                     font=("Arial", 9, "bold"),
                                     bg="lime green",
@@ -165,22 +178,22 @@ class LoginPage(tk.Frame):
 
 
             #\ view password
-            self.ViewPWbuttonIMG = PhotoImage(file=Index.Image_path + "\\view.png")
-            self.ViewPWbutton = Button(self.password_eyeFrame,
+            self.ViewPWbuttonIMG = tk.PhotoImage(file=Index.Image_path + "\\view.png")
+            self.ViewPWbutton = tk.Button(self.password_eyeFrame,
                                         text="view",
                                         command=self.ViewPWButtonfunc,
                                         bg='white',
                                         activebackground="white",
-                                        relief=FLAT,
+                                        relief=tk.FLAT,
                                         image=self.ViewPWbuttonIMG)
             controller.BHoverOn(self.ViewPWbutton, ["white", "grey87"])
 
             #\ --Image--
-            self.NotViewPWbuttonIMG = PhotoImage(file=Index.Image_path + "\\viewhidden.png")
+            self.NotViewPWbuttonIMG = tk.PhotoImage(file=Index.Image_path + "\\viewhidden.png")
             #photoimage = ViewPWbuttonIMG.subsample(3, 3)
 
             #\ --checkbox--
-            self.viewcheck = BooleanVar(self.password_eyeFrame, True)
+            self.viewcheck = tk.BooleanVar(self.password_eyeFrame, True)
 
             #\ --Putting the button in its place by--
             self.Loginlabel.pack(pady=20)
@@ -189,10 +202,10 @@ class LoginPage(tk.Frame):
             self.accountEntry.pack()
 
             self.password_eyeFrame.pack()
-            self.PasswordLabel.pack(side=TOP)
-            self.PasswordPadLabel.pack(side=LEFT, padx=14)
-            self.ViewPWbutton.pack(side=RIGHT)
-            self.passwordFrame.pack(side=RIGHT)
+            self.PasswordLabel.pack(side=tk.TOP)
+            self.PasswordPadLabel.pack(side=tk.LEFT, padx=14)
+            self.ViewPWbutton.pack(side=tk.RIGHT)
+            self.passwordFrame.pack(side=tk.RIGHT)
             self.passwordEntry.pack()
 
             self.Loginbutton.pack(pady=20)
@@ -241,7 +254,7 @@ class LoginPage(tk.Frame):
         if self.Check_empty() > 0:
             return
         else:
-            [_, Login_Response, Login_state] = Login_Web(Index.myaccount, Index.mypassword)
+            [_, Login_Response, Login_state] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
             if (Login_state == False):
                 messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
             elif Login_Response == None and Login_state == None:
@@ -267,11 +280,40 @@ class LoginPage(tk.Frame):
 
 
 
+#\ --- Setting Page ---
+class SettingPage(tk.Frame):
+    def __init__(self, parent, controller):
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
+            self.SettingTitle = tk.Label(self, text="Setting", background="white")
+            self.returnbutton = ttk.Button(self, text="Return", command=lambda: controller.show_frame(MainPage))
+            self.SettingTitle.pack()
+            self.returnbutton.pack()
+
+
+
+
+#\ --- Main Page ---
 #\ second window frame MainPage
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
+
+            #\ ---Menu Bar---
+            self.filemenu = tk.Menu(controller.menubar, tearoff=0)
+            self.filemenu.add_command(label="API&Key", command=lambda : controller.show_frame(SettingPage))
+            self.filemenu.add_command(label="Image url", command=self.donothing)
+            self.filemenu.add_separator()
+            self.filemenu.add_command(label="Exit", command=self.quit)
+            controller.menubar.add_cascade(label="Settings", menu=self.filemenu)
+
+            self.helpmenu = tk.Menu(controller.menubar, tearoff=0)
+            self.helpmenu.add_command(label="Help Index", command=self.donothing)
+            self.helpmenu.add_command(label="About...", command=self.donothing)
+            controller.menubar.add_cascade(label="Help", menu=self.helpmenu)
+
+
 
             #\ Label frame and label setting
             labelframe_font_size = 10
@@ -287,7 +329,7 @@ class MainPage(tk.Frame):
             self.img_counter = 0
             self.previous_img = None
             #\ put the image on a typical widget
-            self.imglabel = tk.Label(self, bg='white',relief=FLAT, borderwidth=0, highlightthickness=0)
+            self.imglabel = tk.Label(self, bg='white',relief=tk.FLAT, borderwidth=0, highlightthickness=0)
             self.imglabel.pack(padx=5, pady=5)
             self.init_while = False
             self.update_img()
@@ -297,25 +339,25 @@ class MainPage(tk.Frame):
             ######################
             #\ label frame
             ID_LabelFrame_bg = "white"
-            self.LabelFrame_ID_Find = LabelFrame(self, text='ID Find', fg="red", font=LabelFrame_font, bg=ID_LabelFrame_bg, highlightbackground="red", takefocus=True)
+            self.LabelFrame_ID_Find = tk.LabelFrame(self, text='ID Find', fg="red", font=LabelFrame_font, bg=ID_LabelFrame_bg, highlightbackground="red", takefocus=True)
 
             #\ Label
-            self.APIKEY_label = Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
-            self.id_label = Label(self.LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
-            self.latitude_label = Label(self.LabelFrame_ID_Find, text = "(LAT, LNG): ", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.APIKEY_label = tk.Label(self.LabelFrame_ID_Find, text = "API-Key:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.id_label = tk.Label(self.LabelFrame_ID_Find, text = "ID:", font=label_font_style, bg=ID_LabelFrame_bg)
+            self.latitude_label = tk.Label(self.LabelFrame_ID_Find, text = "(LAT, LNG): ", font=label_font_style, bg=ID_LabelFrame_bg)
 
             #\ Entry
-            self.var_APIKEY = StringVar(self.LabelFrame_ID_Find)
-            self.APIKEY_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-            self.APIKEY = Entry(self.APIKEY_border, textvariable=self.var_APIKEY)
-            self.APIKEY_TLTP = CreateToolTip(self.APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
+            self.var_APIKEY = tk.StringVar(self.LabelFrame_ID_Find)
+            self.APIKEY_border = tk.Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            self.APIKEY = tk.Entry(self.APIKEY_border, textvariable=self.var_APIKEY)
+            self.APIKEY_TLTP = DataClass.CreateToolTip(self.APIKEY, "This is the apikey for google map to remove the watermark of \" for develop purpose only\"")
 
-            self.ID_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
-            self.ID = Entry(self.ID_border)
+            self.ID_border = tk.Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief="sunken")  # to make a border for the entry
+            self.ID = tk.Entry(self.ID_border)
 
-            self.var_LNGLAT = StringVar(self.LabelFrame_ID_Find)
-            self.LNGLAT_border = Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief=RELIEF_FLAT)
-            self.blank_LNGLAT = Entry(self.LNGLAT_border, textvariable=self.var_LNGLAT)
+            self.var_LNGLAT = tk.StringVar(self.LabelFrame_ID_Find)
+            self.LNGLAT_border = tk.Frame(self.LabelFrame_ID_Find, bg="black", borderwidth=1, relief=RELIEF_FLAT)
+            self.blank_LNGLAT = tk.Entry(self.LNGLAT_border, textvariable=self.var_LNGLAT)
 
 
             self.LabelFrame_ID_Find.pack(fill="both", expand="yes")
@@ -337,30 +379,30 @@ class MainPage(tk.Frame):
             #\ ---Species Find Frame---
             ###########################
             Species_Find_LabelFrame_bg = "white"
-            self.LabelFrame_Species_Find = LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg, highlightbackground="red", takefocus=True)
+            self.LabelFrame_Species_Find = tk.LabelFrame(self, text='Species Find', fg="orange", font=LabelFrame_font, bg=Species_Find_LabelFrame_bg, highlightbackground="red", takefocus=True)
             self.LabelFrame_Species_Find.pack(fill="both", expand="yes")
 
             #\ Label
-            self.Species_label = Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            self.Species_label = tk.Label(self.LabelFrame_Species_Find, text="Select the Family and Species", font=label_font_style , bg=Species_Find_LabelFrame_bg)
 
             #\ drop down menu
             #\ species
             global var_species
-            var_species = StringVar(self.LabelFrame_Species_Find)
+            var_species = tk.StringVar(self.LabelFrame_Species_Find)
             var_species.set(Index.Calopterygidae_Species[0])
             self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
 
             #\ family
             global var_family
-            var_family = StringVar(self.LabelFrame_Species_Find)
+            var_family = tk.StringVar(self.LabelFrame_Species_Find)
             var_family.set(Index.Species_Family_Name[0])
             self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
             self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
             #\ check box
-            self.VarDatacheckbox = BooleanVar(self.LabelFrame_Species_Find)
-            self.Datacheckbox = Checkbutton(self.LabelFrame_Species_Find, text="EXCEL-SQL", variable=self.VarDatacheckbox, bg="white")
-            self.DatacheckboxTLTP = CreateToolTip(self.Datacheckbox, "This will import data from database")
+            self.VarDatacheckbox = tk.BooleanVar(self.LabelFrame_Species_Find)
+            self.Datacheckbox = tk.Checkbutton(self.LabelFrame_Species_Find, text="EXCEL-SQL", variable=self.VarDatacheckbox, bg="white")
+            self.DatacheckboxTLTP = DataClass.CreateToolTip(self.Datacheckbox, "This will import data from database")
 
             #\ Button
             self.species_find_button = ttk.Button(self.LabelFrame_Species_Find,
@@ -380,20 +422,20 @@ class MainPage(tk.Frame):
             ########################
             #\ frame
             Save2file_LabelFrame_bg = "white"
-            self.LabelFrame_Save2file = LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg, highlightbackground="red", takefocus=True)
+            self.LabelFrame_Save2file = tk.LabelFrame(self, text='Crawling data', fg="green", font=LabelFrame_font, bg=Save2file_LabelFrame_bg, highlightbackground="red", takefocus=True)
 
             #\ Label
-            self.Save2file_label = Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
-            self.MaxCrawling_label = Label(self.LabelFrame_Save2file, text="Max Crawling NO", font=label_font_style , bg=Species_Find_LabelFrame_bg)
+            self.Save2file_label = tk.Label(self.LabelFrame_Save2file, text="Update the database", font=label_font_style , bg=Save2file_LabelFrame_bg, anchor='w')
+            self.MaxCrawling_label = tk.Label(self.LabelFrame_Save2file, text="Max Crawling NO", font=label_font_style , bg=Species_Find_LabelFrame_bg)
             self.LabelFrame_Save2file.pack(fill="both", expand="yes") # fill both horizon and vertically
 
             #\ Entry
-            self.var_MC = StringVar(self.LabelFrame_Save2file)
+            self.var_MC = tk.StringVar(self.LabelFrame_Save2file)
             self.var_MC.set(str(Index.limit_cnt))
             self.MaxCrawling_width = 10
-            self.MaxCrawling_border = Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
-            self.MaxCrawling = Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width, justify="center")
-            self.MaxCrawlingTLTP = CreateToolTip(self.MaxCrawling, "This will limit the max number of data shown")
+            self.MaxCrawling_border = tk.Frame(self.LabelFrame_Save2file, bg="black", borderwidth=1, relief="sunken", width=self.MaxCrawling_width)
+            self.MaxCrawling = tk.Entry(self.MaxCrawling_border, textvariable=self.var_MC, width=self.MaxCrawling_width, justify="center")
+            self.MaxCrawlingTLTP = DataClass.CreateToolTip(self.MaxCrawling, "This will limit the max number of data shown")
 
             #\ Button
             self.Save2file_button = ttk.Button(self.LabelFrame_Save2file,
@@ -405,9 +447,9 @@ class MainPage(tk.Frame):
                                         command=self.Save2FileButton)
 
             #\ Slider
-            self.Save2file_slider = Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
-                                        orient=HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1, cursor="hand2",
-                                        length=250, sliderrelief=GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
+            self.Save2file_slider = tk.Scale(self.LabelFrame_Save2file, from_=1, to=Index.maxcpus, label="Crawling speed",
+                                        orient=tk.HORIZONTAL, bg=Save2file_LabelFrame_bg, tickinterval=1, cursor="hand2",
+                                        length=250, sliderrelief=tk.GROOVE, troughcolor="black", command=self.Save2FileSliderValue)
             self.Save2file_slider.set(Index.maxcpus)#self.Save2file_slider.set(int(maxcpus / 2))
 
 
@@ -420,28 +462,28 @@ class MainPage(tk.Frame):
             ###################
             #\ Label Frame
             Plot_LabelFrame_bg = "white"
-            self.LabelFrame_Plot = LabelFrame(self, text="Plot Chart", font=LabelFrame_font, bg=Plot_LabelFrame_bg, fg="blue", highlightbackground="red", takefocus=True)
+            self.LabelFrame_Plot = tk.LabelFrame(self, text="Plot Chart", font=LabelFrame_font, bg=Plot_LabelFrame_bg, fg="blue", highlightbackground="red", takefocus=True)
             self.LabelFrame_Plot.pack(fill="both", expand="yes") # fill both horizon and vertically
 
             #\ Label
-            self.Time_range_from_label = Label(self.LabelFrame_Plot, text="From", bg=Plot_LabelFrame_bg)
-            self.Time_range_to_label = Label(self.LabelFrame_Plot, text="to", bg=Plot_LabelFrame_bg)
-            self.Time_Duration_Year_label = Label(self.LabelFrame_Plot, text="Year", bg=Plot_LabelFrame_bg)
-            self.Time_Duration_Month_label = Label(self.LabelFrame_Plot, text="Month", bg=Plot_LabelFrame_bg)
+            self.Time_range_from_label = tk.Label(self.LabelFrame_Plot, text="From", bg=Plot_LabelFrame_bg)
+            self.Time_range_to_label = tk.Label(self.LabelFrame_Plot, text="to", bg=Plot_LabelFrame_bg)
+            self.Time_Duration_Year_label = tk.Label(self.LabelFrame_Plot, text="Year", bg=Plot_LabelFrame_bg)
+            self.Time_Duration_Month_label = tk.Label(self.LabelFrame_Plot, text="Month", bg=Plot_LabelFrame_bg)
 
 
             #\ Drop down menu
             #\ species
-            self.Plot_var_species = StringVar(self.LabelFrame_Plot, value=Index.Calopterygidae_Species[0])
+            self.Plot_var_species = tk.StringVar(self.LabelFrame_Plot, value=Index.Calopterygidae_Species[0])
             self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=self.Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
 
             #\ family
-            self.Plot_var_family = StringVar(self.LabelFrame_Plot, value=Index.Species_Family_Name[0])
+            self.Plot_var_family = tk.StringVar(self.LabelFrame_Plot, value=Index.Species_Family_Name[0])
             self.Plot_Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=10, textvariable=self.Plot_var_family, values=Index.Species_Family_Name)
             self.Plot_Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
             #\ Button
-            self.MatplotlibPlot_button = Button(self.LabelFrame_Plot,
+            self.MatplotlibPlot_button = tk.Button(self.LabelFrame_Plot,
                                         text='Matplotlib',
                                         justify='center',
                                         bg='White',
@@ -449,12 +491,12 @@ class MainPage(tk.Frame):
                                         relief=RELIEF_GROOVE,
                                         command=self.MatplotlibPlotButton)
             controller.BHoverOn(self.MatplotlibPlot_button, ['White','gray70'])
-            self.MatplotlibPlot_button_logo = PhotoImage(file=Index.Matplotlib_img_path)
+            self.MatplotlibPlot_button_logo = tk.PhotoImage(file=Index.Matplotlib_img_path)
             self.MatplotlibPlot_button.config(image=self.MatplotlibPlot_button_logo)
 
 
 
-            self.PyechartsPlot_button = Button(self.LabelFrame_Plot,
+            self.PyechartsPlot_button = tk.Button(self.LabelFrame_Plot,
                                         text='Pyecharts',
                                         justify='center',
                                         bg='White',
@@ -462,41 +504,41 @@ class MainPage(tk.Frame):
                                         relief=RELIEF_GROOVE,
                                         command=self.PyechartsPlotButton)
             controller.BHoverOn(self.PyechartsPlot_button, ['White','gray70'])
-            self.PyechartsPlot_button_logo = PhotoImage(file=Index.Echarts_img_path)
+            self.PyechartsPlot_button_logo = tk.PhotoImage(file=Index.Echarts_img_path)
             self.PyechartsPlot_button.config(image=self.PyechartsPlot_button_logo)
 
             #\ Entry
             today = datetime.today()
             shift_year_age = today - relativedelta(years = Index.Plot_chart_init_delta_years)  #\ shift the time back to the previous year
-            self.var_Time_end = StringVar(self.LabelFrame_Plot, value=today.strftime("%Y-%m-%d"))
-            self.var_Time_start = StringVar(self.LabelFrame_Plot, value=shift_year_age.strftime("%Y-%m-%d"))
+            self.var_Time_end = tk.StringVar(self.LabelFrame_Plot, value=today.strftime("%Y-%m-%d"))
+            self.var_Time_start = tk.StringVar(self.LabelFrame_Plot, value=shift_year_age.strftime("%Y-%m-%d"))
             self.Time_range_width = 10
-            self.Time_range_start_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
-            self.Time_range_start = Entry(self.Time_range_start_border, width=self.Time_range_width, textvariable=self.var_Time_start, justify="center")
-            self.Time_range_end_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
-            self.Time_range_end = Entry(self.Time_range_end_border, width=self.Time_range_width, textvariable=self.var_Time_end, justify="center")
+            self.Time_range_start_border = tk.Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
+            self.Time_range_start = tk.Entry(self.Time_range_start_border, width=self.Time_range_width, textvariable=self.var_Time_start, justify="center")
+            self.Time_range_end_border = tk.Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.Time_range_width)
+            self.Time_range_end = tk.Entry(self.Time_range_end_border, width=self.Time_range_width, textvariable=self.var_Time_end, justify="center")
 
 
             #\ time selector
-            self.VarTimeDuration_ckeckbox = BooleanVar(self.LabelFrame_Plot, value=False)
-            self.TimeDuration_checkbox = Checkbutton(self.LabelFrame_Plot, text="--", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
-            self.TimeDuration_checkboxTLTP = CreateToolTip(self.TimeDuration_checkbox, "Use the time adjest or not")
+            self.VarTimeDuration_ckeckbox = tk.BooleanVar(self.LabelFrame_Plot, value=False)
+            self.TimeDuration_checkbox = tk.Checkbutton(self.LabelFrame_Plot, text="--", variable=self.VarTimeDuration_ckeckbox, bg="white", cursor= "arrow", command=self.TimeDuration_checkbox_callback)
+            self.TimeDuration_checkboxTLTP = DataClass.CreateToolTip(self.TimeDuration_checkbox, "Use the time adjest or not")
 
-            self.var_Duration_month = StringVar(self.LabelFrame_Plot, value=str(0))
+            self.var_Duration_month = tk.StringVar(self.LabelFrame_Plot, value=str(0))
             self.var_Duration_month.trace_add("write", self.Time_Duration_month_callback)
-            self.var_Duration_year = StringVar(self.LabelFrame_Plot, value=str(0))
+            self.var_Duration_year = tk.StringVar(self.LabelFrame_Plot, value=str(0))
             self.var_Duration_year.trace_add("write", self.Time_Duration_year_callback)
             self.TimeDuration_range_width = 5
-            self.Time_Duration_year_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
-            self.Time_Duration_year = Entry(   self.Time_Duration_year_border,
+            self.Time_Duration_year_border = tk.Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
+            self.Time_Duration_year =tk.Entry(   self.Time_Duration_year_border,
                                                 width=self.TimeDuration_range_width,
                                                 textvariable=self.var_Duration_year,
                                                 justify="center",
                                                 # validate='all',
                                                 # validatecommand=self.Time_Duration_year_callback
                                             )
-            self.Time_Duration_month_border = Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
-            self.Time_Duration_month = Entry( self.Time_Duration_month_border,
+            self.Time_Duration_month_border = tk.Frame(self.LabelFrame_Plot, bg="black", borderwidth=1, relief="sunken", width=self.TimeDuration_range_width)
+            self.Time_Duration_month = tk.Entry( self.Time_Duration_month_border,
                                             width=self.TimeDuration_range_width,
                                             textvariable=self.var_Duration_month,
                                             justify="center",
@@ -515,28 +557,28 @@ class MainPage(tk.Frame):
             ########################################
             #\ frame
             Hub_LabelFrame_bg = "White"
-            self.Hub_Frame = LabelFrame(self, text="", font=LabelFrame_font, bg=Hub_LabelFrame_bg, highlightbackground="red", takefocus=True)
+            self.Hub_Frame = tk.LabelFrame(self, text="", font=LabelFrame_font, bg=Hub_LabelFrame_bg, highlightbackground="red", takefocus=True)
             self.Hub_Frame.pack(fill="both", expand="yes")
-            self.Hub_parentF = Frame(self.Hub_Frame, bg=Hub_LabelFrame_bg)
+            self.Hub_parentF = tk.Frame(self.Hub_Frame, bg=Hub_LabelFrame_bg)
 
             #\ Github Label Image
-            self.githubImg = PhotoImage(file=Index.github_img_path)
+            self.githubImg = tk.PhotoImage(file=Index.github_img_path)
             Label_bg_color = "white"
-            self.Hub_Label = Label(self.Hub_parentF, text="github", cursor="hand2", image=self.githubImg, bg=Label_bg_color)
+            self.Hub_Label = tk.Label(self.Hub_parentF, text="github", cursor="hand2", image=self.githubImg, bg=Label_bg_color)
             self.Hub_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://github.com/tingweichien/Dragonfly_Web_Crawler"))
-            self.Hub_Label_tooltip = CreateToolTip(self.Hub_Label, "Go to Github", window_y=-15)
+            self.Hub_Label_tooltip = DataClass.CreateToolTip(self.Hub_Label, "Go to Github", window_y=-15)
 
             #\ Web-version Label Image
-            self.web_versionImg = PhotoImage(file=Index.web_version_img_path)
-            self.Web_version_Label = Label(self.Hub_parentF, text="web version", cursor="hand2", image=self.web_versionImg, bg=Label_bg_color)
+            self.web_versionImg = tk.PhotoImage(file=Index.web_version_img_path)
+            self.Web_version_Label = tk.Label(self.Hub_parentF, text="web version", cursor="hand2", image=self.web_versionImg, bg=Label_bg_color)
             self.Web_version_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://flask-web-training.herokuapp.com/"))
-            self.Web_version_tooltip = CreateToolTip(self.Web_version_Label, "Go to Web version of this app", window_y=-15)
+            self.Web_version_tooltip = DataClass.CreateToolTip(self.Web_version_Label, "Go to Web version of this app", window_y=-15)
 
             #\ ReadtheDoc Label Image
-            self.ReadthedocsImg = PhotoImage(file=Index.Readthedocs_img_path)
-            self.Readthedocs_Label = Label(self.Hub_parentF, text="read the docs", cursor="hand2", image=self.ReadthedocsImg, bg=Label_bg_color)
+            self.ReadthedocsImg = tk.PhotoImage(file=Index.Readthedocs_img_path)
+            self.Readthedocs_Label = tk.Label(self.Hub_parentF, text="read the docs", cursor="hand2", image=self.ReadthedocsImg, bg=Label_bg_color)
             self.Readthedocs_Label.bind("<Button-1>", lambda e: self.Hub_callback("https://dragonfly-web-crawler.readthedocs.io/en/latest/"))
-            self.Readthedocs_tooltip = CreateToolTip(self.Readthedocs_Label, "Go to read the docs for more detail info", window_y=-10)
+            self.Readthedocs_tooltip = DataClass.CreateToolTip(self.Readthedocs_Label, "Go to read the docs for more detail info", window_y=-10)
 
             #\ list to get the label and labelfrme in Save2file frame
             # self.LinkLabelList = [self.Hub_Frame, self.Hub_parentF]
@@ -571,14 +613,14 @@ class MainPage(tk.Frame):
             self.Save2file_label.grid(row=9)
             self.Save2file_slider.grid(row=10, column=0, columnspan=2, padx=5)
             self.MaxCrawling_label.grid(row=9,column=3)
-            self.MaxCrawling.grid(row=10, column=3, sticky=N)
-            self.MaxCrawling_border.grid(row=10, column=3, sticky=N)
+            self.MaxCrawling.grid(row=10, column=3, sticky=tk.N)
+            self.MaxCrawling_border.grid(row=10, column=3, sticky=tk.N)
 
             #\ Plot Chart
             self.Plot_Family_drop_down_menu.grid(row=11, column=0, columnspan=2, padx=3)
             self.Plot_Species_drop_down_menu.grid(row=11, column=2, columnspan=2, padx=3)
-            self.MatplotlibPlot_button.grid(row=11, column=5, columnspan=2, pady=3, padx=20, sticky=E)
-            self.PyechartsPlot_button.grid(row=12, rowspan=2, column=5, columnspan=2, padx=20, sticky=E)
+            self.MatplotlibPlot_button.grid(row=11, column=5, columnspan=2, pady=3, padx=20, sticky=tk.E)
+            self.PyechartsPlot_button.grid(row=12, rowspan=2, column=5, columnspan=2, padx=20, sticky=tk.E)
             self.Time_range_from_label.grid(row=12, column=0)
             self.Time_range_start.grid(row=12, column=1)
             self.Time_range_start_border.grid(row=12, column=1)
@@ -586,18 +628,18 @@ class MainPage(tk.Frame):
             self.Time_range_end.grid(row=12, column=3)
             self.Time_range_end_border.grid(row=12, column=3, pady=3)
 
-            self.TimeDuration_checkbox.grid(row=13, column=1, sticky=W)
-            self.Time_Duration_year.grid(row=13, column=1, sticky=E)
-            self.Time_Duration_year_border.grid(row=13, column=1, sticky=E)
-            self.Time_Duration_Year_label.grid(row=13, column=2, sticky=W)
-            self.Time_Duration_month.grid(row=13, column=3, sticky=W)
-            self.Time_Duration_month_border.grid(row=13, column=3, sticky=W)
-            self.Time_Duration_Month_label.grid(row=13, column=3, sticky=E)
+            self.TimeDuration_checkbox.grid(row=13, column=1, sticky=tk.W)
+            self.Time_Duration_year.grid(row=13, column=1, sticky=tk.E)
+            self.Time_Duration_year_border.grid(row=13, column=1, sticky=tk.E)
+            self.Time_Duration_Year_label.grid(row=13, column=2, sticky=tk.W)
+            self.Time_Duration_month.grid(row=13, column=3, sticky=tk.W)
+            self.Time_Duration_month_border.grid(row=13, column=3, sticky=tk.W)
+            self.Time_Duration_Month_label.grid(row=13, column=3, sticky=tk.E)
 
             #\ Hub and docs
-            self.Hub_Label.pack(side=LEFT, padx=15)
-            self.Readthedocs_Label.pack(side=RIGHT, padx=15)
-            self.Web_version_Label.pack(side=RIGHT, padx=15)
+            self.Hub_Label.pack(side=tk.LEFT, padx=15)
+            self.Readthedocs_Label.pack(side=tk.RIGHT, padx=15)
+            self.Web_version_Label.pack(side=tk.RIGHT, padx=15)
             self.Hub_parentF.pack(expand=True)
 
 
@@ -637,6 +679,11 @@ class MainPage(tk.Frame):
                 tmpList.remove(element)
                 controller.BHoverOnGroup(element, tmpList, [element["bg"], Index.var_HCNgColorList[idx]])
 
+    #\ Menu Bar
+    def donothing(self):
+        print("menu bar")
+
+
 
     #\ ID find
     def IDEnterButton(self, ID:str):
@@ -647,7 +694,7 @@ class MainPage(tk.Frame):
 
         # Check if this data do not contain the Longitude and Latitude infomation
         map_key = True
-        [_ID_find_result, _overflow, _Max_ID_Num] = DataCrawler(Login_Response, ID)
+        [_ID_find_result, _overflow, _Max_ID_Num] = Dragonfly.DataCrawler(Login_Response, ID)
         if _overflow:
             messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + str(_Max_ID_Num))  #ID number overflow
             return
@@ -667,9 +714,9 @@ class MainPage(tk.Frame):
     # \ Species find to plot info inthe table and plot on the map
     def SpeciesFindButton(self, var_family, var_species):
         if self.VarDatacheckbox.get() == True:
-            map_result_list = ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[var_family] + "\\" + Index.Species_class_key[var_family] + Index.Species_key[var_species] + ".csv")
+            map_result_list = Save2File.ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[var_family] + "\\" + Index.Species_class_key[var_family] + Index.Species_key[var_species] + ".csv")
         else:
-            map_result_list = SpeiciesCrawler(var_family, var_species)
+            map_result_list = Dragonfly.SpeiciesCrawler(var_family, var_species)
 
         if len(map_result_list) == 0:
             messagebox.showinfo("Infomation", "The selected species does not have any record")
@@ -757,7 +804,7 @@ class MainPage(tk.Frame):
 
             #\update the sub progressbar
             if self.epecting_CNT != 0:
-                self.pbVar_partial.set(100*DataCNT.value/self.epecting_CNT)
+                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.epecting_CNT)
 
 
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
@@ -773,7 +820,7 @@ class MainPage(tk.Frame):
             self.GIFcheck = True
             self.Info_Name_label['text'] = "Updating~"
             self.NewWindow.title = "Update data - updating~"
-            savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
+            Save2File.savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
             self.GIFcheck = False
 
         #\ disable the button1
@@ -799,35 +846,35 @@ class MainPage(tk.Frame):
 
 
         #\ Frame
-        self.progressLabelFrame = Frame(self.NewWindow, bg="white")
-        self.progressLabelFrame.pack(side=TOP)
-        self.progressbarFrame = Frame(self.NewWindow, bg="white")
+        self.progressLabelFrame = tk.Frame(self.NewWindow, bg="white")
+        self.progressLabelFrame.pack(side=tk.TOP)
+        self.progressbarFrame = tk.Frame(self.NewWindow, bg="white")
         self.progressbarFrame.pack()
-        self.progressbarSubFrame = Frame(self.NewWindow, bg="white")
+        self.progressbarSubFrame = tk.Frame(self.NewWindow, bg="white")
         self.progressbarSubFrame.pack()
-        self.ButtonFrame = Frame(self.NewWindow, bg="white")
+        self.ButtonFrame = tk.Frame(self.NewWindow, bg="white")
         self.ButtonFrame.pack()
 
 
         #\ Progress layer
-        progressbar_label = Label(self.progressLabelFrame, text="Progress", bg="white")
-        progressbar_label.pack(side=LEFT)
-        self.Load_image = [PhotoImage(file=Index.updateGIF, format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
-        self.loading_label = Label(self.progressLabelFrame, bg="white")
-        self.loading_label.pack(side=RIGHT)
+        progressbar_label = tk.Label(self.progressLabelFrame, text="Progress", bg="white")
+        progressbar_label.pack(side=tk.LEFT)
+        self.Load_image = [tk.PhotoImage(file=Index.updateGIF, format="gif -index %i" %(i)) for i in range(Index.GIFMAXFRAME)] # base on how many frame the gif file have
+        self.loading_label = tk.Label(self.progressLabelFrame, bg="white")
+        self.loading_label.pack(side=tk.RIGHT)
 
-        self.pbVar = IntVar(self.NewWindow)
-        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=HORIZONTAL, phase=1, length=350, mode="determinate", variable=self.pbVar, maximum=100)
-        self.progressbar.pack(side=LEFT, pady=10)
+        self.pbVar = tk.IntVar(self.NewWindow)
+        self.progressbar = ttk.Progressbar(self.progressbarFrame, orient=tk.HORIZONTAL, phase=1, length=350, mode="determinate", variable=self.pbVar, maximum=100)
+        self.progressbar.pack(side=tk.LEFT, pady=10)
 
-        self.progressbar_label_time = Label(self.progressbarFrame, text="00:00", bg="white")
-        self.progressbar_label_time.pack(side=RIGHT, padx=5)
-        self.progressbar_label = Label(self.progressbarFrame, text="0%", bg="white")
-        self.progressbar_label.pack(side=RIGHT, padx=5)
+        self.progressbar_label_time = tk.Label(self.progressbarFrame, text="00:00", bg="white")
+        self.progressbar_label_time.pack(side=tk.RIGHT, padx=5)
+        self.progressbar_label = tk.Label(self.progressbarFrame, text="0%", bg="white")
+        self.progressbar_label.pack(side=tk.RIGHT, padx=5)
 
 
         #\ Button layer
-        button_popup_label = Label(self.ButtonFrame, text="Ready to update?", bg="white")
+        button_popup_label = tk.Label(self.ButtonFrame, text="Ready to update?", bg="white")
         button_popup_label.pack()
         self.button_popup = ttk.Button(self.ButtonFrame, text="start", command=self.start_button)
         self.button_popup.pack(pady=2)
@@ -835,34 +882,34 @@ class MainPage(tk.Frame):
 
         #\ Check button
         #\ this specify whether to update MySQL database or not
-        self.Var_MySQL_enable = BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_MySQL = Checkbutton(self.ButtonFrame, text="MySQL-Enable", variable=self.Var_MySQL_enable, bg="white", cursor= "arrow")
+        self.Var_MySQL_enable = tk.BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_MySQL = tk.Checkbutton(self.ButtonFrame, text="MySQL-Enable", variable=self.Var_MySQL_enable, bg="white", cursor= "arrow")
         self.checkbox_MySQL.pack(side="left")
         #\ this specify whether to update weather from online weather api or not
-        self.Var_weather_enable = BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_weather = Checkbutton(self.ButtonFrame, text="Weather-Enable", variable=self.Var_weather_enable, bg="white", cursor= "arrow")
+        self.Var_weather_enable = tk.BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_weather = tk.Checkbutton(self.ButtonFrame, text="Weather-Enable", variable=self.Var_weather_enable, bg="white", cursor= "arrow")
         self.checkbox_weather.pack(side="left")
         #\ this specify whether to update from web and save it to excel or not
-        self.Var_UpdatefWeb_enable = BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_UpdatefWeb = Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", variable=self.Var_UpdatefWeb_enable, bg="white", cursor= "arrow")
+        self.Var_UpdatefWeb_enable = tk.BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_UpdatefWeb = tk.Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", variable=self.Var_UpdatefWeb_enable, bg="white", cursor= "arrow")
         self.checkbox_UpdatefWeb.pack(side="left")
 
 
         #\ Update progress infomation
-        self.TextLabelFrame = LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
+        self.TextLabelFrame = tk.LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
         self.TextLabelFrame.pack(pady=10)
-        self.Info_Name_label_Var = StringVar(self.TextLabelFrame)
-        self.Info_Name_label = Label(self.TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white", textvariable=self.Info_Name_label_Var)
+        self.Info_Name_label_Var = tk.StringVar(self.TextLabelFrame)
+        self.Info_Name_label = tk.Label(self.TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white", textvariable=self.Info_Name_label_Var)
         self.Info_Name_label.pack(pady=3)
-        self.Info_FileName_label = Label(self.TextLabelFrame, anchor='w', bg="white")
+        self.Info_FileName_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FileName_label.pack(pady=3)
-        self.Info_UpdateNum_label = Label(self.TextLabelFrame, anchor='w', bg="white")
+        self.Info_UpdateNum_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_UpdateNum_label.pack(pady=3)
-        self.Info_CurrentNum_label = Label(self.TextLabelFrame, anchor='w', bg="white")
+        self.Info_CurrentNum_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_CurrentNum_label.pack(pady=3)
-        self.Info_State_label = Label(self.TextLabelFrame, anchor='w', bg="white")
+        self.Info_State_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_State_label.pack(pady=3)
-        self.Info_FinishState_label = Label(self.TextLabelFrame, anchor='w', bg="white")
+        self.Info_FinishState_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FinishState_label.pack(pady=3)
 
         #\ the sub bar for the progress bar
@@ -870,8 +917,8 @@ class MainPage(tk.Frame):
         # s.theme_use('clam')
         # s.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
         self.epecting_CNT = 0
-        self.pbVar_partial = IntVar(self.NewWindow)
-        self.progressbar_partial = ttk.Progressbar(self.NewWindow, orient=HORIZONTAL,
+        self.pbVar_partial = tk.IntVar(self.NewWindow)
+        self.progressbar_partial = ttk.Progressbar(self.NewWindow, orient=tk.HORIZONTAL,
                                                     phase=1, length=300, mode="determinate",
                                                     # style="red.Horizontal.TProgressbar",
                                                     variable=self.pbVar_partial, maximum=100)
@@ -1219,7 +1266,7 @@ class MainPage(tk.Frame):
 
         except:
             print("[Warning] Blending failed~")
-            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+            self.tk_image  = tk.PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
             self.imglabel.config(image=self.tk_image)
 
 
@@ -1241,7 +1288,7 @@ class MainPage(tk.Frame):
 
         #\ for init
         else:
-            self.tk_image  = PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+            self.tk_image  = tk.PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
             self.init_while = True
             self.imglabel.config(image=self.tk_image)
 

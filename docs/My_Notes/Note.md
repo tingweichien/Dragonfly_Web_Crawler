@@ -408,8 +408,7 @@ reference :
 7. The structure of the chart
 
 * tab
-    * -- timeline
-
+  * -- timeline
       * -- grid
         * -- map0
         * -- bar0
@@ -422,7 +421,7 @@ reference :
         * line_multiA
     * -- table0
 
-1. referece :
+8. referece :
 
    (1) <https://www.kesci.com/home/project/5eb7958f366f4d002d783d4a>
    (2) <https://gallery.pyecharts.org/#/Geo/geo_chart_countries_js>
@@ -517,8 +516,6 @@ reference :
     - (6) The setting on the web will be the following
     ![setting for the readthedoc](https://i.imgur.com/1j97wmf.png)
 
-
-
 ### git rebase
 
 1. Merge the several commits together by using ```git rebase -i IDIDIDIDIDI```
@@ -529,7 +526,6 @@ reference :
 3. reference:
    - [How to merge several commit together](https://gitbook.tw/chapters/rewrite-history/merge-multiple-commits-to-one-commit.html)
    - [push after rebase](https://stackoverflow.com/questions/8939977/git-push-rejected-after-feature-branch-rebase)
-
 
 ## [2020/12/1]
 
@@ -706,3 +702,42 @@ reference :
     So use the global lock to lwt every thread line up for the same key
 
 3. Add a messageinfo to show if the weather crawling meet the daily limit counts.
+
+## [2021/03/07]
+
+1. Fix the import method by importing only the module needed
+
+2. Add the "**key out of date**" and "**key overflow**" error message for the weather crawling
+
+3. Change the matpltlib color map to satisfy pylint rules
+
+    - Code
+
+        ```python
+        # piecolors = cm.coolwarm(np.linspace(0, 1, 12))
+        cmap = cm.get_cmap("coolwarm")
+        piecolors = cmap(np.linspace(0, 1, 12))
+        ```
+
+    - reference
+      - <https://stackoverflow.com/questions/51452112/how-to-fix-cm-spectral-module-matplotlib-cm-has-no-attribute-spectral>
+      - <https://stackoverflow.com/questions/47302343/what-names-can-be-used-in-plt-cm-get-cmap>
+      - <https://matplotlib.org/stable/tutorials/colors/colormaps.html>
+
+4. Solved the path problem for the tree plot in matplot.
+
+    - File path
+
+        ```python
+        - DragonflyData
+          - src
+            - plot_pyecharts_tree.py
+          - pyecharts_result
+            - Dragonfly_tree_plot.html
+        ```
+
+    - Code
+
+        ```python
+        ../pyecharts_result/Dragonfly_tree_plot.html
+        ```

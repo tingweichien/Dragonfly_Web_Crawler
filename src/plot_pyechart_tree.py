@@ -1,10 +1,9 @@
 #\ pls use pyecharts v1
 #\ this is the plot by using pyechart
 
-import json
 from pyecharts import options as opts
 from pyecharts.charts import Tree, Bar
-from Index import *
+import Index
 from pyecharts.commons.utils import JsCode
 import webview
 
@@ -26,22 +25,22 @@ Tvalue = "value"
 Family_group = []
 Family_group_all = []
 family_count = 0
-for suborder_count, sb in enumerate([Species_Name_Group_Damselfly, Species_Name_Group_Dragonfly]):
+for suborder_count, sb in enumerate([Index.Species_Name_Group_Damselfly, Index.Species_Name_Group_Dragonfly]):
     for species_names in sb:
-        family = {Tchildren: [{Tvalue: Species_Family_Name_E[family_count] + str(number+1), Tname: value} for number,value in enumerate(species_names)],
-                Tname: Species_Family_Name[family_count],
-                Tvalue: Species_Family_Name_E[family_count]}
+        family = {Tchildren: [{Tvalue: Index.Species_Family_Name_E[family_count] + str(number+1), Tname: value} for number,value in enumerate(species_names)],
+                Tname: Index.Species_Family_Name[family_count],
+                Tvalue: Index.Species_Family_Name_E[family_count]}
         family_count += 1
 
         #\ combine 科別(infraorder)
         Family_group.append(family)
 
     #\ combine 亞目類別(order)
-    Family_group_all.append({Tchildren:Family_group.copy(), Tname:species_SubOrder[suborder_count], Tvalue:species_SubOrder_E[suborder_count]})
+    Family_group_all.append({Tchildren:Family_group.copy(), Tname:Index.species_SubOrder[suborder_count], Tvalue:Index.species_SubOrder_E[suborder_count]})
     Family_group.clear()
 
 #\ combine all the children together
-TData = [{Tchildren:Family_group_all, Tname:species_Order}]
+TData = [{Tchildren:Family_group_all, Tname:Index.species_Order}]
 
 #\ selecting the type of the tree plot
 tree_layout = "orthogonal"  #"radial"
@@ -68,7 +67,7 @@ tree.add(series_name = "",
         tooltip_opts=opts.TooltipOpts(formatter=tooltip_F),
         )
 tree.get_options()
-tree.render("pyechart_results\Dragonfly_tree_plot.html")
+tree.render(".\\pyecharts_result\\Dragonfly_tree_plot.html")
 
-webview.create_window("HTML window", "pyechart_results\Dragonfly_tree_plot.html")
+webview.create_window("HTML window", "../pyecharts_result/Dragonfly_tree_plot.html",width=1920, height=1080)
 webview.start(http_server=True, gui='qt')
