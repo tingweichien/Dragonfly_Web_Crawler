@@ -813,7 +813,10 @@ class MainPage(tk.Frame):
             return
 
 
-    # very important!!! using thread makes the progressbar move outside the main thread
+    #\ very important!!! using thread makes the progressbar move outside the main thread
+    #\ Var_MySQL_enable : Update the crawling data from csv to MySQL
+    #\ Var_weather_enable :　Update the weather data
+    #\ Var_UpdatefWeb_enable : Update the data from web and save to the csv
     def start_button(self):
         self.start_time = datetime.now()
         def start_multithread():
@@ -881,18 +884,28 @@ class MainPage(tk.Frame):
 
 
         #\ Check button
+        #\ Color
+        self.default_fg_color = "black"
+        self.default_bg_color = "white"
+        self.selected_fg_color = "green"
+        self.updating_bg_color = "light sky blue"
+        self.updating_fg_color = "black"
+        self.finished_bg_color = "pale green"
+        self.ChangeDefaultColor1 = False
+        self.ChangeDefaultColor2 = False
+        self.ChangeDefaultColor3 = False
+        #\ this specify whether to update from web and save it to excel or not
+        self.Var_UpdatefWeb_enable = tk.BooleanVar(self.ButtonFrame, value=True)
+        self.checkbox_UpdatefWeb = tk.Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", fg=self.selected_fg_color, variable=self.Var_UpdatefWeb_enable, bg=self.default_bg_color, cursor= "arrow",command=self.checkbox_UpdatefWeb_callback)
+        self.checkbox_UpdatefWeb.pack(side="left")
         #\ this specify whether to update MySQL database or not
         self.Var_MySQL_enable = tk.BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_MySQL = tk.Checkbutton(self.ButtonFrame, text="MySQL-Enable", variable=self.Var_MySQL_enable, bg="white", cursor= "arrow")
+        self.checkbox_MySQL = tk.Checkbutton(self.ButtonFrame, text="MySQL-Enable", fg=self.selected_fg_color, variable=self.Var_MySQL_enable, bg=self.default_bg_color, cursor= "arrow", command=self.checkbox_MySQL_callback)
         self.checkbox_MySQL.pack(side="left")
         #\ this specify whether to update weather from online weather api or not
         self.Var_weather_enable = tk.BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_weather = tk.Checkbutton(self.ButtonFrame, text="Weather-Enable", variable=self.Var_weather_enable, bg="white", cursor= "arrow")
+        self.checkbox_weather = tk.Checkbutton(self.ButtonFrame, text="Weather-Enable", fg=self.selected_fg_color, variable=self.Var_weather_enable, bg=self.default_bg_color, cursor= "arrow",command=self.checkbox_weather_callback)
         self.checkbox_weather.pack(side="left")
-        #\ this specify whether to update from web and save it to excel or not
-        self.Var_UpdatefWeb_enable = tk.BooleanVar(self.ButtonFrame, value=True)
-        self.checkbox_UpdatefWeb = tk.Checkbutton(self.ButtonFrame, text="UpdateWebData-Enable", variable=self.Var_UpdatefWeb_enable, bg="white", cursor= "arrow")
-        self.checkbox_UpdatefWeb.pack(side="left")
 
 
         #\ Update progress infomation
@@ -951,7 +964,7 @@ class MainPage(tk.Frame):
 
 
 
-    #\ Button to open pop up window for updating
+    #\ Button to open pop up window for checkupdating
     #\ read the flow from here to the top of the method in this class
     def Save2FileButton(self):
         Index.limit_cnt = int(self.var_MC.get())
@@ -959,6 +972,34 @@ class MainPage(tk.Frame):
 
         #\ pop up window
         self.Save2File_popup()
+
+
+    #\ checkbox callback function for changing color
+    def checkbox_MySQL_callback(self):
+        if self.ChangeDefaultColor1:
+            self.checkbox_MySQL["fg"] =  self.selected_fg_color
+            self.ChangeDefaultColor1= False
+        else :
+            self.checkbox_MySQL["fg"] =  self.default_fg_color
+            self.ChangeDefaultColor1 = True
+
+    def checkbox_weather_callback(self):
+        if self.ChangeDefaultColor2:
+            self.checkbox_weather["fg"] =  self.selected_fg_color
+            self.ChangeDefaultColor2 = False
+        else :
+            self.checkbox_weather["fg"] =  self.default_fg_color
+            self.ChangeDefaultColor2 = True
+
+    def checkbox_UpdatefWeb_callback(self):
+        if self.ChangeDefaultColor3:
+            self.checkbox_UpdatefWeb["fg"] =  self.selected_fg_color
+            self.ChangeDefaultColor3 = False
+        else :
+            self.checkbox_UpdatefWeb["fg"] =  self.default_fg_color
+            self.ChangeDefaultColor3 = True
+
+
 
 
     #\ Table
