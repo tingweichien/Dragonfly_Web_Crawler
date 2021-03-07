@@ -22,6 +22,7 @@ import json
 import Update_Database
 from functools import partial
 from typing import List
+import Database_function
 
 
 TotalSpeciesNumber = 0
@@ -372,6 +373,15 @@ def parse_all(self):
     CleanDataTF()
 
 
+#\ the parsing all function with the GUI effect
+def parse_all_dragonfly_data(self):
+    print("\n[Update] --Start Crawling dragonfly daTa from web--\n")
+    self.checkbox_UpdatefWeb["fg"] = self.updating_fg_color
+    self.checkbox_UpdatefWeb["bg"] = self.updating_bg_color
+    parse_all(self)
+    self.checkbox_UpdatefWeb["bg"] = self.finished_bg_color
+    print("\n[Update] --Finished Crawling dragonfly daTa from web--\n")
+
 
 
 #\ read the file from csv database
@@ -392,18 +402,32 @@ def ReadFromFile(file:str)->List[DataClass.DetailedTableInfo]:
 
 
 
+
+
+
+
 #########################################################################
-#\ select the parsing type : all family or one
+#\ The main function for updating
+#\  1. Update from web and save the dragonfly info to the csv file
+#\  2. Update the csv file result to the MySQL database
+#\      (1) Update to MySQL database
+#\      (2) Update the weather data to MySQL
+#\  Some parameters
+#\      - Var_MySQL_enable : Update the crawling data from csv to MySQL
+#\      - Var_weather_enable :　Update the weather data
+#\      - Var_UpdatefWeb_enable : Update the data from web and save to the csv
 def savefile(self, parsetype:str, Update_enable:List[bool]):
     # --main--
     if __name__ == 'Save2File':
         #\ start timer
         Start = time.time()
 
+        #\ (1) Update the data from web to csv file
+        #\ Checking which of the update option been selected
         _, _, UpdateNewdata = Update_enable
         if UpdateNewdata:
             if parsetype == 'parse_all':
-                parse_all(self)
+                parse_all_dragonfly_data(self)
             else:
                 print("[warning] !!!! No parse type define !!!!!")
         else:
@@ -411,12 +435,12 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
 
 
         #\ Build the MySQL connection
-        print("start writing to the MySQL database")
-        connection_SF = Update_Database.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
+        connection_SF = Database_function.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
 
 
-        #\ also insert to the data base
+        #\ (2) Insert to the data base
         Update_Database.Update_database(self, connection_SF, Update_enable)
+
 
 
         #\ End timer
@@ -431,7 +455,7 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         self.IUpdateNumLabel_text(f"--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s")
         print(f"\n--- Finished crawling all the data ---  Totally spend: {int(Time_interval / 60)}m {round(Time_interval % 60)}s" )
 
-        #\ after finishing, force the bar number to 100%
+        #\ After finishing, force the bar number to 100%
         self.pbVar.set(100)
         self.progressbar_label['text'] = '100%'
         self.progressbar.stop()
