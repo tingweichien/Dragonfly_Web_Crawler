@@ -741,3 +741,8 @@ reference :
         ```python
         ../pyecharts_result/Dragonfly_tree_plot.html
         ```
+
+## [2021/03/08]
+
+1. Add the function to display bg of updating section
+    ![Updating section](https://i.imgur.com/Ers01FW.png)
