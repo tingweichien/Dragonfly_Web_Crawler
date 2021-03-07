@@ -7,9 +7,8 @@ import csv
 import weather_data_class
 
 
-#\ auto update the data in csv into DATABASE
-#\ maybe the next sep will be update by the save2File
-#\ contain update weather data
+#\ (1) Auto update the data in csv into DATABASE
+#\ (2) contain update weather data
 def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
     #\ INIT the key
@@ -29,6 +28,18 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
     #\ assign the enable bits
     Update_MySQL, Update_weather, _ = Update_enable
 
+    #\ Progress bar
+    if Update_MySQL or Update_weather is True:
+        Update_data_updating_GUI(self, Update_enable, "start")
+
+    #\ Print the Upating info
+    update_string = ["updating to MySQL", "updating weather data"]
+    for idx, update_state in enumerate(Update_enable[0:2]):
+        if update_state:
+            print(f"\n[Update] --Start{update_string[idx]}--\n")
+
+
+    #\ Loop through the whole dragonflt species
     for S in Index.Species_Family_Name:
         #\ insert species name data into species table
         #\ Counts
@@ -37,7 +48,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
         # insertdata_S = list(zip(Index.Species_Name_Group[Id], [Id+1]*length_S))
         # insert_data(connection, insertquery_S, insertdata_S)
 
-    #\ build species info table
+        #\ build species info table
         for Sp in Index.Species_Name_Group[Id]:
 
             #\ This is to update the infomation from dragonfly recording web
@@ -81,13 +92,6 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             #\ This is to update the weather information from World weather online
             if Update_weather:
 
-                #\ clear the update infomation block and reset the information
-                self.Update_Block_set_all_to_empty()
-
-                #\ set the progress in this update section
-                self.progressbar_partial["mode"] = "indeterminate"
-                self.progressbar_partial.start(50)
-
                 #\ The weather data update main function
                 state = Database_function.get_weather_data(self, connection, Species_table_name)
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
@@ -96,3 +100,42 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 if state == False:
                     messagebox.showwarning("Weather Crawling warning", f"Weather data crawling warning\n{weather_data_class.ErrorLog}")
                     return
+
+    #\ End of the updating
+    for idx, update_state in enumerate(Update_enable):
+        if update_state:
+            print(f"\n[Update] --Finished{update_string[idx]}--\n")
+
+    #\ Updating the GUI
+    Update_data_updating_GUI(self, Update_enable, "finish")
+
+
+
+#\  Update GUI
+#\  state: "start" or "finish"
+def Update_data_updating_GUI(self, update_enable:List[bool], state:str):
+    if state == "start":
+        #\ clear the update infomation block and reset the information
+        self.Update_Block_set_all_to_empty()
+
+        #\ set the progress in this update section
+        self.progressbar_partial["mode"] = "indeterminate"
+        self.progressbar_partial.start(50)
+
+        #\ selector color for weather-data, checkbox_MySQL
+        if update_enable[0]:
+            self.checkbox_MySQL["fg"] = self.updating_fg_color
+            self.checkbox_MySQL["bg"] = self.updating_bg_color
+        if update_enable[1]:
+            self.checkbox_weather["fg"] = self.updating_fg_color
+            self.checkbox_weather["bg"] = self.updating_bg_color
+
+    elif state == "finish":
+        #\ selector color for weather-data, checkbox_MySQL
+        if update_enable[0]:
+            self.checkbox_MySQL["bg"] = self.finished_bg_color
+        if update_enable[1]:
+            self.checkbox_weather["bg"] = self.finished_bg_color
+
+    else:
+        print("please specify the state args")

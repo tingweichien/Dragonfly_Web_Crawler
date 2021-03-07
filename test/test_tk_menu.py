@@ -21,6 +21,10 @@ class Example(tk.Frame):
 
         root.configure(menu=self.menubar)
 
+        self.Checkbutton = tk.Checkbutton(self, text="checkbutton", selectcolor="green")
+        self.Checkbutton.pack()
+
+
     def enable_menu(self):
         self.menubar.entryconfig("Test2", state="normal")
 
