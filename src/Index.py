@@ -758,7 +758,7 @@ Weather_earliest_date = date(2008, 7, 1)
 weather_request_limit = 500
 
 #\ weather thread queue limit
-MaxQueueNum = 10
+MaxQueueNum = 20
 
 #\ Enable or Disable weather multithreading
 weather_multithread = True #False
