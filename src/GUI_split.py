@@ -805,6 +805,7 @@ class MainPage(tk.Frame):
             #\update the sub progressbar
             if self.epecting_CNT != 0:
                 self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.epecting_CNT)
+                self.progressbar_partial_label["text"] = f"({Dragonfly.DataCNT.value}/{self.epecting_CNT})"
 
 
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
@@ -935,7 +936,9 @@ class MainPage(tk.Frame):
                                                     phase=1, length=300, mode="determinate",
                                                     # style="red.Horizontal.TProgressbar",
                                                     variable=self.pbVar_partial, maximum=100)
-        self.progressbar_partial.pack()
+        self.progressbar_partial.pack(side="left")
+        self.progressbar_partial_label = tk.Label(self.NewWindow, text="", bg="white")
+        self.progressbar_partial_label.pack(side="left")
 
 
 
