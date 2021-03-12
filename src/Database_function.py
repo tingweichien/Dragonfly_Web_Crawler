@@ -225,9 +225,11 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str)->bool:
                     dataList = response_List[currentCNT : currentCNT_END]
                     GWD_return_status = GetWeatherDataThread(self, dataList, DB_species, weather_connection)
 
-                    #\ if false this might means APO key is out of date or reach calls per day.
+                    #\ if false this might means API key is out of date or reach calls per day.
                     if  GWD_return_status == False:
-                        return False
+                        print("GWD_return_status == False, then change key due to some error for the API")
+                        changekey_Info(self)
+
 
                     #\ break the while loop since the rest of the data have been overdated
                     if Index.WeatherTimeOverLimitStatus == Index.overtimelimit:

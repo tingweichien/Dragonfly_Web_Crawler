@@ -36,6 +36,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
     update_string = ["updating to MySQL", "updating weather data"]
     for idx, update_state in enumerate(Update_enable[0:2]):
         if update_state:
+            print("-------------------------------------------")
             print(f"\n[Update] --Start{update_string[idx]}--\n")
 
 
@@ -105,6 +106,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
     for idx, update_state in enumerate(Update_enable):
         if update_state:
             print(f"\n[Update] --Finished{update_string[idx]}--\n")
+            print("----------------------------------------------")
 
     #\ Updating the GUI
     Update_data_updating_GUI(self, Update_enable, "finish")
@@ -119,6 +121,7 @@ def Update_data_updating_GUI(self, update_enable:List[bool], state:str):
         self.Update_Block_set_all_to_empty()
 
         #\ set the progress in this update section
+        self.update_section = "Save2File"
         self.progressbar_partial["mode"] = "indeterminate"
         self.progressbar_partial.start(50)
 

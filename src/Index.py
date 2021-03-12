@@ -738,6 +738,7 @@ weather_key = [ "2ee5762c23b4433a81b174850210103",
                 "e719dd9aec3e47df90d174438210103",
                 "2ee5762c23b4433a81b174850210103",
                 "13558b3b23d540e18af170642210203",
+                "979041b134fd4a7d8fa174537211203",
                 ]
 OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
 
@@ -745,6 +746,7 @@ weather_Key_expire_date = [date(2021, 4, 30),
                             date(2021, 4, 30),
                             date(2021, 4, 30),
                             date(2021, 5, 2),
+                            date(2021, 5, 11),
                             ]
 
 
@@ -784,3 +786,9 @@ pb_microsecond_ndigits = 6
 
 #\ show n digit 0.XXXXX..... in update timer
 pb_showing_digit = 1
+
+
+
+
+#\ sub progressbar label effect
+SpinLabel = ["--", "\\", "|", "/"]

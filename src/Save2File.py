@@ -375,12 +375,14 @@ def parse_all(self):
 
 #\ the parsing all function with the GUI effect
 def parse_all_dragonfly_data(self):
+    print("\------------------------------------------------------")
     print("\n[Update] --Start Crawling dragonfly daTa from web--\n")
     self.checkbox_UpdatefWeb["fg"] = self.updating_fg_color
     self.checkbox_UpdatefWeb["bg"] = self.updating_bg_color
     parse_all(self)
     self.checkbox_UpdatefWeb["bg"] = self.finished_bg_color
     print("\n[Update] --Finished Crawling dragonfly daTa from web--\n")
+    print("\------------------------------------------------------")
 
 
 
@@ -422,7 +424,7 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         #\ start timer
         Start = time.time()
 
-        #\ (1) Update the data from web to csv file
+        #\ --(1) Update the data from web to csv file--
         #\ Checking which of the update option been selected
         _, _, UpdateNewdata = Update_enable
         if UpdateNewdata:
@@ -438,7 +440,7 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         connection_SF = Database_function.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
 
 
-        #\ (2) Insert to the data base
+        #\ --(2) Insert to the data base--
         Update_Database.Update_database(self, connection_SF, Update_enable)
 
 
