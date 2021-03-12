@@ -199,7 +199,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
             #\ get the total number of data need to be update ot crawl
             expecting_CNT = Total_num - oldData_len
-            self.epecting_CNT = expecting_CNT
+            self.expecting_CNT = expecting_CNT
 
             #\ GUI display
             self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))

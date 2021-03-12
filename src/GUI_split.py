@@ -803,9 +803,9 @@ class MainPage(tk.Frame):
                 self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
 
             #\update the sub progressbar
-            if self.epecting_CNT != 0:
-                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.epecting_CNT)
-                self.progressbar_partial_label["text"] = f"({Dragonfly.DataCNT.value}/{self.epecting_CNT})"
+            if self.expecting_CNT != 0:
+                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.expecting_CNT)
+                self.progressbar_partial_label["text"] = f"({Dragonfly.DataCNT.value}/{self.expecting_CNT})"
 
 
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
@@ -930,15 +930,18 @@ class MainPage(tk.Frame):
         # s = ttk.Style()
         # s.theme_use('clam')
         # s.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
-        self.epecting_CNT = 0
+        self.SubProgressbarFrame = tk.Frame(self.NewWindow, padx=40, bg="white")
+        self.SubProgressbarFrame.pack(pady=10)
+        self.SubProgressBarVar = tk.StringVar(self.NewWindow, value="0/0")
+        self.progressbar_partial_label = tk.Label(self.SubProgressbarFrame, textvariable=self.SubProgressBarVar, bg="white")
+        self.progressbar_partial_label.pack(side=tk.RIGHT, padx=5)
+        self.expecting_CNT = 0
         self.pbVar_partial = tk.IntVar(self.NewWindow)
-        self.progressbar_partial = ttk.Progressbar(self.NewWindow, orient=tk.HORIZONTAL,
+        self.progressbar_partial = ttk.Progressbar(self.SubProgressbarFrame, orient=tk.HORIZONTAL,
                                                     phase=1, length=300, mode="determinate",
                                                     # style="red.Horizontal.TProgressbar",
                                                     variable=self.pbVar_partial, maximum=100)
-        self.progressbar_partial.pack(side="left")
-        self.progressbar_partial_label = tk.Label(self.NewWindow, text="", bg="white")
-        self.progressbar_partial_label.pack(side="left")
+        self.progressbar_partial.pack(side=tk.RIGHT, padx=5)
 
 
 

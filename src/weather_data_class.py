@@ -6,6 +6,7 @@ import Database_function
 
 #\ global lock for the MySQL
 MySQL_Lock = threading.Lock()
+Check_Lock = threading.Lock()
 
 #\ error log to be reported
 ErrorLog =  ""
@@ -25,17 +26,20 @@ class WeatherDataWorker(threading.Thread):
     self.KeyChange = False
 
 
-
+  #\ the callback function triggered by the thread start
   def run(self):
     global ErrorLog
 
     #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
     progressbar_portion = self.controller.progressbar_portion_calc()
 
+    #\ Get the check status
+    Check_Lock.acquire()
+    Check_status = Database_function.check_weather_data(self.controller, self.response)
+    Check_Lock.release()
+
     #\ check the weather request data is vaild or not
-    if Database_function.check_weather_data(self.controller, self.response):
-
-
+    if not Check_status:
 
       #\ request data format
       data = {"key": Index.weather_key[Index.key_cnt],
