@@ -6,6 +6,7 @@ import Database_function
 
 #\ global lock for the MySQL
 MySQL_Lock = threading.Lock()
+Check_Lock = threading.Lock()
 
 #\ error log to be reported
 ErrorLog =  ""
@@ -23,19 +24,23 @@ class WeatherDataWorker(threading.Thread):
     self.DB_species = DB_species
     self.weather_connection = weather_connection
     self.KeyChange = False
+    self.weather_r = None
 
 
-
+  #\ the callback function triggered by the thread start
   def run(self):
     global ErrorLog
 
     #\ The indicator for how many portion of the update will be, this var is to let the progressbar adjest by how many check button been selected.
     progressbar_portion = self.controller.progressbar_portion_calc()
 
+    #\ Get the check status
+    Check_Lock.acquire()
+    Check_status = Database_function.check_weather_data(self.controller, self.response)
+    Check_Lock.release()
+
     #\ check the weather request data is vaild or not
-    if Database_function.check_weather_data(self.controller, self.response):
-
-
+    if Check_status:
 
       #\ request data format
       data = {"key": Index.weather_key[Index.key_cnt],
@@ -44,53 +49,65 @@ class WeatherDataWorker(threading.Thread):
               "date" : self.response["Dates"],
               "enddate" : self.response["Dates"]
           }
+      print(data)
 
       try:
         #\ this is the API
         ######################################################################
-        weather_r = requests.post(url=Index.OnlineWeatherURL, data=data).json()
+        self.weather_r = requests.post(url=Index.OnlineWeatherURL, headers=Index.headers, data=data).json()
         #######################################################################
 
         #\ @ lock it to let only one get the authorization
         MySQL_Lock.acquire()
 
-        #\ count the request time
-        Index.request_cnt += 1
-        print("request counts: ", str(Index.request_cnt))
+        #\ overlimit
+        if self.weather_r != Index.WRE_API_over_limit:
 
-        #\ GUI display
-        self.controller.Info_FileName_label['text']  = Index.Species_key_fullname_E2C[self.DB_species]
-        self.controller.IStateLabel_text("request counts: "+ str(Index.request_cnt))
-        self.controller.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
-        self.controller.pbLabel_text()
-        self.controller.IFinishStateLabel_text(f"current key {Index.key_cnt} : {Index.weather_key[Index.key_cnt]}")
+          #\ count the request time
+          Index.request_cnt += 1
+          print("request counts: ", str(Index.request_cnt))
 
-
-        #\--- problem : if the noraml data will cause error here since there will be no such column or class or object
-        #\ check if the error occurred
-        # if weather_r["data"]["error"][0]["msg"] == Index.WRE_No_data_available:
-        #     continue
-        # else:
+          #\ GUI display
+          self.controller.Info_FileName_label['text']  = Index.Species_key_fullname_E2C[self.DB_species]
+          self.controller.IStateLabel_text("request counts: "+ str(Index.request_cnt))
+          self.controller.progressbar.step((100*progressbar_portion["weather_portion"]) / (len(Index.weather_key) * Index.weather_request_limit))
+          self.controller.pbLabel_text()
+          self.controller.IFinishStateLabel_text(f"current key {Index.key_cnt} : {Index.weather_key[Index.key_cnt]}")
 
 
-        #\ Extract the data, extract by hour
-        for data_seperate_time in weather_r["data"]["weather"][0]["hourly"]:
-            #\ select the corresponding hour
-            #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
-            respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
-            if int(self.response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
-                Database_function.update_weather_data(self.controller,
-                                                      self.DB_species,
-                                                      data_seperate_time,
-                                                      self.response["species_info_id"],
-                                                      self.weather_connection)
+          #\--- problem : if the noraml data will cause error here since there will be no such column or class or object
+          #\ check if the error occurred
+          # if weather_r["data"]["error"][0]["msg"] == Index.WRE_No_data_available:
+          #     continue
+          # else:
+
+
+          #\ Extract the data, extract by hour
+          for data_seperate_time in self.weather_r["data"]["weather"][0]["hourly"]:
+              #\ select the corresponding hour
+              #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
+              respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
+              if int(self.response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
+                  Database_function.update_weather_data(self.controller,
+                                                        self.DB_species,
+                                                        data_seperate_time,
+                                                        self.response["species_info_id"],
+                                                        self.weather_connection)
+        #\ overlimit
+        else:
+          self.errorLog()
 
       #\ something wrong with the weather api
       except:
-        ErrorLog = f"[warning] API warning : {weather_r}"
-        print(ErrorLog)
-        self.KeyChange = True
+        self.errorLog()
 
 
       #\ @ release the lock
       MySQL_Lock.release()
+
+
+  #\ error log
+  def errorLog(self):
+    ErrorLog = f"[warning] API warning : {self.weather_r}"
+    print(ErrorLog)
+    self.KeyChange = True
