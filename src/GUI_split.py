@@ -783,6 +783,21 @@ class MainPage(tk.Frame):
         self.Info_Name_label['text'] = ""
 
 
+    #\ update the sub-progressbar
+    #\ return the sub-progressbar label
+    def set_sub_progressbar(self)->str:
+        if self.update_section == "Save2File":
+            self.SpinLabelIndex += 1
+            return Index.SpinLabel[self.SpinLabelIndex % len(Index.SpinLabel)]
+        else:
+            if self.expecting_CNT != 0:
+                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.expecting_CNT)
+                return f"({Dragonfly.DataCNT.value}/{self.expecting_CNT})"
+            else:
+                return "(0/0)"
+
+
+
     #\ thread to update gif
     #\ also for update the update timer
     #\ the sub-progressbar will also included
@@ -802,11 +817,11 @@ class MainPage(tk.Frame):
                 milisec = delta_time.microseconds
                 self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
 
-            #\update the sub progressbar
-            if self.epecting_CNT != 0:
-                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.epecting_CNT)
+            #\update the sub progressbar for value and label
+            text = self.set_sub_progressbar()
+            self.progressbar_partial_label["text"] = text
 
-
+            #\ Update updating image
             self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
         else:
             self.loading_label.config(image=self.Load_image[10])
@@ -929,13 +944,23 @@ class MainPage(tk.Frame):
         # s = ttk.Style()
         # s.theme_use('clam')
         # s.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
-        self.epecting_CNT = 0
+        self.SubProgressbarFrame = tk.Frame(self.NewWindow, padx=40, bg="white")
+        self.SubProgressbarFrame.pack(pady=10)
+
+        self.expecting_CNT = 0
         self.pbVar_partial = tk.IntVar(self.NewWindow)
-        self.progressbar_partial = ttk.Progressbar(self.NewWindow, orient=tk.HORIZONTAL,
+        self.progressbar_partial = ttk.Progressbar(self.SubProgressbarFrame, orient=tk.HORIZONTAL,
                                                     phase=1, length=300, mode="determinate",
                                                     # style="red.Horizontal.TProgressbar",
                                                     variable=self.pbVar_partial, maximum=100)
-        self.progressbar_partial.pack()
+        self.progressbar_partial.pack(side=tk.LEFT, padx=5)
+        self.progressbar_partial_label = tk.Label(self.SubProgressbarFrame, text="0/0", bg="white")
+        self.progressbar_partial_label.pack(side=tk.RIGHT, padx=5)
+
+
+        #\sub progress bar spin label effect
+        self.update_section = ""
+        self.SpinLabelIndex = 0
 
 
 

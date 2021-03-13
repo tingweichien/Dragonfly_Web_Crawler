@@ -139,6 +139,8 @@ def update_weather_data(self, Table:str, data_seperate_time:dict, species_info_i
 #\ (G)et (W)eather (D)ata
 def GetWeatherDataThread(self, dataList, DB_species, weather_connection):
 
+    # print("start GetWeatherDataThread")
+
     #\ create the queue
     GWD_queue = queue.Queue()
 
@@ -147,10 +149,12 @@ def GetWeatherDataThread(self, dataList, DB_species, weather_connection):
     for num in range(len(dataList)):
         worker_list.append(weather_data_class.WeatherDataWorker(self, GWD_queue, num, dataList[num], DB_species, weather_connection))
 
+
     #\ start the thread
     WorkerLength = len(worker_list)
     for number in range(WorkerLength):
         worker_list[number].start()
+        #  worker_list[number].ThreadStart()
 
 
     #\ wait for the thread to join to show the result
@@ -182,6 +186,8 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str)->bool:
     weather_r = {}
     currentCNT = 0
     currentCNT_END = 0
+
+    print("start get_weather_data")
 
     #\ show the crawling species information
     self.Info_FileName_label['text']  = f'Current crawling --- {Index.Species_key_fullname_E2C[DB_species]} --- weather data'
@@ -219,9 +225,11 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str)->bool:
                     dataList = response_List[currentCNT : currentCNT_END]
                     GWD_return_status = GetWeatherDataThread(self, dataList, DB_species, weather_connection)
 
-                    #\ if false this might means APO key is out of date or reach calls per day.
+                    #\ if false this might means API key is out of date or reach calls per day.
                     if  GWD_return_status == False:
-                        return False
+                        print("GWD_return_status == False, then change key due to some error for the API")
+                        changekey_Info(self)
+
 
                     #\ break the while loop since the rest of the data have been overdated
                     if Index.WeatherTimeOverLimitStatus == Index.overtimelimit:
@@ -290,6 +298,7 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str)->bool:
                                                     weather_connection)
 
         except:
+            print("get_weather_data : change key")
             changekey_Info(self)
 
     #\ key had been run out
@@ -312,10 +321,14 @@ def changekey_Info(self):
 
 
 #\ check the data is vaild or not
+#\ @return :
+#\          False: something wrong
+#\          True : pass
 def check_weather_data(self, response)->bool:
 
     #\ somehow in multithread the key count will overflow
     if Index.key_cnt >= len(Index.weather_key):
+        print("check_weather_data : key count overflow")
         return False
 
     #\ check if the key is out of date
@@ -333,6 +346,7 @@ def check_weather_data(self, response)->bool:
 
                 #\ over the limit
                 else:
+                    print("check_weather_data : change key")
                     changekey_Info(self)
                     Index.request_cnt = 0
 
@@ -343,7 +357,7 @@ def check_weather_data(self, response)->bool:
 
         #\ if the the date time over the earliest date
         else:
-            print(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!\n')
+            # print(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!\n')
             self.IUpdateNumLabel_text(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!')
             Index.WeatherTimeOverLimitStatus = True
             return  False
