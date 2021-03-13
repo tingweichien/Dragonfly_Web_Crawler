@@ -1,1 +1,0 @@
-self.expecting_CNT

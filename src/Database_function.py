@@ -139,7 +139,7 @@ def update_weather_data(self, Table:str, data_seperate_time:dict, species_info_i
 #\ (G)et (W)eather (D)ata
 def GetWeatherDataThread(self, dataList, DB_species, weather_connection):
 
-    print("start GetWeatherDataThread")
+    # print("start GetWeatherDataThread")
 
     #\ create the queue
     GWD_queue = queue.Queue()
@@ -321,6 +321,9 @@ def changekey_Info(self):
 
 
 #\ check the data is vaild or not
+#\ @return :
+#\          False: something wrong
+#\          True : pass
 def check_weather_data(self, response)->bool:
 
     #\ somehow in multithread the key count will overflow
@@ -354,7 +357,7 @@ def check_weather_data(self, response)->bool:
 
         #\ if the the date time over the earliest date
         else:
-            print(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!\n')
+            # print(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!\n')
             self.IUpdateNumLabel_text(f'[warning] The date({response["Dates"]}) is over the limit date {Index.Weather_earliest_date}!!!!')
             Index.WeatherTimeOverLimitStatus = True
             return  False

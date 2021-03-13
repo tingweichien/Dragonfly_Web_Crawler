@@ -819,7 +819,6 @@ class MainPage(tk.Frame):
 
             #\update the sub progressbar for value and label
             text = self.set_sub_progressbar()
-            print(text)
             self.progressbar_partial_label["text"] = text
 
             #\ Update updating image
@@ -948,15 +947,15 @@ class MainPage(tk.Frame):
         self.SubProgressbarFrame = tk.Frame(self.NewWindow, padx=40, bg="white")
         self.SubProgressbarFrame.pack(pady=10)
 
-        self.progressbar_partial_label = tk.Label(self.SubProgressbarFrame, text="0/0", bg="white")
-        self.progressbar_partial_label.pack(side=tk.RIGHT, padx=5)
         self.expecting_CNT = 0
         self.pbVar_partial = tk.IntVar(self.NewWindow)
         self.progressbar_partial = ttk.Progressbar(self.SubProgressbarFrame, orient=tk.HORIZONTAL,
                                                     phase=1, length=300, mode="determinate",
                                                     # style="red.Horizontal.TProgressbar",
                                                     variable=self.pbVar_partial, maximum=100)
-        self.progressbar_partial.pack(side=tk.RIGHT, padx=5)
+        self.progressbar_partial.pack(side=tk.LEFT, padx=5)
+        self.progressbar_partial_label = tk.Label(self.SubProgressbarFrame, text="0/0", bg="white")
+        self.progressbar_partial_label.pack(side=tk.RIGHT, padx=5)
 
 
         #\sub progress bar spin label effect

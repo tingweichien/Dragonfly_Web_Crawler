@@ -739,6 +739,7 @@ weather_key = [ "2ee5762c23b4433a81b174850210103",
                 "2ee5762c23b4433a81b174850210103",
                 "13558b3b23d540e18af170642210203",
                 "979041b134fd4a7d8fa174537211203",
+                "298b3b375508494aa32163953211303",
                 ]
 OnlineWeatherURL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
 
@@ -747,11 +748,14 @@ weather_Key_expire_date = [date(2021, 4, 30),
                             date(2021, 4, 30),
                             date(2021, 5, 2),
                             date(2021, 5, 11),
+                            date(2021, 5, 12),
                             ]
 
 
 #\ Weather Request Error(WRE) code
 WRE_No_data_available = "There is no weather data available for the date provided." #\ the request date or place is not availabe somehow
+WRE_API_over_limit = "{'data': {'error': [{'msg': 'API key has reached calls per day allowed limit.'}]}\}"
+
 
 #\ weather api history date limit, the limit from the api server
 Weather_earliest_date = date(2008, 7, 1)
@@ -763,7 +767,8 @@ weather_request_limit = 500
 MaxQueueNum = 20
 
 #\ Enable or Disable weather multithreading
-weather_multithread = True #False
+weather_multithread = True
+# weather_multithread = False
 
 #\ over weather api oldest time limit
 overtimelimit = True
@@ -791,4 +796,4 @@ pb_showing_digit = 1
 
 
 #\ sub progressbar label effect
-SpinLabel = ["--", "\\", "|", "/"]
+SpinLabel = ["--", "  \\", "  |", "  /"]
