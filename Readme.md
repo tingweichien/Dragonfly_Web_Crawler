@@ -42,7 +42,7 @@
 - Execute the ```Dragonfly-Data.exe``` to run the program.
 ![start](./docs/image/program_result_picture/start.png)
 
-- Open ```Dragonfly-Data-debug.py``` and debug it.
+- Open ```Dragonfly-Data-debug.py``` or ```.\src\GUI_split.py``` debug it.
 
 ---
 
@@ -108,7 +108,6 @@
 
 ![Mainpage](https://i.imgur.com/inTKauJ.png)
 
-
 #### (4) ***Plot to Google map***
 
 ![Table](./docs/image/program_result_picture/Tablepng.png)
@@ -116,7 +115,7 @@
 
 #### (5) ***Save the data***
 
-![Updating](./docs/image/program_result_picture/Updatingpng.png)
+![Updating](https://i.imgur.com/D2vg3MQ.png)
 
 #### (6) ***Plot by matplotlib***
 
