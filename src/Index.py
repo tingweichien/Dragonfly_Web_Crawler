@@ -56,7 +56,12 @@ info_box_template = """
 ico_image_path = 'docs\\image\\dragonfly_ico.ico'
 
 #\ statement in the login page
-copyright_text = "Developed by Ting Wei Chien\n 2020/7/26"
+Developer = "Ting Wei Chien"
+Developer_date = "2020/7/26"
+copyright_text = "Developed by {Developer}\n {Developer_date}"
+
+#\ console print for the program start
+program_start_print = f'{"="*46}\nWelcome to the dragonfly data crawling program\nDate:\t{datetime.now()}\nCopyright:\tdeveloped by{Developer} from {Developer_date}\n{"="*46}'
 
 #\ update GIF
 updateGIF = "docs\\image\\LOAD.gif"
