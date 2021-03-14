@@ -102,7 +102,7 @@ class tkinterApp(tk.Tk):
             self.config(menu=self.menubar)
 
 
-        print(frame._name)
+        print(f'\n{"-"*28}\n| Current page\t{frame._name} |\n{"-"*28}\n')
         tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
         tk.Tk.wm_geometry(self, Index.MainPageGeometry)
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
@@ -312,7 +312,6 @@ class MainPage(tk.Frame):
             self.helpmenu.add_command(label="Help Index", command=self.donothing)
             self.helpmenu.add_command(label="About...", command=self.donothing)
             controller.menubar.add_cascade(label="Help", menu=self.helpmenu)
-
 
 
             #\ Label frame and label setting
@@ -585,8 +584,7 @@ class MainPage(tk.Frame):
 
 
             #\ ---grid---
-            #############
-
+            ###############################
             #\ ID Find
             self.APIKEY_label.grid(row=3)
             self.id_label.grid(row=4)
@@ -687,7 +685,8 @@ class MainPage(tk.Frame):
 
     #\ ID find
     def IDEnterButton(self, ID:str):
-        # CHECK IF THE USER ENTER THE id OR NOT
+        print("[Button] ID Find")
+        #\ CHECK IF THE USER ENTER THE id OR NOT
         if ID == '':
             messagebox.showwarning('Warning!!!','ID should not be empty')
             return
@@ -711,8 +710,9 @@ class MainPage(tk.Frame):
                 self.Show_on_map([_ID_find_result])
 
 
-    # \ Species find to plot info inthe table and plot on the map
+    # \ Species find to plot info in the table and plot on the map
     def SpeciesFindButton(self, var_family, var_species):
+        print("[Button] Specied Find")
         if self.VarDatacheckbox.get() == True:
             map_result_list = Save2File.ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[var_family] + "\\" + Index.Species_class_key[var_family] + Index.Species_key[var_species] + ".csv")
         else:
@@ -833,6 +833,7 @@ class MainPage(tk.Frame):
     #\ Var_weather_enable :　Update the weather data
     #\ Var_UpdatefWeb_enable : Update the data from web and save to the csv
     def start_button(self):
+        print("[Button] Start the Updating")
         self.start_time = datetime.now()
         def start_multithread():
             self.GIFcheck = True
@@ -992,6 +993,7 @@ class MainPage(tk.Frame):
     #\ Button to open pop up window for checkupdating
     #\ read the flow from here to the top of the method in this class
     def Save2FileButton(self):
+        print("[Button] Save to File Button")
         Index.limit_cnt = int(self.var_MC.get())
         print(f"limit count is {Index.limit_cnt}")
 
@@ -1251,6 +1253,7 @@ class MainPage(tk.Frame):
 
     #\ Plot by Matplotlib
     def MatplotlibPlotButton(self):
+        print("[Button] Matplotlib Plot Button")
         print(f"time start from {self.var_Time_start.get()} to {self.var_Time_end.get()}")
         print(self.Plot_var_species.get())
         PFD.PlotChart("Matplotlib",
@@ -1261,6 +1264,7 @@ class MainPage(tk.Frame):
 
     #\ Plot by Pyechart
     def PyechartsPlotButton(self):
+        print("[Button] Pyecharts Plot Button")
         PFD.PlotChart("Pyecharts",
                             Index.Species_key_fullname_C2E[self.Plot_var_species.get()],
                             [self.var_Time_start.get(), self.var_Time_end.get()]
@@ -1291,6 +1295,7 @@ class MainPage(tk.Frame):
 
     #\ gitHub open
     def Hub_callback(self, link:list):
+        print(f"[Web] open {link}")
         webbrowser.open(link)
 
 
@@ -1365,6 +1370,7 @@ class MainPage(tk.Frame):
 
 # Driver Code
 if __name__ == '__main__':
+    print(Index.program_start_print)
     app = tkinterApp()
     app.geometry(Index.Login_geometry)
 
