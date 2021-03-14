@@ -145,8 +145,8 @@ python file by just click the run.bat file . Although it works, it is quite stup
     ```
 
     - (3) In CMD type :
-    ```pyinstaller -F GUI_split.py --icon=.\image\dragonfly_ico.ico --additional-hooks-dir=hooks --clean (clean can be optional)```
-I also see the library that show my error and will hook the gmplot in the future, so that will be typing ```pip install -U pyinstaller-hooks-contrib``` solve all the problem
+      - ```pyinstaller -F GUI_split.py --icon=.\image\dragonfly_ico.ico --additional-hooks-dir=hooks --clean``` (clean can be optional)
+      - I also see the library that show my error and will hook the gmplot in the future, so that will be typing ```pip install -U pyinstaller-hooks-contrib``` solve all the problem
     - (4)reference: <https://github.com/pyinstaller/pyinstaller-hooks-contrib/issues/20>
 
 ## [2020/08/04]
@@ -407,19 +407,19 @@ reference :
 
 7. The structure of the chart
 
-* tab
-  * -- timeline
-      * -- grid
-        * -- map0
-        * -- bar0
-        * -- pie0
-    * -- timeline2
-      * worldcloud0
-    * -- timeline3
-      * grid_multi
-        * bar_multiA
-        * line_multiA
-    * -- table0
+- tab
+  - -- timeline
+    - -- grid
+      - -- map0
+      - -- bar0
+      - -- pie0
+    - -- timeline2
+      - worldcloud0
+    - -- timeline3
+      - grid_multi
+        - bar_multiA
+        - line_multiA
+    - -- table0
 
 8. referece :
 
@@ -746,3 +746,39 @@ reference :
 
 1. Add the function to display bg of updating section
     ![Updating section](https://i.imgur.com/Ers01FW.png)
+
+## [2021/03/14]
+
+1. Build release program by pyinstaller
+    - Remeber if the pyinstaller command is not recognized as command, then do the ```pyenv rehash``` again to let the scripts file refresh.
+    <https://github.com/pyenv-win/pyenv-win/issues/67>
+    ![pyenv rehash](https://i.imgur.com/7Zqi6DG.png)
+    - Command
+      - Not work command
+
+        ``` python
+        pyinstaller -F src\GUI_split.py --icon=.\docs\image\dragonfly_ico.ico --add-data="C:\Users\Admin\.pyenv\pyenv-win\versions\3.7.3\Lib\site-packages\pyecharts\render\templates\.;.\templates" --add-data="C:\Users\Admin\.pyenv\pyenv-win\versions\3.7.3\Lib\site-packages\pyecharts\datasets\.;.\datasets" --additional-hooks-dir=hooks --clean
+        ```
+
+      - Command
+        - Release mode:
+
+            ``` python
+            pyinstaller -F src\GUI_split.py --distpath="./" -n="Dragonfly-Data" --icon=.\docs\image\dragonfly_ico.ico --additional-hooks-dir=hooks -w --clean
+            ```
+
+        - Debug mode:
+
+            ```python
+            pyinstaller -F src\GUI_split.py --distpath="./" -n="Dragonfly-Data-debug" --icon=.\docs\image\dragonfly_ico.ico --additional-hooks-dir=hooks --clean
+            ```
+
+      - problem
+        - Reguired including the pyecharts
+            **Final Solution** : <https://www.cnblogs.com/LoveOpenSourceBoy/p/14192260.html>
+            (Other solution not work : <https://blog.csdn.net/u013586693/article/details/109455581>)
+            ![problem 2](https://i.imgur.com/J1kyfX0.png)
+
+        - The output .exe file path
+            **Solution** : <https://pyinstaller.readthedocs.io/en/stable/usage.html>
+            ![problem 4](https://i.imgur.com/EUXpKTG.png)
