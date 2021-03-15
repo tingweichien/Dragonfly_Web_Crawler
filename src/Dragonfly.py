@@ -8,18 +8,10 @@ import DataClass
 import re
 import Index
 from multiprocessing import Process, Pool, Value, Lock
-
 from typing import List
 import proxyscrape
 
 
-
-'''
-ErrorID = {
-    "Login_error": -1,
-    "ID_overflow": -2
-}
-'''
 
 # global
 session = requests.Session()
