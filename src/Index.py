@@ -18,8 +18,9 @@ mypassword = None
 
 
 #\ auto save account and password file
-Login_path = os.getenv('temp')
-Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
+#Login_path = os.getenv('temp')
+#Login_Filename = os.path.join(Login_path, 'Password_Account_info.txt')
+Login_Filename = "src/Password_Account_info.txt"
 
 
 ###################################################
