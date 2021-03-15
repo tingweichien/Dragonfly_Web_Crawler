@@ -23,6 +23,7 @@ import io
 from PIL import Image, ImageTk
 import random
 import time
+import base64
 
 
 
@@ -217,13 +218,29 @@ class LoginPage(tk.Frame):
             self.VarPwd.set(p)
 
 
+    #\ encrypt or decrypt the password
+    #\  PW : password to encrypt or decrypt
+    #\  type : select to encrypt or decrypt
+    def encrypt_decrypt_function(self, PW, type:str)->str:
+        if type == "encrypt":
+            return base64.b64encode(PW.encode("utf-8")).decode("utf-8")
+        elif type == "decrypt":
+            return base64.b64decode(PW).decode("utf-8")
+        else:
+            print("[Warning] no type specified in the encrypt_decrypt_function")
+
+
+
+
     #\ @@ 注意空格，不小心放在init method裡面
     #\ 嘗試自動填寫使用者名稱和密碼
     def Auto_Fill(self):
         try:
             with open(Index.Login_Filename) as fp:
                 n, p = fp.read().strip().split(',')
-                return [n, p]
+                NM = self.encrypt_decrypt_function(n, "decrypt")
+                PW = self.encrypt_decrypt_function(p, "decrypt")
+                return [NM, PW]
         except:
             return ['', '']
 
@@ -262,9 +279,13 @@ class LoginPage(tk.Frame):
             else:
                 Username = Index.myaccount
                 controller.show_frame(MainPage)
+
                 #\ and write the account and password to the Login_Filename
                 with open(Index.Login_Filename, 'w') as fp:
-                    fp.write(','.join((Index.myaccount, Index.mypassword)))
+                    account = self.encrypt_decrypt_function(Index.myaccount, "encrypt")
+                    password = self.encrypt_decrypt_function(Index.mypassword, "encrypt")
+                    # print(f"account, password = {account}, {password}")
+                    fp.write(','.join((account, password)))
 
 
     #\ the eye button that can hide the PW or show it

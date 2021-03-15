@@ -782,3 +782,12 @@ reference :
         - The output .exe file path
             **Solution** : <https://pyinstaller.readthedocs.io/en/stable/usage.html>
             ![problem 4](https://i.imgur.com/EUXpKTG.png)
+
+## [2021/03/16]
+
+1. Add the encrypt and decrypt function for the password
+
+2. reference
+   - <https://stackoverflow.com/questions/157938/hiding-a-password-in-a-python-script-insecure-obfuscation-only>
+   - <https://stackoverflow.com/questions/606191/convert-bytes-to-a-string>
+
