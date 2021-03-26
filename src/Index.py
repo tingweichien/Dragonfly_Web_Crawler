@@ -62,7 +62,7 @@ Developer_date = "2020/7/26"
 copyright_text = "Developed by {Developer}\n {Developer_date}"
 
 #\ console print for the program start
-program_start_print = f'{"="*46}\nWelcome to the dragonfly data crawling program\nDate:\t{datetime.now()}\nCopyright:\tdeveloped by{Developer} from {Developer_date}\n{"="*46}'
+program_start_print = f'{"="*55}\nWelcome to the dragonfly data crawling program\nDate:\t{datetime.now()}\nCopyright:\tdeveloped by {Developer} from {Developer_date}\n{"="*55}'
 
 #\ update GIF
 updateGIF = "docs\\image\\LOAD.gif"
@@ -478,7 +478,9 @@ Species_class_key_dragonfly = {
 }
 
 Species_class_key = {**Species_class_key_damselfly, **Species_class_key_dragonfly}
+#\ 科別中文
 Species_Family_Name = list(Species_class_key.keys())
+#\ 科別英文
 Species_Family_Name_E = list(Species_class_key.values())
 
 

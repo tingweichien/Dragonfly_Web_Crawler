@@ -71,9 +71,11 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                         CSVData_org = csv.DictReader(r)
                         CSVData = [line for line in CSVData_org]
                         currentData_Num = Database_function.read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
+                        Data_update_Num = len(CSVData) - currentData_Num[0]['COUNT(*)']
+                        print(f"start from 0 ~ {Data_update_Num}")
                         insertdata_SI = []
                         #\ read the database to check the current data number and insert the data from csv file start from it.
-                        for SI in CSVData[currentData_Num: ]:
+                        for SI in CSVData[:Data_update_Num]:
                             # insert data
                             if SI['Latitude'] == '' and SI['Longitude'] == '':
                                 insertdata_SI = (Id + 1, Index.Species_key[Sp], Sp, SI['ID'], SI['User'], SI['Date'], SI['Time'], SI['City'], SI['District'], SI['Place'])

@@ -103,7 +103,11 @@ class WeatherDataWorker(threading.Thread):
 
 
       #\ @ release the lock
-      MySQL_Lock.release()
+      try:
+        MySQL_Lock.release()
+      except:
+        # workaround for some error that not able to relesase the lock since it might not have request the lock before
+        print("[Warning] Release MySQL_Lock wrong")
 
 
   #\ error log

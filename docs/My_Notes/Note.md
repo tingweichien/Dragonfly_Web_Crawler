@@ -746,6 +746,9 @@ reference :
 
 1. Add the function to display bg of updating section
     ![Updating section](https://i.imgur.com/Ers01FW.png)
+    ![updating section - 2](https://i.imgur.com/rTNEyS2.png)  
+
+
 
 ## [2021/03/14]
 

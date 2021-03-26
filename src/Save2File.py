@@ -375,14 +375,14 @@ def parse_all(self):
 
 #\ the parsing all function with the GUI effect
 def parse_all_dragonfly_data(self):
-    print("\------------------------------------------------------")
+    print("------------------------------------------------------")
     print("\n[Update] --Start Crawling dragonfly daTa from web--\n")
     self.checkbox_UpdatefWeb["fg"] = self.updating_fg_color
     self.checkbox_UpdatefWeb["bg"] = self.updating_bg_color
     parse_all(self)
     self.checkbox_UpdatefWeb["bg"] = self.finished_bg_color
     print("\n[Update] --Finished Crawling dragonfly daTa from web--\n")
-    print("\------------------------------------------------------")
+    print("------------------------------------------------------")
 
 
 
