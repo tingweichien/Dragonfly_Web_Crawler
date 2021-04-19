@@ -1,5 +1,5 @@
 import threading
-import queue
+import Save2File
 import Index
 import requests
 import Database_function
@@ -15,16 +15,18 @@ ErrorLog =  ""
 
 # Worker 類別，負責處理資料
 class WeatherDataWorker(threading.Thread):
-  def __init__(self, controller, queue, num, response, DB_species, weather_connection):
+  def __init__(self, controller, queue, num, DataList, DB_species, weather_connection, CsvOldData, file_path):
     threading.Thread.__init__(self)
-    self.response = response
+    self.DataList = DataList #\ [species_info_id, Dates, HOUR(Times), Latitude, Longitude]
     self.queue = queue
-    self.num = num
+    self.Workernumber = num #\ number of the worker
     self.controller = controller
     self.DB_species = DB_species
     self.weather_connection = weather_connection
     self.KeyChange = False
     self.weather_r = None
+    self.CsvOldData = CsvOldData
+    self.CsvFilePath = file_path
 
 
   #\ the callback function triggered by the thread start
@@ -36,7 +38,7 @@ class WeatherDataWorker(threading.Thread):
 
     #\ Get the check status
     Check_Lock.acquire()
-    Check_status = Database_function.check_weather_data(self.controller, self.response)
+    Check_status = Database_function.check_weather_data(self.controller, self.DataList)
     Check_Lock.release()
 
     #\ check the weather request data is vaild or not
@@ -44,10 +46,10 @@ class WeatherDataWorker(threading.Thread):
 
       #\ request data format
       data = {"key": Index.weather_key[Index.key_cnt],
-              "q" : f'{self.response["Latitude"]}, {self.response["Longitude"]}',
+              "q" : f'{self.DataList["Latitude"]}, {self.DataList["Longitude"]}',
               "format" : "json",
-              "date" : self.response["Dates"],
-              "enddate" : self.response["Dates"]
+              "date" : self.DataList["Dates"],
+              "enddate" : self.DataList["Dates"]
           }
       print(data)
 
@@ -87,12 +89,33 @@ class WeatherDataWorker(threading.Thread):
               #\ select the corresponding hour
               #\ remove the minutes. i.e. "1800" --> "18", get it from counting back
               respponse_hour = int(data_seperate_time["time"][:-2]) if data_seperate_time["time"] != "0" else 0
-              if int(self.response["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the response is in three hours interval
+              if int(self.DataList["HOUR(Times)"]) in range(respponse_hour, respponse_hour+3): #\ the DataList is in three hours interval
+
+                  #\ value to update
+                  value = f"""'{{"tempC" : { data_seperate_time["tempC"].replace(" ", "") }, \
+"FeelsLikeC" : { data_seperate_time["FeelsLikeC"].replace(" ", "") }, \
+"windspeedKmph" : { data_seperate_time["windspeedKmph"].replace(" ", "") }, \
+"winddirDegree" : { data_seperate_time["winddirDegree"].replace(" ", "") }, \
+"winddir16Point" : "{ data_seperate_time["winddir16Point"].replace(" ", "") }", \
+"humidity" : { data_seperate_time["humidity"].replace(" ", "") }}}'"""
+
+                  #\ Update to MySQL
                   Database_function.update_weather_data(self.controller,
                                                         self.DB_species,
-                                                        data_seperate_time,
-                                                        self.response["species_info_id"],
+                                                        value,
+                                                        self.DataList["species_info_id"],
                                                         self.weather_connection)
+                  #\ Update to CSV
+                  status = Save2File.Update2File(self.CsvFilePath,
+                                                 self.CsvOldData,
+                                                "update content",
+                                                self.DataList["species_info_id"],
+                                                Index.WeatherCsvIndex,
+                                                value)
+                  if status == False:
+                    print("[Warning] Weather update to csv failed")
+                    break
+
         #\ overlimit
         else:
           self.errorLog()
@@ -112,6 +135,6 @@ class WeatherDataWorker(threading.Thread):
 
   #\ error log
   def errorLog(self):
-    ErrorLog = f"[warning] API warning : {self.weather_r}"
+    ErrorLog = f"[Warning] API warning\n : {self.weather_r}"
     print(ErrorLog)
     self.KeyChange = True

@@ -1,4 +1,7 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
+Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
+籪富,蔼籪富,74819,10:00:00,2021-04-01,Leo,堕カ,匪跋,甉,142,24.902255811580016,121.31772994995117,
+籪富,蔼籪富,76204,11:25:00,2021-03-25,skink,﹜孽郡,繷马,敌矗芠褐緼爵,188,24.874056008808545,121.80696487426758,
+籪富,蔼籪富,76034,12:28:00,2021-03-19,skink,穝カ,瞏跋,睲睤紈,288,24.993361076999378,121.61797642707825,
 籪富,蔼籪富,73289,10:11:00,2020-08-21,skink,穝λ郡,闽﹁马,繟ń繟祇爵,241,24.775513050757304,121.23855113983154,
 籪富,蔼籪富,73347,09:38:00,2020-08-21,skink,穝λ郡,闽﹁马,关爵,218,24.769766385811515,121.22445240617708,
 籪富,蔼籪富,67353,08:06:00,2020-07-31,cclin,穝λ郡,闽﹁马,关爵,222,24.769804507077055,121.22456073760985,

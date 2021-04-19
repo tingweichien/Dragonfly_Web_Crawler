@@ -746,7 +746,7 @@ reference :
 
 1. Add the function to display bg of updating section
     ![Updating section](https://i.imgur.com/Ers01FW.png)
-    ![updating section - 2](https://i.imgur.com/rTNEyS2.png)  
+    ![updating section - 2](https://i.imgur.com/rTNEyS2.png)
 
 
 
@@ -794,3 +794,64 @@ reference :
    - <https://stackoverflow.com/questions/157938/hiding-a-password-in-a-python-script-insecure-obfuscation-only>
    - <https://stackoverflow.com/questions/606191/convert-bytes-to-a-string>
 
+## [2021/3/28]
+
+1. query for MySql
+    ```sql
+    SELECT * FROM dragonfly_db.calopterygidae01 order by Dates DESC , Times DESC;
+
+    ALTER TABLE dragonfly_db.calopterygidae01 DROP species_info_id;
+
+    ALTER TABLE dragonfly_db.calopterygidae01 order by Dates DESC , Times DESC;
+
+    SELECT * FROM dragonfly_db.calopterygidae01;
+
+    ALTER TABLE dragonfly_db.calopterygidae01 AUTO_INCREMENT = 1;
+
+    ALTER TABLE dragonfly_db.calopterygidae01 ADD species_info_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+    DELETE t1 FROM dragonfly_db.calopterygidae01 t1 INNER JOIN dragonfly_db.calopterygidae01 t2 WHERE t1.species_info_id > t2.species_info_id AND t1.ID = t2.ID;
+
+    SELECT *, COUNT(ID) FROM dragonfly_db.calopterygidae01 GROUP BY ID HAVING COUNT(ID)>1;
+
+    ALTER TABLE dragonfly_db.calopterygidae01 ADD CONSTRAINT ID_constraint UNIQUE(ID);
+
+    INSERT INTO dragonfly_db.calopterygidae01 (species_family_id, species_id, Species_Name, ID, recorder, Dates, Times, City, District, Altitude, Place, Latitude, Longitude)VALUES(1, 1, '白痣珈蟌', 75886, 'skink', '2021-03-14', '12:52:00', '宜蘭縣', '頭城鎮', 93, '靈山寺', 24.87350606082531, 121.81111693382263) ON DUPLICATE KEY UPDATE ID=ID;
+    ```
+
+- Reference :
+
+  - Delete duplicate
+    - <https://www.mysqltutorial.org/mysql-delete-duplicate-rows/>
+    - <https://www.mysqltutorial.org/mysql-delete-join/>
+  - Safe update
+    - <https://stackoverflow.com/questions/11448068/mysql-error-code-1175-during-update-in-mysql-workbench>
+  - Sorting by date & time in descending order
+    - <https://stackoverflow.com/questions/9511882/sorting-by-date-time-in-descending-order>
+    - <https://stackoverflow.com/questions/514943/order-a-mysql-table-by-two-columns>
+    - <https://stackoverflow.com/questions/29781052/order-by-ignored-as-there-is-a-user-defined-clustered-index-in-the-table>
+  - Re-arrange table
+    - <https://stackoverflow.com/questions/740358/reorder-reset-auto-increment-primary-key>
+  - Insert if not exist
+    - <https://stackoverflow.com/questions/1361340/how-to-insert-if-not-exists-in-mysql>
+    - <https://www.mysqltutorial.org/mysql-unique-constraint/>
+
+## [2021/4/20]
+
+1. Finally, fix the bug for removing the csv file content and not able to update weather data.
+
+2. Add retry for the MySQL database connection in case it assert the error that cannot connect to the database
+
+3. Add the chardet to detect the file encoding type in case of reading in wrong encoding type
+
+    ```python
+    def DetectFileEncoding(File_path:str) -> str:
+        with open(File_path, "rb") as r:
+            result = chardet.detect(r.read(10000))
+            print(f"[Info] {File_path} is encoding in {result['encoding']} type")
+            return result['encoding']
+    ```
+
+4. Rearrange the info id in the MySQL database to let the newest data get the first id
+
+5. Require to re-update the weather data

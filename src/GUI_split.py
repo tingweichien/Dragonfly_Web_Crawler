@@ -860,7 +860,15 @@ class MainPage(tk.Frame):
             self.GIFcheck = True
             self.Info_Name_label['text'] = "Updating~"
             self.NewWindow.title = "Update data - updating~"
-            Save2File.savefile(self, Index.parse_type, [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()])
+
+            #\ Main updating function
+            ##################################################################################################################
+            Save2File.savefile( self,
+                                Index.parse_type,
+                                [self.Var_MySQL_enable.get(), self.Var_weather_enable.get(), self.Var_UpdatefWeb_enable.get()]
+                                )
+            ##################################################################################################################
+
             self.GIFcheck = False
 
         #\ disable the button1
