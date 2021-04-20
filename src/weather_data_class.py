@@ -59,6 +59,10 @@ class WeatherDataWorker(threading.Thread):
         self.weather_r = requests.post(url=Index.OnlineWeatherURL, headers=Index.headers, data=data).json()
         #######################################################################
 
+        if self.weather_r == "None":
+          print("[warning] weather response none")
+          return
+
         #\ @ lock it to let only one get the authorization
         MySQL_Lock.acquire()
 
@@ -135,6 +139,7 @@ class WeatherDataWorker(threading.Thread):
 
   #\ error log
   def errorLog(self):
-    ErrorLog = f"[Warning] API warning\n : {self.weather_r}"
+    ErrorLog = f"[Warning] API warning : \n {self.weather_r}"
     print(ErrorLog)
     self.KeyChange = True
+    # raise Exception

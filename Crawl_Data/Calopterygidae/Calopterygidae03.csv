@@ -1,2 +1,2 @@
-﻿Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
-珈蟌科,綠翅珈蟌,72388,2020-11-19,09:58:00,skink,雲林縣,古坑鄉,樟湖村石橋,604,23.60970821097264,120.63841223716736,
+﻿Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
+珈蟌科,綠翅珈蟌,72388,2020-11-19,09:58:00,skink,雲林縣,古坑鄉,樟湖村石橋,604,23.60970821097264,120.63841223716736,,"'{""tempC"" : 27, ""FeelsLikeC"" : 28, ""windspeedKmph"" : 7, ""winddirDegree"" : 126, ""winddir16Point"" : ""SE"", ""humidity"" : 55}'"

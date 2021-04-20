@@ -16,10 +16,16 @@ weather_connection = None
 
 
 #\ execute query
-def ExecuteQuery(connection:mysql.connector, query:str):
-    cursor = connection.cursor()
-    cursor.execute(query)
-    connection.commit()
+def ExecuteQuery(connection:mysql.connector, query:str, multi_state=False):
+    try:
+        cursor = connection.cursor()
+        if multi_state == True:
+            cursor.execute(query, multi=True)
+        else:
+            cursor.execute(query)
+        connection.commit()
+    except Error as e:
+        print(f"[warning][ExecuteQuery] MySQL error'{e}' occurred")
 
 
 
@@ -31,10 +37,11 @@ def create_connection(host_name, user_name, user_password, DB_name) -> mysql.con
             host=host_name,
             user=user_name,
             passwd=user_password,
-            database=DB_name)
+            database=DB_name,
+            raise_on_warnings=True)
         print("connect to MySQL DB successful")
     except Error as e:
-        print(f"[warning] The error'{e}' occurred")
+        print(f"[warning][create_connection] MySQL error'{e}' occurred")
 
     return connection
 
@@ -45,7 +52,7 @@ def create_database(connection:mysql.connector, query:str):
         cursor.execute(query)
         print("Database created successfully")
     except Error as e:
-        print(f"[warning] The error '{e}' occurred")
+        print(f"[warning][create_database] MySQL error '{e}' occurred")
 
 
 #\ create Table
@@ -56,7 +63,7 @@ def create_table(connection:mysql.connector, query:str):
         connection.commit()
         print("Query executed successfully")
     except Error as e:
-        print(f"[warning] The error '{e}' occurred")
+        print(f"[warning][create_table] MySQL error '{e}' occurred")
 
 
 #\ insert
@@ -82,7 +89,7 @@ def read_data(connection:mysql.connector, query:str)->List[dict]:
         # for row in result:
         #     print(row)
     except:
-        print("[warning] The species might not have any recorder")
+        print("[warning][read_data] The species might not have any recorder in MySQL")
     return result
 
 
@@ -101,7 +108,7 @@ def ALTER_TABLE(connection: mysql.connector, column_name:str, column_type:str ,T
         print(f"Create the {column_name} column ")
 
     except:
-        print(f"The {column_name} column has been created")
+        print(f"The {column_name} column has been created in MySQL")
 
 
 #\ Delete the duplicate column in the database
@@ -142,7 +149,7 @@ def update_weather_data(self, Table:str, value:str, species_info_id:int, weather
             print("--- Update weather data to database successfully ---")
             no_retry = False
         except Error as e:
-            print(f"[Warning] The error '{e}' occurred")
+            print(f"[Warning][update_weather_data] MySQL error '{e}' occurred")
             retry_cnt += 1
             print(f"Retry : {retry_cnt}")
             create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
@@ -280,7 +287,7 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str, CsvOldDat
     print(f'Current crawling --- {Index.Species_key_fullname_E2C[DB_species]} --- weather data')
 
     #\ create the new column
-    # ALTER_TABLE(weather_connection, "weather", "JSON", DB_species)
+    ALTER_TABLE(weather_connection, "Weather", "JSON", DB_species)
 
     #\ if the key is not available or request meets the limit then change the key
     if Index.key_cnt < len(Index.weather_key) :
@@ -418,7 +425,7 @@ def ReArrangePrimaryKey(connection:mysql.connector, Species_table_name:str, colu
             + ReOrderTable_query(Species_table_name, Date_Order_query)\
             + AlertTable_query(Species_table_name)\
             + AlertTableIncrease_query(Species_table_name, column_name)
-    ExecuteQuery(connection, query)
+    ExecuteQuery(connection, query, True)
 
 
 #\ Add constraint
@@ -463,6 +470,7 @@ create_species_info_table_end = """(species_info_id INT AUTO_INCREMENT,
     Place TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     Latitude DOUBLE,
     Longitude DOUBLE,
+    Weather JSON,
     FOREIGN KEY (species_id) REFERENCES Species_table(species_id),
     FOREIGN KEY (species_family_id) REFERENCES Species_Family_table(species_family_id),
     PRIMARY KEY (species_info_id)

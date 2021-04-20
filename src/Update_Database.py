@@ -59,8 +59,8 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             Species_table_name = Index.Species_class_key[S] + Index.Species_key[Sp]
             ##########################################################################
 
-            #\ change the table name to new name
-            Database_function.update_header(connection, Species_table_name)
+            #\ [Temp fix] Change the table name to new name
+            #Database_function.update_header(connection, Species_table_name)
 
             #\ (1)Insert the data to the MySQL database from excel file
             if Update_MySQL:
@@ -73,11 +73,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             #\ (2)This is to update the weather information from World weather online
             if Update_weather:
 
-                #\ +--------+
-                #\ | Fixing | -- > put the temp fix here
-                #\ +--------+
-
-                #\ Add a new weather column
+                #\ [Temp fix] Add a new weather column in csv
                 file_path = f'{Index.folder_all_crawl_data}{Index.Species_class_key[S]}\\{Species_table_name}.csv'
                 CsvOldData, _, _, _, _ = Save2File.Read_check_File(file_path)
                 if len(CsvOldData) != 0:
@@ -88,9 +84,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                                                 _,
                                                 Index.WeatherCsvIndex,
                                                 "weather")
-                #\ +---------------+
-                #\ | End of Fixing |
-                #\ +---------------+
+                #\ [Temp fix] end
 
 
                 #\ The weather data update main function
@@ -108,21 +102,16 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             #\ re-arrange the primary key after inserting
             print("[Info] re-arrange primary key")
             Database_function.ReArrangePrimaryKey(connection, Species_table_name, Database_function.Primary_Key)
+            print("[Info] Finished re-arranging primary key")
 
-            #\ +--------+
-            #\ | Fixing | -- > put the temp fix here
-            #\ +--------+
-
-            #\ Delete duplicate column in MySQL if exist
-            print("[Fixing] Delete duplicate")
-            Database_function.Delete_duplicate(connection, Species_table_name)
-
-            #\ +---------------+
-            #\ | End of Fixing |
-            #\ +---------------+
+            #\ [Temp fix] Delete duplicate column in MySQL if exist
+            # print("[Fixing] Delete duplicate")
+            # Database_function.Delete_duplicate(connection, Species_table_name)
+            # print("[Fixing] Finishing Delete duplicate")
+            #\ [Temp fix] end
 
         except:
-            None
+            raise Exception
 
 
     #\ End of the updating

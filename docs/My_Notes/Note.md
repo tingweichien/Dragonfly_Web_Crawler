@@ -855,3 +855,15 @@ reference :
 4. Rearrange the info id in the MySQL database to let the newest data get the first id
 
 5. Require to re-update the weather data
+
+## [2021/4/21]
+
+1. **Use multi=True when executing multiple statements** error
+    solution :
+
+    ```python
+    conn  = session.connection().connection
+    cursor = conn.cursor()  # get mysql db-api cursor
+    cursor.execute(sql, multi=True)
+    ```
+    https://stackoverflow.com/questions/19783404/enable-executing-multiple-statements-while-execution-via-sqlalchemy    
