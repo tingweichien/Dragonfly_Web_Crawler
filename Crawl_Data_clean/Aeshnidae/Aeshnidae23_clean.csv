@@ -1,4 +1,4 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
+Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
 富,鑘富,65025,12:00:00,2020-06-28,Leo,浆郡,ドń马,皑び狶,1045,23.408711462247314,121.41464384129904,
 富,鑘富,35114,09:26:00,2018-05-27,cclin,﹜孽郡,秏,榜,806,24.765905081367166,121.60873589129642,
 富,鑘富,34458,08:14:00,2018-05-16,钠,﹜孽郡,秏,榜,808,24.767300847959106,121.60796642303467,

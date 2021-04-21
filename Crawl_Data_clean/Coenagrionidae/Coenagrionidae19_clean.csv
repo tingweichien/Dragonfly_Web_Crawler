@@ -1,4 +1,4 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
+Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
 細蟌科,丹頂細蟌,65453,09:04:00,2020-07-04,skink,連江縣,南竿鄉,津沙水庫,63,26.145672517882684,119.9156641960144,
 細蟌科,丹頂細蟌,53103,10:00:00,2019-08-20,skink,金門縣,金湖鎮,金門植物園,71,24.454845691714794,118.39746952056885,
 細蟌科,丹頂細蟌,53053,10:15:00,2019-08-19,skink,金門縣,金湖鎮,金門植物園,71,24.454845691714794,118.39746952056885,

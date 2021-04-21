@@ -1,4 +1,5 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
+Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
+珈蟌科,中華珈蟌指名亞種,76251,13:27:00,2021-03-28,skink,新竹縣,尖石鄉,水田林道0.7公里溪流,741,24.751410690835883,121.27493262290955,
 珈蟌科,中華珈蟌指名亞種,71692,12:22:00,2020-10-29,skink,台北市,文山區,臺北市立動物園昆蟲館,65,24.993724516679826,121.58088952302933,
 珈蟌科,中華珈蟌指名亞種,75432,12:37:00,2020-10-06,ying-o hsiung,新竹縣,峨眉鄉,石硬子,220,24.668034486129976,121.04550182819366,
 珈蟌科,中華珈蟌指名亞種,70998,09:25:00,2020-10-03,lyajhoo,宜蘭縣,員山鄉,冷埤,424,24.72582239187035,121.64804935455321,

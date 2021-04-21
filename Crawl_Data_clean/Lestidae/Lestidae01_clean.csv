@@ -1,4 +1,5 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
+Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
+絲蟌科,青紋絲蟌,76193,09:55:00,2021-03-28,ying-o hsiung,桃園市,復興區,東眼山森林遊樂區,906,24.831323116365553,121.40990138053894,
 絲蟌科,青紋絲蟌,75477,10:38:00,2021-02-21,skink,宜蘭縣,大同鄉,臺七甲2公里八重櫻花林(櫻緣青),400,24.586417169866404,121.50104284286498,
 絲蟌科,青紋絲蟌,75482,11:27:00,2021-02-21,skink,宜蘭縣,大同鄉,北橫公路80.8公里,748,24.60683502963371,121.48862957954407,
 絲蟌科,青紋絲蟌,72493,11:30:00,2020-11-22,吳登立,雲林縣,古坑鄉,石壁山區,1622,23.616835330927337,120.70571959018707,

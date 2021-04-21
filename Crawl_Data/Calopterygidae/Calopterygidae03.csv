@@ -1,2 +1,2 @@
-Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description
-ÏÉîe¬ì,ºñ¯ÍÏÉîe,72388,2020-11-19,09:58:00,skink,¶³ªL¿¤,¥j§|¶m,¼Ì´ò§ø¥Û¾ô,604,23.60970821097264,120.63841223716736,
+ï»¿Species Family,Species,ID,Date,Time,User,City,District,Place,Altitude,Latitude,Longitude,Description,weather
+çˆèŸŒç§‘,ç¶ ç¿…çˆèŸŒ,72388,2020-11-19,09:58:00,skink,é›²æ—ç¸£,å¤å‘é„‰,æ¨Ÿæ¹–æ‘çŸ³æ©‹,604,23.60970821097264,120.63841223716736,,"'{""tempC"" : 27, ""FeelsLikeC"" : 28, ""windspeedKmph"" : 7, ""winddirDegree"" : 126, ""winddir16Point"" : ""SE"", ""humidity"" : 55}'"
