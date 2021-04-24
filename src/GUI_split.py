@@ -20,7 +20,7 @@ from dateutil.relativedelta import relativedelta
 import Plot_from_database as PFD
 from urllib.request import urlopen
 import io
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageSequence
 import random
 import time
 import base64
@@ -36,7 +36,8 @@ Username = ''
 current_dropdown_index = 0
 Login_Response = 0
 Login_state = False
-
+Finish_state = False
+Initial_state = True
 
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
@@ -77,7 +78,7 @@ class tkinterApp(tk.Tk):
 
             # iterating through a tuple consisting
             # of the different page layouts
-            for F in (LoginPage, MainPage, SettingPage):
+            for F in (LoginPage, WaitPage, MainPage, SettingPage):
 
                 frame = F(container, self)
 
@@ -90,22 +91,28 @@ class tkinterApp(tk.Tk):
 
             self.show_frame(LoginPage)
 
+
     #\ to display the current frame passed as
     #\ parameter
     def show_frame(self, cont):
         global Username
         frame = self.frames[cont]
+        print(f'\n{"-"*28}\n| Current page\t{frame._name} |\n{"-"*28}\n')
 
         #\ menu setting
         if frame._name == "!loginpage":
             self.config(menu=self.Emptymenubar)
+
+        elif frame._name == "!waitpage":
+            self.config(menu=self.Emptymenubar)
+            tk.Tk.wm_title(self, "logging~~")
+            tk.Tk.wm_geometry(self, Index.Waiting_geometry)
+
         else:
             self.config(menu=self.menubar)
+            tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
+            tk.Tk.wm_geometry(self, Index.MainPageGeometry)
 
-
-        print(f'\n{"-"*28}\n| Current page\t{frame._name} |\n{"-"*28}\n')
-        tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
-        tk.Tk.wm_geometry(self, Index.MainPageGeometry)
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
         frame.tkraise()
 
@@ -261,11 +268,14 @@ class LoginPage(tk.Frame):
 
     #\ Login action
     def LoginButtonFunc(self, controller):
-        threading.Thread(target=self.LoginButtonFuncthread(controller)).start()
+        global Initial_state
+        Initial_state = False
+        controller.show_frame(WaitPage)
+        # self.LoginButtonFuncthread(controller) #######ERROR##############
 
     #\ Login thread
     def LoginButtonFuncthread(self, controller):
-        global Login_Response, Login_state, Username
+        global Login_Response, Login_state, Username, Finish_state
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
         if self.Check_empty() > 0:
@@ -286,6 +296,7 @@ class LoginPage(tk.Frame):
                     password = self.encrypt_decrypt_function(Index.mypassword, "encrypt")
                     # print(f"account, password = {account}, {password}")
                     fp.write(','.join((account, password)))
+                    Finish_state = True
 
 
     #\ the eye button that can hide the PW or show it
@@ -298,6 +309,43 @@ class LoginPage(tk.Frame):
             self.passwordEntry.config(show="*")
             self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
             self.viewcheck.set(True)
+
+
+
+
+
+#\ --- Waiting Page ---
+class WaitPage(tk.Frame):
+    def __init__(self, parent, controller):
+        if __name__ == '__main__':
+            tk.Frame.__init__(self, parent, bg="white")
+            # w, h = Index.Waiting_geometry.split("x")
+            # img_file = Image.open(Index.Image_path + "\\waiting.gif")
+            # img_file = img_file.resize((int(w), int(h)), Image.ANTIALIAS)
+
+            #\ Check the website to see how many frame it is https://ezgif.com/speed/ezgif-6-c8049cd1d3fa.gif
+            self.waiting_image_frame = [tk.PhotoImage(file=Index.waitingframeGIF, format = 'gif -index %i' %(i)) for i in range(1, Index.GIFMAXFRAME_waiting_frame)]
+            self.waiting_image_Label = tk.Label(self, image=self.waiting_image_frame[0], bg="black")
+            self.ind = 0 #\ image
+            self.waiting_image_Label.pack()
+            self.run_waiting_image()
+
+
+    def run_waiting_image(self):
+        if (Initial_state):
+            pass
+        elif (Finish_state) :
+            return
+        else:
+            self.ind += 1
+            self.ind %= (Index.GIFMAXFRAME_waiting_frame-1)
+            self.waiting_image_Label.configure(image=self.waiting_image_frame[self.ind])
+            print(f"update waiting image, ind={self.ind}")
+        self.after(int(Index.waitingframe_gif_change_time*1000), self.run_waiting_image)
+
+
+
+
 
 
 
@@ -1382,15 +1430,18 @@ class MainPage(tk.Frame):
 
     #\ update image thread to call the finction again by using after function
     def update_img_thread(self):
-        if (self.init_while):
-            #\ blending the picture in another thread
-            threading.Thread(target=self.blending_img()).start()
-
-        #\ for init
+        if (Initial_state):
+            pass
         else:
-            self.tk_image  = tk.PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
-            self.init_while = True
-            self.imglabel.config(image=self.tk_image)
+            if (self.init_while):
+                #\ blending the picture in another thread
+                threading.Thread(target=self.blending_img()).start()
+
+            #\ for init
+            else:
+                self.tk_image  = tk.PhotoImage(file = Index.Image_path + "\\dragonfly_picture.gif")
+                self.init_while = True
+                self.imglabel.config(image=self.tk_image)
 
         #\ rerun the function every XXX second
         self.after(Index.img_change_time*1000, self.update_img_thread)
@@ -1400,6 +1451,7 @@ class MainPage(tk.Frame):
 # Driver Code
 if __name__ == '__main__':
     print(Index.program_start_print)
+
     app = tkinterApp()
     app.geometry(Index.Login_geometry)
 
@@ -1407,8 +1459,8 @@ if __name__ == '__main__':
     app.title(" Please Login")
 
     #\ Specify the style1
-    style = ThemedStyle(app)
-    style.set_theme("xpnative")
+    # style = ThemedStyle(app)
+    # style.set_theme("xpnative")
 
     #\ Let the main loop running
     app.mainloop()
