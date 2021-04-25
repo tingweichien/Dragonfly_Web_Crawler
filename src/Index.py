@@ -26,6 +26,7 @@ Login_Filename = "src/Password_Account_info.txt"
 ###################################################
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
+Waiting_geometry = "300x330"
 MainPageGeometry = "380x680"
 updateWinGeometry = "600x420"
 
@@ -248,6 +249,13 @@ TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species
 #\ progress window
 #\ state the max frame for the LOAD gif
 GIFMAXFRAME = 80
+
+
+#\ for waiting frame animation
+waitingframeGIF = Image_path + "\\waiting.gif"
+waitingframe_gif_change_time = 0.01 #\ seconds
+waitingframe_loop_time = 0.01 #\ seconds
+GIFMAXFRAME_waiting_frame = 16 #9 #\ maximum frame
 
 
 #----------------------------------------------------------------------#
