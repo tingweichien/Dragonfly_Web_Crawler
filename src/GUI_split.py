@@ -1,6 +1,7 @@
 # this is GUI split program
 
 import tkinter as tk
+import tkinter.font as tkFont
 from tkinter import ttk, messagebox
 from ttkthemes import ThemedStyle
 from PySimpleGUI.PySimpleGUI import RELIEF_FLAT, RELIEF_GROOVE, RELIEF_SUNKEN
@@ -36,8 +37,12 @@ Username = ''
 current_dropdown_index = 0
 Login_Response = 0
 Login_state = False
-Finish_state = False
-Initial_state = True
+
+#\ for login
+Login_Finish_state = False
+Login_Initial_state = True
+Login_state_start = False
+Login_processing_state = False
 
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
@@ -46,7 +51,7 @@ var_species = None
 # Plot_var_species = None
 
 
-
+mainpage_img_list = []
 
 
 ################################################################################
@@ -135,10 +140,20 @@ class tkinterApp(tk.Tk):
         trigger.bind("<Leave>", lambda event, color=colorList[0], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
         trigger.bind("<Enter>", lambda event, color=colorList[1], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
 
+    #\ encrypt or decrypt the password
+    #\  PW : password to encrypt or decrypt
+    #\  type : select to encrypt or decrypt
+    def encrypt_decrypt_function(self, PW, type:str)->str:
+        if type == "encrypt":
+            return base64.b64encode(PW.encode("utf-8")).decode("utf-8")
+        elif type == "decrypt":
+            return base64.b64decode(PW).decode("utf-8")
+        else:
+            print("[Warning] no type specified in the encrypt_decrypt_function")
 
 
 
-
+############################################################################################################################
 #\ --- Login Page ---
 #\ first window frame LoginPage
 #\ controller is the parent class
@@ -220,83 +235,20 @@ class LoginPage(tk.Frame):
             self.StatementLabel.pack(pady=20)
 
             #\ --try to auto fill the account and password--
-            [n, p] = self.Auto_Fill()
+            [n, p] = self.Auto_Fill(controller)
             self.VarName.set(n)
             self.VarPwd.set(p)
 
 
-    #\ encrypt or decrypt the password
-    #\  PW : password to encrypt or decrypt
-    #\  type : select to encrypt or decrypt
-    def encrypt_decrypt_function(self, PW, type:str)->str:
-        if type == "encrypt":
-            return base64.b64encode(PW.encode("utf-8")).decode("utf-8")
-        elif type == "decrypt":
-            return base64.b64decode(PW).decode("utf-8")
-        else:
-            print("[Warning] no type specified in the encrypt_decrypt_function")
-
-
-
-
-    #\ @@ 注意空格，不小心放在init method裡面
-    #\ 嘗試自動填寫使用者名稱和密碼
-    def Auto_Fill(self):
-        try:
-            with open(Index.Login_Filename) as fp:
-                n, p = fp.read().strip().split(',')
-                NM = self.encrypt_decrypt_function(n, "decrypt")
-                PW = self.encrypt_decrypt_function(p, "decrypt")
-                return [NM, PW]
-        except:
-            return ['', '']
-
-
-    #\ Check if the user have entered the info (account and password) or not
-    def Check_empty(self):
-        InputArgumentsLabel = ["Account", "Password"]
-        index = 0
-        string = ""
-        for Input in [self.VarName.get(), self.VarPwd.get()]:
-            if (Input == ''):
-                string += "[" + InputArgumentsLabel[index] + "] "
-            index += 1
-        if (len(string) > 0):
-            messagebox.showwarning('Warning!!!', string + "should not be empty!!!!")
-        return len(string)
-
-
     #\ Login action
     def LoginButtonFunc(self, controller):
-        global Initial_state
-        Initial_state = False
-        controller.show_frame(WaitPage)
-        # self.LoginButtonFuncthread(controller) #######ERROR##############
-
-    #\ Login thread
-    def LoginButtonFuncthread(self, controller):
-        global Login_Response, Login_state, Username, Finish_state
+        global Login_Initial_state, Login_Response, Login_state_start
+        Login_Initial_state = False
+        Login_state_start = True
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
-        if self.Check_empty() > 0:
-            return
-        else:
-            [_, Login_Response, Login_state] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
-            if (Login_state == False):
-                messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
-            elif Login_Response == None and Login_state == None:
-                messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
-            else:
-                Username = Index.myaccount
-                controller.show_frame(MainPage)
-
-                #\ and write the account and password to the Login_Filename
-                with open(Index.Login_Filename, 'w') as fp:
-                    account = self.encrypt_decrypt_function(Index.myaccount, "encrypt")
-                    password = self.encrypt_decrypt_function(Index.mypassword, "encrypt")
-                    # print(f"account, password = {account}, {password}")
-                    fp.write(','.join((account, password)))
-                    Finish_state = True
+        controller.show_frame(WaitPage)
+        # self.LoginButtonFuncthread(controller) #######ERROR##############
 
 
     #\ the eye button that can hide the PW or show it
@@ -310,10 +262,26 @@ class LoginPage(tk.Frame):
             self.ViewPWbutton.config(image=self.ViewPWbuttonIMG)
             self.viewcheck.set(True)
 
+    #\ @@ 注意空格，不小心放在init method裡面
+    #\ 嘗試自動填寫使用者名稱和密碼
+    def Auto_Fill(self, controller):
+        try:
+            with open(Index.Login_Filename) as fp:
+                n, p = fp.read().strip().split(',')
+                NM = controller.encrypt_decrypt_function(n, "decrypt")
+                PW = controller.encrypt_decrypt_function(p, "decrypt")
+                return [NM, PW]
+        except:
+            return ['', '']
 
 
 
 
+
+
+
+
+############################################################################################################################
 #\ --- Waiting Page ---
 class WaitPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -325,30 +293,167 @@ class WaitPage(tk.Frame):
 
             #\ Check the website to see how many frame it is https://ezgif.com/speed/ezgif-6-c8049cd1d3fa.gif
             self.waiting_image_frame = [tk.PhotoImage(file=Index.waitingframeGIF, format = 'gif -index %i' %(i)) for i in range(1, Index.GIFMAXFRAME_waiting_frame)]
-            self.waiting_image_Label = tk.Label(self, image=self.waiting_image_frame[0], bg="black")
+            Font = tkFont.Font(family="Arial", size=15, weight="bold")
+            self.waiting_image_Label = tk.Label(self, text="LOGGIN IN ~", fg="white", font=Font,
+                                                image=self.waiting_image_frame[0], bg="black",
+                                                compound=tk.BOTTOM)
             self.ind = 0 #\ image
             self.waiting_image_Label.pack()
-            self.run_waiting_image()
+
+            #\ init the thread
+            self.Login_thread = []
+            self.LoginButtonFuncthread = threading.Thread(target=self.LoginCheck, args=(controller,))
+            self.Login_thread.append(self.LoginButtonFuncthread)
+            self.update_waiting_gif_thread = threading.Thread(target=self.update_waiting_gif)
+            self.Login_thread.append(self.update_waiting_gif_thread)
+            self.parse_mainpage_picture_thread = threading.Thread(target=self.parse_mainpage_picture)
+            self.Login_thread.append(self.parse_mainpage_picture_thread)
+            self.finish_process_check_thread = threading.Thread(target=self.finish_process_check)
+            self.Login_thread.append(self.finish_process_check_thread)
+
+            #\ thread state
+            self.parse_mainpage_picture_state = False
+            self.LoginCheck_state = False
+
+            #\ start the loop for waiting frame
+            self.run_waiting_image(controller)
 
 
-    def run_waiting_image(self):
-        if (Initial_state):
+    #\ auto run when enter this page
+    def run_waiting_image(self, controller):
+        global Login_state_start, Login_Finish_state, Login_processing_state
+        if (Login_state_start):
+            #\ start the thread to process the login method
+            self.LoginButtonFuncthread.start()
+            Login_state_start = False
+
+        if (Login_Initial_state or Login_processing_state):
             pass
-        elif (Finish_state) :
+
+        elif (Login_Finish_state) :
+
+            #\ end the login process thread when all done
+            for thread in self.Login_thread:
+                thread.join()
+            print("[info] waiting frame thread joied")
+
+            #\ move to the main page
+            controller.show_frame(MainPage)
             return
+
         else:
+            #\ run the checking below two function finished state function thread
+            self.finish_process_check_thread.start()
+
+            #\ start the thread to update gif
+            self.update_waiting_gif_thread.start()
+
+            #\ get ready for the image that are going to show on the mainpage
+            self.parse_mainpage_picture_thread.start()
+
+            #\ leave this loop to avoid it calling again and again to start the same thread
+            Login_processing_state = True
+
+        self.after(int(Index.waitingframe_loop_time*1000), lambda:self.run_waiting_image(controller))
+
+
+
+    #\ update the gif
+    def update_waiting_gif(self):
+        while (Login_Finish_state != True):
             self.ind += 1
             self.ind %= (Index.GIFMAXFRAME_waiting_frame-1)
             self.waiting_image_Label.configure(image=self.waiting_image_frame[self.ind])
             print(f"update waiting image, ind={self.ind}")
-        self.after(int(Index.waitingframe_gif_change_time*1000), self.run_waiting_image)
+            time.sleep(Index.waitingframe_gif_change_time)
+
+
+    #\ Login thread
+    def LoginCheck(self, controller):
+        global Login_state
+        if (self.Check_empty()) > 0:
+            return
+        else:
+            [_, Login_Response, Login_state] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
+            if (Login_state == False):
+                messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
+            elif Login_Response == None and Login_state == None:
+                messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
+            else:
+                print("[info] login state success")
+
+                #\ save the login authorization info
+                self.SaveEncryptedAuth(controller)
+
+                #\ function finish state
+                self.LoginCheck_state = True
+
+
+    #\ Save the password and username in encrypted form
+    def SaveEncryptedAuth(self, controller):
+        global Username
+        Username = Index.myaccount
+
+        #\ and write the account and password to the Login_Filename
+        with open(Index.Login_Filename, 'w') as fp:
+            account = controller.encrypt_decrypt_function(Index.myaccount, "encrypt")
+            password = controller.encrypt_decrypt_function(Index.mypassword, "encrypt")
+            # print(f"account, password = {account}, {password}")
+            fp.write(','.join((account, password)))
 
 
 
+    #\ Check if the user have entered the info (account and password) or not
+    def Check_empty(self):
+        InputArgumentsLabel = ["Account", "Password"]
+        index = 0
+        string = ""
+        for Input in [Index.myaccount, Index.mypassword]:
+            if (Input == ''):
+                string += "[" + InputArgumentsLabel[index] + "] "
+            index += 1
+        if (len(string) > 0):
+            messagebox.showwarning('Warning!!!', string + "should not be empty!!!!")
+        return len(string)
+
+
+    #\ get the mainpage picture and do the pre-request
+    def parse_mainpage_picture(self):
+        global mainpage_img_list, Login_Finish_state
+        for img_cnt in range(len(Index.img_url_list)):
+            #\ open the image from url
+            image_bytes = urlopen(Index.img_url_list[img_cnt], timeout=Index.Img_timeout).read()
+
+            #\ internal data file
+            data_stream = io.BytesIO(image_bytes)
+
+            #\ open as a PIL image object
+            pil_image = Image.open(data_stream)
+
+            #\ convert PIL image object to Tkinter PhotoImage object
+            pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+
+            #\ save the processed image to the list
+            mainpage_img_list.append(pil_image)
+
+        #\ finished
+        self.parse_mainpage_picture_state = True
+        print("[info] parsing mainpage picture successfully")
 
 
 
+    def finish_process_check(self):
+        global Login_processing_state, Login_Finish_state
+        while (True):
+            if self.parse_mainpage_picture_state is True and self.LoginCheck_state is True:
+                Login_processing_state = False
+                Login_Finish_state = True
+                print("[info] finish process check successfully")
+                return
 
+
+
+############################################################################################################################
 #\ --- Setting Page ---
 class SettingPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -361,7 +466,7 @@ class SettingPage(tk.Frame):
 
 
 
-
+############################################################################################################################
 #\ --- Main Page ---
 #\ second window frame MainPage
 class MainPage(tk.Frame):
@@ -1378,6 +1483,7 @@ class MainPage(tk.Frame):
 
     #\ Blending the image
     def blending_img(self):
+        global mainpage_img_list
         try:
             #\ random the number of picture
             self.img_counter = random.randrange(0, 9, 1)
@@ -1385,17 +1491,20 @@ class MainPage(tk.Frame):
             #\ limit the image counter within the range
             self.img_counter %= len(Index.img_url_list)
 
-            #\ open the image from url
-            image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
+            # #\ open the image from url
+            # image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
 
-            #\ internal data file
-            data_stream = io.BytesIO(image_bytes)
+            # #\ internal data file
+            # data_stream = io.BytesIO(image_bytes)
 
-            #\ open as a PIL image object
-            self.pil_image = Image.open(data_stream)
+            # #\ open as a PIL image object
+            # self.pil_image = Image.open(data_stream)
 
-            #\ convert PIL image object to Tkinter PhotoImage object
-            self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+            # #\ convert PIL image object to Tkinter PhotoImage object
+            # self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+
+            #\ get the image
+            self.pil_image = mainpage_img_list[self.img_counter]
 
             #\ Blending
             if (self.init_while):
@@ -1430,7 +1539,7 @@ class MainPage(tk.Frame):
 
     #\ update image thread to call the finction again by using after function
     def update_img_thread(self):
-        if (Initial_state):
+        if (Login_Initial_state):
             pass
         else:
             if (self.init_while):
