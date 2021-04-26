@@ -69,13 +69,13 @@ def Login_Web(Input_account:str, Input_password:str):
                 loginStatus = requests.get(Index.Login_url)
                 Login_type = "No proxy"
 
-            print(f"login type: {Login_type}, login status: {loginStatus}")
+            print(f"[info] login type: {Login_type}, login status: {loginStatus}")
 
 
         except:
             #\ print the retry
             re_try += 1
-            print(f"retry: {re_try}")
+            print(f"[info] retry: {re_try}")
 
 
         else:

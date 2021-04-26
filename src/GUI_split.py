@@ -38,11 +38,13 @@ current_dropdown_index = 0
 Login_Response = 0
 Login_state = False
 
-#\ for login
+#\ for waiting frame to login and init chrome driver
 Login_Finish_state = False
 Login_Initial_state = True
 Login_state_start = False
 Login_processing_state = False
+ChromeDriverInit_state = False
+
 
 # global the Stringvar to replace the XXX,get() mehtod in the previos version
 var_family = None
@@ -162,9 +164,6 @@ class LoginPage(tk.Frame):
         if __name__ == '__main__':
             tk.Frame.__init__(self, parent, bg="white")
 
-            #\ check and update the chromedriver
-            Chromedriver.update_chromedriver.check_chromedriver()
-
             #\ label of frame Layout 2
             self.Loginlabel = tk.Label(self, text="Login", font=LARGEFONT, bg="white")
             self.AccountLabel = tk.Label(self, text="Account", bg="white")
@@ -248,7 +247,6 @@ class LoginPage(tk.Frame):
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
         controller.show_frame(WaitPage)
-        # self.LoginButtonFuncthread(controller) #######ERROR##############
 
 
     #\ the eye button that can hide the PW or show it
@@ -302,8 +300,10 @@ class WaitPage(tk.Frame):
 
             #\ init the thread
             self.Login_thread = []
-            self.LoginButtonFuncthread = threading.Thread(target=self.LoginCheck, args=(controller,))
-            self.Login_thread.append(self.LoginButtonFuncthread)
+            self.Init_ChromeDriver_thread = threading.Thread(target=self.ChromeDriverInit)
+            self.Login_thread.append(self.Init_ChromeDriver_thread)
+            self.LoginButtonFunc_thread = threading.Thread(target=self.LoginCheck, args=(controller,))
+            self.Login_thread.append(self.LoginButtonFunc_thread)
             self.update_waiting_gif_thread = threading.Thread(target=self.update_waiting_gif)
             self.Login_thread.append(self.update_waiting_gif_thread)
             self.parse_mainpage_picture_thread = threading.Thread(target=self.parse_mainpage_picture)
@@ -324,7 +324,7 @@ class WaitPage(tk.Frame):
         global Login_state_start, Login_Finish_state, Login_processing_state
         if (Login_state_start):
             #\ start the thread to process the login method
-            self.LoginButtonFuncthread.start()
+            self.LoginButtonFunc_thread.start()
             Login_state_start = False
 
         if (Login_Initial_state or Login_processing_state):
@@ -342,14 +342,17 @@ class WaitPage(tk.Frame):
             return
 
         else:
-            #\ run the checking below two function finished state function thread
-            self.finish_process_check_thread.start()
-
             #\ start the thread to update gif
             self.update_waiting_gif_thread.start()
 
+            #\ run the checking below two function finished state function thread
+            self.finish_process_check_thread.start()
+
             #\ get ready for the image that are going to show on the mainpage
             self.parse_mainpage_picture_thread.start()
+
+            #\ Initial chrome driver
+            self.Init_ChromeDriver_thread.start()
 
             #\ leave this loop to avoid it calling again and again to start the same thread
             Login_processing_state = True
@@ -364,7 +367,7 @@ class WaitPage(tk.Frame):
             self.ind += 1
             self.ind %= (Index.GIFMAXFRAME_waiting_frame-1)
             self.waiting_image_Label.configure(image=self.waiting_image_frame[self.ind])
-            print(f"update waiting image, ind={self.ind}")
+            # print(f"update waiting image, ind={self.ind}")
             time.sleep(Index.waitingframe_gif_change_time)
 
 
@@ -441,14 +444,22 @@ class WaitPage(tk.Frame):
         print("[info] parsing mainpage picture successfully")
 
 
+    #\ chrome driver init
+    def ChromeDriverInit(self):
+        global ChromeDriverInit_state
+        Chromedriver.update_chromedriver.check_chromedriver()
+        print("[info] chrome driver init successfully")
+        ChromeDriverInit_state = True
 
+
+    #\ Finish state
     def finish_process_check(self):
         global Login_processing_state, Login_Finish_state
         while (True):
-            if self.parse_mainpage_picture_state is True and self.LoginCheck_state is True:
+            if self.parse_mainpage_picture_state is True and self.LoginCheck_state is True and ChromeDriverInit_state is True:
                 Login_processing_state = False
                 Login_Finish_state = True
-                print("[info] finish process check successfully")
+                print("\n[info] finish process checking successfully")
                 return
 
 
@@ -1086,7 +1097,7 @@ class MainPage(tk.Frame):
         self.default_fg_color = "black"
         self.default_bg_color = "white"
         self.selected_fg_color = "green"
-        self.updating_bg_color = "light sky blue"
+        self.updating_bg_color = "red" #\light sky blue"
         self.updating_fg_color = "black"
         self.finished_bg_color = "pale green"
         self.ChangeDefaultColor1 = False
