@@ -121,6 +121,9 @@ i.e. "command = lambda: your_function(input_args)"
 I do not bind my canvas to the PhotoImage
 <https://stackoverflow.com/questions/16846469/tkinter-canvas-image-is-not-displayed-in-class>
 
+![GUI](https://i.imgur.com/E3DI0r6.png) 
+
+
 ## [2020/08/03]
 
 1. use checkbox to select if you want to plot the data from database to the map.
@@ -866,4 +869,16 @@ reference :
     cursor = conn.cursor()  # get mysql db-api cursor
     cursor.execute(sql, multi=True)
     ```
-    https://stackoverflow.com/questions/19783404/enable-executing-multiple-statements-while-execution-via-sqlalchemy    
+
+    https://stackoverflow.com/questions/19783404/enable-executing-multiple-statements-while-execution-via-sqlalchemy
+
+## [2021/4/26]
+
+1. resize image in tkinter use **PIL** module
+2. Resize gif : <https://ezgif.com/resize/ezgif-2-47ef4dd2a7e2.gif>
+3. tkinter font : <https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-set-font-of-tkinter-text-widget/>
+4. tkinter label image with text : <https://stackoverflow.com/questions/33200257/create-a-text-over-an-image-using-python-tkinter>
+5. For multithread you should create the all the instance first and start all of them later. If starting the thread right after it created and do the next, this might cause delay, make all the stuff looks not in multithread
+6. Add the waiting frame between the login and main frame. Move 
+    login function and chromedriver init to during this frame.
+    ![waiting frame](https://i.imgur.com/F4hBGub.png) 
