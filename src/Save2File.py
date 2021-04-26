@@ -10,6 +10,7 @@
 
 from tkinter import messagebox
 import csv
+import os
 import os.path
 import Index
 import Dragonfly
@@ -23,29 +24,41 @@ import Update_Database
 from functools import partial
 from typing import List
 import Database_function
+import chardet
 
 
 TotalSpeciesNumber = 0
 
-# read data from csv file
+#\ Read data from csv file
 def Read_check_File(File_name:str):
     oldData = []
     oldData_len = 0
     oldID = 0
     file_size = -1 #means no such file
-    # check the file exist or not
+
+    #\ check the file exist or not
     file_check = os.path.exists(Index.current_path + "\\" + File_name)
 
-    # get the Old ID
+    #\ get the Old ID
     if file_check:
         file_size = os.stat(Index.current_path + "\\" + File_name).st_size
         if not file_size == 0:
-            with open(File_name, newline='', errors = "ignore") as F:
-                R = csv.reader(F)
+            with open(File_name, newline='', errors = "ignore", encoding=DetectFileEncoding(File_name)) as F:
+                R = csv.reader(F, dialect='excel', skipinitialspace=True)
                 oldData = [line for line in R]
                 oldID = oldData[0][0]
                 oldData_len = len(oldData) - 1
     return [oldData, oldData_len, oldID, file_check, file_size]
+
+
+#\ Detect the file encoding type
+def DetectFileEncoding(File_path:str) -> str:
+    with open(File_path, "rb") as r:
+        result = chardet.detect(r.read(10000))
+        print(f"[Info] {File_path} is encoding in {result['encoding']} type")
+        return result['encoding']
+
+
 
 
 
@@ -57,7 +70,7 @@ def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_He
         os.mkdir(newDir)
 
     #\ 'a' stands for append, which can append the new data to old one
-    with open(File_path, mode='w', newline='', errors = "ignore") as Save_File:
+    with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
         File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         # init , for there is no file exists or the file is empty
         if ((not file_check) or (file_size == 0)):
@@ -73,6 +86,72 @@ def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_He
             print('\n[write type]: Insert')
 
 
+#\ Update data to CSV database for fixing or adding to current database
+#\ if update header then the row_index do not need to specify
+#\ @params
+#\      File_path   : File path to update
+#\      Data        : Data to update
+#\      Task        : Task to do
+#\      Row_index   : Modify row
+#\      Col_index   : Modify column
+#\      Content     : Content to update or modify
+def Update2File(File_path:str, Data:list, task:str, Row_index:int=None, Col_index:int=None, Content:str=None) -> bool:
+    if File_path is None or len(Data) == 0:
+        print("[Warning] File_path or Data is None")
+        return False
+
+    Update2FileTaskList = ["modify header", "add header", "update content"]
+    Flag = False
+    if task in Update2FileTaskList:
+        with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
+            File_writer = csv.writer(Save_File, skipinitialspace=True)
+
+            #\ switch task
+            #\ modify header
+            if task == Update2FileTaskList[0]:
+                if Col_index != None and Content != None:
+                    Data[0][Col_index] = Content
+                    File_writer.writerows(Data)
+                    print(f"\n[info] Update the header [{Content}] to become new header --> {Data[0]}")
+                    Flag = True
+            #\ add header and initial the column
+            elif task == Update2FileTaskList[1]:
+                if Col_index != None and Content != None:
+                    #\ add the header
+                    Data[0].insert(Col_index, Content)
+                    #\ initial this columm
+                    for i in range(1,len(Data)):
+                        Data[i].insert(Col_index, "")
+                    File_writer.writerows(Data)
+                    print(f"\n[info] Insert the header [{Content}] to become new header --> {Data[0]}")
+                    Flag = True
+            #\ update Content
+            elif task == Update2FileTaskList[2]:
+                if Col_index != None and Row_index != None and Content != None:
+                    if (ListIndexValid(Data, Row_index, Col_index)):
+                        Data[Row_index][Col_index] = Content
+                        File_writer.writerows(Data)
+                        print(f"\n[info] Update the data [{Content}] -->  Data[{Row_index}][{Col_index}]")
+                        Flag = True
+    else :
+        print("[warning] No avaliable Update2File task been assign")
+
+    return Flag
+
+
+
+#\ Check if the list index is vaild or not
+def ListIndexValid(LIST:list, row:int, col:int):
+    if row <= len(LIST) :
+        if col <= len(LIST[row]) :
+            print("list vaild")
+            return True
+        else :
+            print(f"col {col} of list invalid should be less than {len(LIST)}")
+            return False
+    else :
+        print(f"row {row} of list invalid should be less than {len(LIST[row])}")
+        return False
 
 #\ write species number to json file
 def writeTotalNum2Json(inputDict:dict, filepath:str):
@@ -120,7 +199,7 @@ def removeEmpty():
                     R = list(csv.reader(r))
                     print("Total: " + str(totalNum[spec]))
                     print("lens: " + str(len(R)))
-                    with open(Save_File+ ".csv", "w", newline='', errors="ignore") as w:
+                    with open(Save_File+ ".csv", "w", newline='', errors="ignore", encoding='utf-8') as w:
                         for read in R:
                             if (not len(read[0]) == 0) and (not read[2] in [data[2] for data in Data]):
                                 Data.append(read)
@@ -160,7 +239,7 @@ def CleanDataTF(*args):
                                     ])
 
             #\ write to the file
-            with open(filepath, 'w', newline='', errors="ignore") as w:
+            with open(filepath, 'w', newline='', errors="ignore", encoding='utf-8') as w:
                 File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                 File_writer.writerow(Index.CSV_Head)
                 File_writer.writerows(newData)
@@ -331,7 +410,7 @@ def parse_all(self):
     if len(Update) == 0:
         for species_family_loop in Index.Species_Family_Name:
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
-                folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
+                folder = Index.folder_all_crawl_data + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
                 Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                 self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
@@ -348,7 +427,7 @@ def parse_all(self):
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
 
                 #\ file to write to
-                folder = 'Crawl_Data\\' + Index.Species_class_key[species_family_loop]
+                folder = Index.folder_all_crawl_data + Index.Species_class_key[species_family_loop]
                 File_name = folder + "\\" + Index.Species_class_key[species_family_loop] + Index.Species_key[species_loop] + '.csv'
 
                 #\ check the file exist or not
@@ -375,14 +454,14 @@ def parse_all(self):
 
 #\ the parsing all function with the GUI effect
 def parse_all_dragonfly_data(self):
-    print("\------------------------------------------------------")
+    print("------------------------------------------------------")
     print("\n[Update] --Start Crawling dragonfly daTa from web--\n")
     self.checkbox_UpdatefWeb["fg"] = self.updating_fg_color
     self.checkbox_UpdatefWeb["bg"] = self.updating_bg_color
     parse_all(self)
     self.checkbox_UpdatefWeb["bg"] = self.finished_bg_color
     print("\n[Update] --Finished Crawling dragonfly daTa from web--\n")
-    print("\------------------------------------------------------")
+    print("------------------------------------------------------")
 
 
 
@@ -390,7 +469,7 @@ def parse_all_dragonfly_data(self):
 def ReadFromFile(file:str)->List[DataClass.DetailedTableInfo]:
     ReadFileList = []
     if (os.path.exists(file) == True):
-        with open(file, 'r', newline="", errors='ignore') as r:
+        with open(file, 'r', newline="", errors='ignore', encoding='utf-8') as r:
             ReadFile = csv.reader(r)
             for line in ReadFile:
                 ReadFileList.append(
@@ -424,7 +503,7 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         #\ start timer
         Start = time.time()
 
-        #\ --(1) Update the data from web to csv file--
+        #\ -- 1. Update the data from web to csv file--
         #\ Checking which of the update option been selected
         _, _, UpdateNewdata = Update_enable
         if UpdateNewdata:
@@ -440,9 +519,10 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         connection_SF = Database_function.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
 
 
-        #\ --(2) Insert to the data base--
+        #\ -- 2. Insert to the data base--
+        #\      - (1) Update to MySQL database
+        # \     - (2) Update the weather data to MySQL
         Update_Database.Update_database(self, connection_SF, Update_enable)
-
 
 
         #\ End timer

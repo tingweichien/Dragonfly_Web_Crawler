@@ -26,6 +26,7 @@ Login_Filename = "src/Password_Account_info.txt"
 ###################################################
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
+Waiting_geometry = "300x330"
 MainPageGeometry = "380x680"
 updateWinGeometry = "600x420"
 
@@ -59,10 +60,10 @@ ico_image_path = 'docs\\image\\dragonfly_ico.ico'
 #\ statement in the login page
 Developer = "Ting Wei Chien"
 Developer_date = "2020/7/26"
-copyright_text = "Developed by {Developer}\n {Developer_date}"
+copyright_text = f"Developed by {Developer}\n {Developer_date}"
 
 #\ console print for the program start
-program_start_print = f'{"="*46}\nWelcome to the dragonfly data crawling program\nDate:\t{datetime.now()}\nCopyright:\tdeveloped by{Developer} from {Developer_date}\n{"="*46}'
+program_start_print = f'{"="*55}\nWelcome to the dragonfly data crawling program\nDate:\t\t{datetime.now()}\nCopyright:\tdeveloped by {Developer} from {Developer_date}\n{"="*55}'
 
 #\ update GIF
 updateGIF = "docs\\image\\LOAD.gif"
@@ -215,7 +216,7 @@ popup_chrome_web = False #True
 ##----crawl dtat to csv----
 
 #\ csv title
-CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "District", "Place", "Altitude", "Latitude", "Longitude", "Description"]
+CSV_Head = ["Species Family", "Species", "ID", "Date", "Time", "User", "City", "District", "Place", "Altitude", "Latitude", "Longitude", "Description", "weather"]
 
 
 #\ mutiprocessing cpu number
@@ -248,6 +249,13 @@ TotalNumberOfSpecies_filepath = folder_all_crawl_data + 'Record_Num_each_species
 #\ progress window
 #\ state the max frame for the LOAD gif
 GIFMAXFRAME = 80
+
+
+#\ for waiting frame animation
+waitingframeGIF = Image_path + "\\waiting.gif"
+waitingframe_gif_change_time = 0.05 #\ seconds
+waitingframe_loop_time = 0.01 #\ seconds
+GIFMAXFRAME_waiting_frame = 16 #9 #\ maximum frame
 
 
 #----------------------------------------------------------------------#
@@ -478,7 +486,9 @@ Species_class_key_dragonfly = {
 }
 
 Species_class_key = {**Species_class_key_damselfly, **Species_class_key_dragonfly}
+#\ 科別中文
 Species_Family_Name = list(Species_class_key.keys())
+#\ 科別英文
 Species_Family_Name_E = list(Species_class_key.values())
 
 
@@ -725,7 +735,8 @@ hostaddress = "127.0.0.1"
 password = "tim960622"
 DB_name =  'Dragonfly_DB'
 
-
+#\ retry for connection to the MySQL database
+Mysql_retry_limit = 3
 
 #\ init plot delta time showing on the GUI of the time start to end time (year)
 Plot_chart_init_delta_years = 10 #\ 10 years
@@ -770,7 +781,7 @@ Weather_earliest_date = date(2008, 7, 1)
 weather_request_limit = 500
 
 #\ weather thread queue limit
-MaxQueueNum = 20
+MaxQueueNum = 30
 
 #\ Enable or Disable weather multithreading
 weather_multithread = True
@@ -778,6 +789,9 @@ weather_multithread = True
 
 #\ over weather api oldest time limit
 overtimelimit = True
+
+#\ weather CSV index
+WeatherCsvIndex = 13
 
 #\ (GLOBAL)
 #\ weather api key count
@@ -797,7 +811,6 @@ pb_microsecond_ndigits = 6
 
 #\ show n digit 0.XXXXX..... in update timer
 pb_showing_digit = 1
-
 
 
 
