@@ -4,7 +4,7 @@ pwd_context = CryptContext(
         schemes=["pbkdf2_sha256"],
         default="pbkdf2_sha256",
         deprecated=["pbkdf2_sha256"],
-        pbkdf2_sha256__default_rounds=30000
+        pbkdf2_sha256__default_rounds=30
 )
 
 decrypt_content = CryptContext(schemes=["md5_crypt"],
