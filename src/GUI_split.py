@@ -30,30 +30,57 @@ import base64
 
 LARGEFONT =("Verdana", 35)
 
-Username = ''
+gUsername = ''
 
 ##################################################################
 #\ arguement
-current_dropdown_index = 0
-Login_Response = 0
-Login_state = False
+gcurrent_dropdown_index = 0
+gLogin_Response = 0
+#\ this is the global for response from the web
+gLogin_web_state = False #\ False, True
 
-#\ for waiting frame to login and init chrome driver
-Login_Finish_state = False
-Login_Initial_state = True
-Login_state_start = False
-Login_processing_state = False
-ChromeDriverInit_state = False
+#\ For waiting frame to login and init chrome driver
+#\ Finish state
+gLogin_Finish_state = False #\ False, True
 
+#\ Initial
+gLogin_Initial_state = True #\ False, True
 
-# global the Stringvar to replace the XXX,get() mehtod in the previos version
-var_family = None
-var_species = None
+#\ Start to login
+gLogin_state_start = False #\ False, True
+
+#\ On logggin processing
+gLogin_processing_state = False #\ False, True
+
+#\ Init the Chrome driver
+gChromeDriverInit_state = False #\ False, True
+
+#\ During the loging state, for parsing the pictures which will be the cover in main page
+gParse_mainpage_picture_state = False #\ False, True
+
+#\ The reponse for trying to login to website oneline
+gLoginResponseCheck_state = None #\ None, False, True
+
+#\ The state to keep the login finish check while loop
+gfinish_process_check_loop = True #\ False, True
+
+#\ global thread for loging process
+gLogin_thread = [] #\ if login success then join these thread
+gLogin_fail_thread = [] #\ if login success then join these thread
+
+#\ global the Stringvar to replace the XXX,get() mehtod in the previos version
+gVar_family = None
+gVar_species = None
 # Plot_var_family = None
 # Plot_var_species = None
 
 
-mainpage_img_list = []
+#\ Image list for main page cover
+gMainpage_img_list = []
+
+
+
+
 
 
 ################################################################################
@@ -102,7 +129,7 @@ class tkinterApp(tk.Tk):
     #\ to display the current frame passed as
     #\ parameter
     def show_frame(self, cont):
-        global Username
+        global gUsername
         frame = self.frames[cont]
         print(f'\n{"-"*28}\n| Current page\t{frame._name} |\n{"-"*28}\n')
 
@@ -117,7 +144,7 @@ class tkinterApp(tk.Tk):
 
         else:
             self.config(menu=self.menubar)
-            tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(Username))
+            tk.Tk.wm_title(self, "蜻蜓經緯度查詢-- {} 已登入".format(gUsername))
             tk.Tk.wm_geometry(self, Index.MainPageGeometry)
 
         tk.Tk.iconbitmap(self, default=Index.ico_image_path)
@@ -141,6 +168,7 @@ class tkinterApp(tk.Tk):
     def BHoverOnGroup(self, trigger:tk, beenTrigger:list, colorList:list):
         trigger.bind("<Leave>", lambda event, color=colorList[0], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
         trigger.bind("<Enter>", lambda event, color=colorList[1], groupmember=beenTrigger: self.B_HoverOnGroup(event, color, groupmember))
+
 
     #\ encrypt or decrypt the password
     #\  PW : password to encrypt or decrypt
@@ -239,14 +267,14 @@ class LoginPage(tk.Frame):
             self.VarPwd.set(p)
 
 
-    #\ Login action
+    #\ Login button action
     def LoginButtonFunc(self, controller):
-        global Login_Initial_state, Login_Response, Login_state_start
-        Login_Initial_state = False
-        Login_state_start = True
+        global gLogin_Response, gLogin_state_start
+        gLogin_state_start = True
         Index.myaccount = self.VarName.get()
         Index.mypassword = self.VarPwd.get()
         controller.show_frame(WaitPage)
+        controller.frames[WaitPage].run_waiting_image(controller)
 
 
     #\ the eye button that can hide the PW or show it
@@ -298,64 +326,93 @@ class WaitPage(tk.Frame):
             self.ind = 0 #\ image
             self.waiting_image_Label.pack()
 
-            #\ init the thread
-            self.Login_thread = []
-            self.Init_ChromeDriver_thread = threading.Thread(target=self.ChromeDriverInit)
-            self.Login_thread.append(self.Init_ChromeDriver_thread)
-            self.LoginButtonFunc_thread = threading.Thread(target=self.LoginCheck, args=(controller,))
-            self.Login_thread.append(self.LoginButtonFunc_thread)
-            self.update_waiting_gif_thread = threading.Thread(target=self.update_waiting_gif)
-            self.Login_thread.append(self.update_waiting_gif_thread)
-            self.parse_mainpage_picture_thread = threading.Thread(target=self.parse_mainpage_picture)
-            self.Login_thread.append(self.parse_mainpage_picture_thread)
-            self.finish_process_check_thread = threading.Thread(target=self.finish_process_check)
-            self.Login_thread.append(self.finish_process_check_thread)
-
-            #\ thread state
-            self.parse_mainpage_picture_state = False
-            self.LoginCheck_state = False
-
-            #\ start the loop for waiting frame
-            self.run_waiting_image(controller)
-
 
     #\ auto run when enter this page
     def run_waiting_image(self, controller):
-        global Login_state_start, Login_Finish_state, Login_processing_state
-        if (Login_state_start):
+        global gLogin_state_start, gLogin_Finish_state, gLogin_processing_state, gLoginResponseCheck_state, gLogin_Initial_state, gfinish_process_check_loop
+
+        #\ (1) start
+        if gLogin_state_start is True:
+            #\ init the thread
+            LoginButtonFunc_thread = threading.Thread(target=self.LoginCheck, args=(controller,))
+            gLogin_thread.append(LoginButtonFunc_thread)
+            gLogin_fail_thread.append(LoginButtonFunc_thread)
+
+            update_waiting_gif_thread = threading.Thread(target=self.update_waiting_gif)
+            gLogin_thread.append(update_waiting_gif_thread)
+            gLogin_fail_thread.append(update_waiting_gif_thread)
+
+            finish_process_check_thread = threading.Thread(target=self.finish_process_check)
+            gLogin_thread.append(finish_process_check_thread)
+            gLogin_fail_thread.append(finish_process_check_thread)
+
+
             #\ start the thread to process the login method
-            self.LoginButtonFunc_thread.start()
-            Login_state_start = False
+            LoginButtonFunc_thread.start()
 
-        if (Login_Initial_state or Login_processing_state):
-            pass
+            #\ run the checking below two function finished state function thread
+            gfinish_process_check_loop = True
+            finish_process_check_thread.start()
 
-        elif (Login_Finish_state) :
+            #\ start the thread to update gif
+            update_waiting_gif_thread.start()
 
+            #\ leave this loop to avoid it calling again and again to start the same thread
+            gLogin_state_start = False
+            gLogin_processing_state = True
+
+
+        #\ (2) processing
+        if gLogin_processing_state is True:
+            #\ (3) login fail then return to the login page
+            if gLoginResponseCheck_state is False:
+                print("[Warning] Login fail !!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+                #\ reset the state
+                gLogin_processing_state = False
+                gLogin_Finish_state = False
+
+                #\ end the login process thread when all done
+                for thread in gLogin_fail_thread:
+                    thread.join(2)
+
+                #\ move to the login page
+                ################################
+                controller.show_frame(LoginPage)
+                ################################
+                return
+
+
+            #\ (4) if login 2 web successfully then init the chrome driver and parse the image
+            elif gLoginResponseCheck_state is True:
+                #\ get ready for the image that are going to show on the mainpage
+                parse_mainpage_picture_thread = threading.Thread(target=self.parse_mainpage_picture)
+                gLogin_thread.append(parse_mainpage_picture_thread)
+                parse_mainpage_picture_thread.start()
+
+                #\ Initial chrome driver
+                Init_ChromeDriver_thread = threading.Thread(target=self.ChromeDriverInit)
+                gLogin_thread.append(Init_ChromeDriver_thread)
+                Init_ChromeDriver_thread.start()
+
+                #\ reset the init state and processing state
+                gLogin_Initial_state = False #\ this will trigger the mainpage image loop to start
+                gLogin_processing_state = False
+
+
+
+        #\ (4) or (5) Finish
+        elif gLogin_Finish_state is True :
             #\ end the login process thread when all done
-            for thread in self.Login_thread:
+            for thread in gLogin_thread:
                 thread.join()
             print("[info] waiting frame thread joied")
 
             #\ move to the main page
+            ################################
             controller.show_frame(MainPage)
+            ################################
             return
-
-        else:
-            #\ start the thread to update gif
-            self.update_waiting_gif_thread.start()
-
-            #\ run the checking below two function finished state function thread
-            self.finish_process_check_thread.start()
-
-            #\ get ready for the image that are going to show on the mainpage
-            self.parse_mainpage_picture_thread.start()
-
-            #\ Initial chrome driver
-            self.Init_ChromeDriver_thread.start()
-
-            #\ leave this loop to avoid it calling again and again to start the same thread
-            Login_processing_state = True
 
         self.after(int(Index.waitingframe_loop_time*1000), lambda:self.run_waiting_image(controller))
 
@@ -363,39 +420,49 @@ class WaitPage(tk.Frame):
 
     #\ update the gif
     def update_waiting_gif(self):
-        while (Login_Finish_state != True):
-            self.ind += 1
-            self.ind %= (Index.GIFMAXFRAME_waiting_frame-1)
-            self.waiting_image_Label.configure(image=self.waiting_image_frame[self.ind])
-            # print(f"update waiting image, ind={self.ind}")
-            time.sleep(Index.waitingframe_gif_change_time)
+        global gLoginResponseCheck_state, gfinish_process_check_loop
+        while gLogin_Finish_state != True:
+            if gLoginResponseCheck_state is False or (gLoginResponseCheck_state is None and gfinish_process_check_loop is False):
+                return
+            else:
+                self.ind += 1
+                self.ind %= (Index.GIFMAXFRAME_waiting_frame-1)
+                self.waiting_image_Label.configure(image=self.waiting_image_frame[self.ind])
+                # print(f"update waiting image, ind={self.ind}")
+                time.sleep(Index.waitingframe_gif_change_time)
 
 
     #\ Login thread
     def LoginCheck(self, controller):
-        global Login_state
-        if (self.Check_empty()) > 0:
+        global gLogin_web_state, gLoginResponseCheck_state
+        if self.Check_empty() > 0:
             return
         else:
-            [_, Login_Response, Login_state] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
-            if (Login_state == False):
+            [_, gLogin_Response, gLogin_web_state] = Dragonfly.Login_Web(Index.myaccount, Index.mypassword)
+            if gLogin_web_state == False:
+                #\ function finish state
+                gLoginResponseCheck_state = False
                 messagebox.showwarning('Warning!!!', 'Account' + " or " + 'Password' + " might be incorrect!!!!")  #incorrect account or password
-            elif Login_Response == None and Login_state == None:
+            elif gLogin_Response == None and gLogin_web_state == None:
+                #\ function finish state
+                gLoginResponseCheck_state = False
                 messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
             else:
-                print("[info] login state success")
+                print("[INFO] login state success")
 
                 #\ save the login authorization info
                 self.SaveEncryptedAuth(controller)
 
                 #\ function finish state
-                self.LoginCheck_state = True
+                gLoginResponseCheck_state = True
+
+            return
 
 
     #\ Save the password and username in encrypted form
     def SaveEncryptedAuth(self, controller):
-        global Username
-        Username = Index.myaccount
+        global gUsername
+        gUsername = Index.myaccount
 
         #\ and write the account and password to the Login_Filename
         with open(Index.Login_Filename, 'w') as fp:
@@ -422,7 +489,8 @@ class WaitPage(tk.Frame):
 
     #\ get the mainpage picture and do the pre-request
     def parse_mainpage_picture(self):
-        global mainpage_img_list, Login_Finish_state
+        global gMainpage_img_list, gParse_mainpage_picture_state
+        print("[INFO] Start Parsing the mainpage picture")
         for img_cnt in range(len(Index.img_url_list)):
             #\ open the image from url
             image_bytes = urlopen(Index.img_url_list[img_cnt], timeout=Index.Img_timeout).read()
@@ -437,29 +505,38 @@ class WaitPage(tk.Frame):
             pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
 
             #\ save the processed image to the list
-            mainpage_img_list.append(pil_image)
+            gMainpage_img_list.append(pil_image)
 
         #\ finished
-        self.parse_mainpage_picture_state = True
-        print("[info] parsing mainpage picture successfully")
+        gParse_mainpage_picture_state = True
+        print("[INFO] parsing mainpage picture successfully")
 
 
     #\ chrome driver init
     def ChromeDriverInit(self):
-        global ChromeDriverInit_state
+        global gChromeDriverInit_state
+        print("[INFO] Start Chrome driver initialization")
         Chromedriver.update_chromedriver.check_chromedriver()
-        print("[info] chrome driver init successfully")
-        ChromeDriverInit_state = True
+        print("[INFO] Chrome driver init successfully")
+        gChromeDriverInit_state = True
 
 
-    #\ Finish state
+    #\ Finish state for login
     def finish_process_check(self):
-        global Login_processing_state, Login_Finish_state
-        while (True):
-            if self.parse_mainpage_picture_state is True and self.LoginCheck_state is True and ChromeDriverInit_state is True:
-                Login_processing_state = False
-                Login_Finish_state = True
-                print("\n[info] finish process checking successfully")
+        global gLogin_processing_state, gLogin_Finish_state, gLoginResponseCheck_state, gParse_mainpage_picture_state, gfinish_process_check_loop
+        while (gfinish_process_check_loop):
+            if (gParse_mainpage_picture_state is True) and (gLoginResponseCheck_state is True) and (gChromeDriverInit_state is True):
+                gLogin_processing_state = False
+                gLogin_Finish_state = True
+                gfinish_process_check_loop = False
+                gLoginResponseCheck_state = None
+                print("\n[INFO] Finish process checking successfully (finish process check)")
+                return
+
+            elif (gLogin_processing_state is False) and (gLoginResponseCheck_state is False):
+                gfinish_process_check_loop = False
+                gLoginResponseCheck_state = None
+                print("\n[INFO] Login fail (finish process check)")
                 return
 
 
@@ -516,7 +593,7 @@ class MainPage(tk.Frame):
             self.imglabel = tk.Label(self, bg='white',relief=tk.FLAT, borderwidth=0, highlightthickness=0)
             self.imglabel.pack(padx=5, pady=5)
             self.init_while = False
-            self.update_img()
+            threading.Thread(target=self.update_img_thread()).start()
 
 
             #\ ---ID Find Frame---
@@ -571,16 +648,16 @@ class MainPage(tk.Frame):
 
             #\ drop down menu
             #\ species
-            global var_species
-            var_species = tk.StringVar(self.LabelFrame_Species_Find)
-            var_species.set(Index.Calopterygidae_Species[0])
-            self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=var_species, values=Index.Species_Name_Group[current_dropdown_index])
+            global gVar_species
+            gVar_species = tk.StringVar(self.LabelFrame_Species_Find)
+            gVar_species.set(Index.Calopterygidae_Species[0])
+            self.Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=14, textvariable=gVar_species, values=Index.Species_Name_Group[gcurrent_dropdown_index])
 
             #\ family
-            global var_family
-            var_family = tk.StringVar(self.LabelFrame_Species_Find)
-            var_family.set(Index.Species_Family_Name[0])
-            self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=var_family, values=Index.Species_Family_Name)
+            global gVar_family
+            gVar_family = tk.StringVar(self.LabelFrame_Species_Find)
+            gVar_family.set(Index.Species_Family_Name[0])
+            self.Family_drop_down_menu = ttk.Combobox(self.LabelFrame_Species_Find, width=10, textvariable=gVar_family, values=Index.Species_Family_Name)
             self.Family_drop_down_menu.bind("<<ComboboxSelected>>", self.changeCombobox)
 
             #\ check box
@@ -594,7 +671,7 @@ class MainPage(tk.Frame):
                                         #justify='center',
                                         #bg='gray80',
                                         cursor="hand2",
-                                        command=lambda:self.SpeciesFindButton(var_family.get(), var_species.get()))
+                                        command=lambda:self.SpeciesFindButton(gVar_family.get(), gVar_species.get()))
 
 
             #\ list to get the label and labelfrme in Species Find frame
@@ -659,7 +736,7 @@ class MainPage(tk.Frame):
             #\ Drop down menu
             #\ species
             self.Plot_var_species = tk.StringVar(self.LabelFrame_Plot, value=Index.Calopterygidae_Species[0])
-            self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=self.Plot_var_species, values=Index.Species_Name_Group[current_dropdown_index])
+            self.Plot_Species_drop_down_menu = ttk.Combobox(self.LabelFrame_Plot, width=14, textvariable=self.Plot_var_species, values=Index.Species_Name_Group[gcurrent_dropdown_index])
 
             #\ family
             self.Plot_var_family = tk.StringVar(self.LabelFrame_Plot, value=Index.Species_Family_Name[0])
@@ -878,7 +955,7 @@ class MainPage(tk.Frame):
 
         # Check if this data do not contain the Longitude and Latitude infomation
         map_key = True
-        [_ID_find_result, _overflow, _Max_ID_Num] = Dragonfly.DataCrawler(Login_Response, ID)
+        [_ID_find_result, _overflow, _Max_ID_Num] = Dragonfly.DataCrawler(gLogin_Response, ID)
         if _overflow:
             messagebox.showwarning('Warning!!!', "ID" + " number is out of range!!!! \nShoud be in the range of 0 ~ " + str(_Max_ID_Num))  #ID number overflow
             return
@@ -896,12 +973,12 @@ class MainPage(tk.Frame):
 
 
     # \ Species find to plot info in the table and plot on the map
-    def SpeciesFindButton(self, var_family, var_species):
+    def SpeciesFindButton(self, gVar_family, gVar_species):
         print("[Button] Specied Find")
         if self.VarDatacheckbox.get() == True:
-            map_result_list = Save2File.ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[var_family] + "\\" + Index.Species_class_key[var_family] + Index.Species_key[var_species] + ".csv")
+            map_result_list = Save2File.ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[gVar_family] + "\\" + Index.Species_class_key[gVar_family] + Index.Species_key[gVar_species] + ".csv")
         else:
-            map_result_list = Dragonfly.SpeiciesCrawler(var_family, var_species)
+            map_result_list = Dragonfly.SpeiciesCrawler(gVar_family, gVar_species)
 
         if len(map_result_list) == 0:
             messagebox.showinfo("Infomation", "The selected species does not have any record")
@@ -912,16 +989,16 @@ class MainPage(tk.Frame):
 
     #\ dont forget to add the 'event' as input args
     def changeCombobox(self, event):
-        global current_dropdown_index, var_species
+        global gcurrent_dropdown_index, gVar_species
 
         tmp = Index.Species_Name_Group[self.Family_drop_down_menu.current()]
         tmp1 = Index.Species_Name_Group[self.Plot_Family_drop_down_menu.current()]
         self.Species_drop_down_menu['value'] = tmp
         self.Plot_Species_drop_down_menu['value'] = tmp1
         #\ init the dropdown list in the first element when the family changed
-        var_species.set(tmp[0])
+        gVar_species.set(tmp[0])
         self.Plot_var_species.set(tmp1[0])
-        #print(var_family.get())
+        #print(gVar_family.get())
         #print(self.Family_drop_down_menu.current())
 
 
@@ -1226,7 +1303,7 @@ class MainPage(tk.Frame):
     #\ bad since the flexibility of the option are limited
     #\ these are coded in PySimpleGUI library
     def New_table(self, map_result_list:list):
-        global var_species, var_family
+        global gVar_species, gVar_family
         Data = [
             [index.Place,
             index.Dates,
@@ -1243,7 +1320,7 @@ class MainPage(tk.Frame):
 
         layout = [
             [
-            PYGUI.Text("-- " + str(var_species.get()) + " --", text_color="black",font=("Ststem", 14)),
+            PYGUI.Text("-- " + str(gVar_species.get()) + " --", text_color="black",font=("Ststem", 14)),
                 ],
             [
             PYGUI.Table(Data,
@@ -1494,7 +1571,7 @@ class MainPage(tk.Frame):
 
     #\ Blending the image
     def blending_img(self):
-        global mainpage_img_list
+        global gMainpage_img_list
         try:
             #\ random the number of picture
             self.img_counter = random.randrange(0, 9, 1)
@@ -1502,20 +1579,8 @@ class MainPage(tk.Frame):
             #\ limit the image counter within the range
             self.img_counter %= len(Index.img_url_list)
 
-            # #\ open the image from url
-            # image_bytes = urlopen( Index.img_url_list[self.img_counter], timeout=Index.Img_timeout).read()
-
-            # #\ internal data file
-            # data_stream = io.BytesIO(image_bytes)
-
-            # #\ open as a PIL image object
-            # self.pil_image = Image.open(data_stream)
-
-            # #\ convert PIL image object to Tkinter PhotoImage object
-            # self.pil_image = self.pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
-
             #\ get the image
-            self.pil_image = mainpage_img_list[self.img_counter]
+            self.pil_image = gMainpage_img_list[self.img_counter]
 
             #\ Blending
             if (self.init_while):
@@ -1543,14 +1608,15 @@ class MainPage(tk.Frame):
     #\ this is because recalling this function by after or use the thread for this function
     #\ will cause the program to hang. Apply the thread to it will cause the error showing that
     #\ the mian thread is not in the main loop, so I add a wrap up function for it to let this work
-    def update_img(self):
-        threading.Thread(target=self.update_img_thread()).start()
+    # def update_img(self):
+    #     threading.Thread(target=self.update_img_thread()).start()
 
 
 
-    #\ update image thread to call the finction again by using after function
+    #\ Update image thread to call the finction again by using after function
+    #\ Waiting fot the gLogin_Initial_state to be disable by login function, else keep waiting
     def update_img_thread(self):
-        if (Login_Initial_state):
+        if (gLogin_Initial_state):
             pass
         else:
             if (self.init_while):

@@ -9,6 +9,8 @@ import multiprocessing
 from datetime import datetime, date
 
 
+#\ default encoding
+DefaultEncoding = "utf-8"
 
 
 ##################################################
@@ -254,7 +256,7 @@ GIFMAXFRAME = 80
 #\ for waiting frame animation
 waitingframeGIF = Image_path + "\\waiting.gif"
 waitingframe_gif_change_time = 0.05 #\ seconds
-waitingframe_loop_time = 0.01 #\ seconds
+waitingframe_loop_time = 0.1 #\ seconds
 GIFMAXFRAME_waiting_frame = 16 #9 #\ maximum frame
 
 
