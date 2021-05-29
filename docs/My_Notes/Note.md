@@ -861,7 +861,7 @@ reference :
 
 ## [2021/4/21]
 
-1. **Use multi=True when executing multiple statements** error
+1. **Use multi=True when executing multiple statements**  error
     solution :
 
     ```python

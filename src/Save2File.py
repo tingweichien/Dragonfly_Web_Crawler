@@ -25,6 +25,7 @@ from functools import partial
 from typing import List
 import Database_function
 import chardet
+import codecs
 
 
 TotalSpeciesNumber = 0
@@ -43,7 +44,7 @@ def Read_check_File(File_name:str):
     if file_check:
         file_size = os.stat(Index.current_path + "\\" + File_name).st_size
         if not file_size == 0:
-            with open(File_name, newline='', errors = "ignore", encoding=DetectFileEncoding(File_name)) as F:
+            with open(File_name, newline='', errors = "ignore", encoding=DetectFileEncoding(File_name, False)) as F:
                 R = csv.reader(F, dialect='excel', skipinitialspace=True)
                 oldData = [line for line in R]
                 oldID = oldData[0][0]
@@ -52,12 +53,27 @@ def Read_check_File(File_name:str):
 
 
 #\ Detect the file encoding type
-def DetectFileEncoding(File_path:str) -> str:
+def DetectFileEncoding(File_path:str, return_or_not:bool) -> str:
     with open(File_path, "rb") as r:
         result = chardet.detect(r.read(10000))
         print(f"[Info] {File_path} is encoding in {result['encoding']} type")
-        return result['encoding']
+        if return_or_not:
+            return result['encoding']
+        else:
+            return Index.DefaultEncoding
 
+
+#\ transform the file encoding to certain type
+def Encode2SpecificType(File_path:str, Type:str):
+    #\ read
+    with open(File_path, "r", newline='', errors = "ignore", encoding=DetectFileEncoding(File_path, False)) as F:
+        R = csv.reader(F, skipinitialspace=True)
+        oldData = [line for line in R]
+
+    #\ write
+    with open(File_path, mode='a+', newline='', errors = "ignore", encoding=Type) as Save_File:
+        File_writer = csv.writer(Save_File, delimiter=',')
+        File_writer.writerows(oldData)
 
 
 
@@ -70,7 +86,8 @@ def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_He
         os.mkdir(newDir)
 
     #\ 'a' stands for append, which can append the new data to old one
-    with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
+    # with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
+    with open(File_path, mode='w', newline='', errors = "ignore", encoding="utf-8") as Save_File:
         File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         # init , for there is no file exists or the file is empty
         if ((not file_check) or (file_size == 0)):
@@ -103,7 +120,7 @@ def Update2File(File_path:str, Data:list, task:str, Row_index:int=None, Col_inde
     Update2FileTaskList = ["modify header", "add header", "update content"]
     Flag = False
     if task in Update2FileTaskList:
-        with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
+        with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path, False)) as Save_File:
             File_writer = csv.writer(Save_File, skipinitialspace=True)
 
             #\ switch task
@@ -547,5 +564,8 @@ def savefile(self, parsetype:str, Update_enable:List[bool]):
         messagebox_Flag = messagebox.showinfo("Finished updating~", "Finished updating the data~")
         if messagebox_Flag:
             self.Save2File_popup_closeWindow()
+
+
+
 
 
