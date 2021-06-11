@@ -54,6 +54,15 @@ def Read_check_File(File_name:str):
 
 #\ Detect the file encoding type
 def DetectFileEncoding(File_path:str, return_or_not:bool) -> str:
+    """[summary]
+
+    Args:
+        File_path (str): file to detect
+        return_or_not (bool): (True) to return the detected encoding or (False) to return the default encoding
+
+    Returns:
+        str: encoding
+    """
     with open(File_path, "rb") as r:
         result = chardet.detect(r.read(10000))
         print(f"[Info] {File_path} is encoding in {result['encoding']} type")
@@ -64,16 +73,17 @@ def DetectFileEncoding(File_path:str, return_or_not:bool) -> str:
 
 
 #\ transform the file encoding to certain type
-def Encode2SpecificType(File_path:str, Type:str):
+def Encode2SpecificType(File_path:str, target_path:str, Type:str):
     #\ read
-    with open(File_path, "r", newline='', errors = "ignore", encoding=DetectFileEncoding(File_path, False)) as F:
-        R = csv.reader(F, skipinitialspace=True)
-        oldData = [line for line in R]
+    with open(File_path, "r", encoding="cp950") as In_File:
+        # R = csv.reader(F, skipinitialspace=True)
+        # oldData = [line for line in R]
 
-    #\ write
-    with open(File_path, mode='a+', newline='', errors = "ignore", encoding=Type) as Save_File:
-        File_writer = csv.writer(Save_File, delimiter=',')
-        File_writer.writerows(oldData)
+        #\ write
+        with open(target_path, "w", encoding=Type) as Save_File:
+            # File_writer = csv.writer(Save_File, delimiter=',')
+            # File_writer.writerows(oldData)
+            Save_File.write(In_File.read())
 
 
 
@@ -86,8 +96,7 @@ def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_He
         os.mkdir(newDir)
 
     #\ 'a' stands for append, which can append the new data to old one
-    # with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path)) as Save_File:
-    with open(File_path, mode='w', newline='', errors = "ignore", encoding="utf-8") as Save_File:
+    with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path, False)) as Save_File:
         File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         # init , for there is no file exists or the file is empty
         if ((not file_check) or (file_size == 0)):
@@ -172,7 +181,7 @@ def ListIndexValid(LIST:list, row:int, col:int):
 
 #\ write species number to json file
 def writeTotalNum2Json(inputDict:dict, filepath:str):
-    with open(filepath, 'w', encoding='utf-8') as outputfile:
+    with open(filepath, 'w', encoding=DetectFileEncoding(filepath, False)) as outputfile:
         json.dump(inputDict, outputfile, ensure_ascii=False, indent = 4) #ident =4 use for pretty print, write inputDict to the outputfile
 
 
@@ -180,7 +189,7 @@ def writeTotalNum2Json(inputDict:dict, filepath:str):
 def ReadTotalNum2Json(filepath:str):
     global TotalSpeciesNumber
     try:
-        with open(filepath, 'r', errors='ignore', encoding='utf-8') as readfile:
+        with open(filepath, 'r', errors='ignore', encoding=DetectFileEncoding(filepath, False)) as readfile:
             return_dict = json.load(readfile)
             TotalSpeciesNumber = len(return_dict)
             return return_dict
@@ -211,12 +220,12 @@ def removeEmpty():
             #print(spec)
             if os.path.exists(Save_File+ ".csv"):
                 with open(Save_File + ".csv", "r", newline='', errors="ignore") as r:
-                    with open("Crawl_Data\\Record_Num_each_species.txt", "r", newline='', errors="ignore", encoding='utf-8') as js:
+                    with open("Crawl_Data\\Record_Num_each_species.txt", "r", newline='', errors="ignore", encoding=Index.DefaultEncoding) as js:
                         totalNum = json.load(js)
                     R = list(csv.reader(r))
                     print("Total: " + str(totalNum[spec]))
                     print("lens: " + str(len(R)))
-                    with open(Save_File+ ".csv", "w", newline='', errors="ignore", encoding='utf-8') as w:
+                    with open(Save_File+ ".csv", "w", newline='', errors="ignore", encoding=Index.DefaultEncoding) as w:
                         for read in R:
                             if (not len(read[0]) == 0) and (not read[2] in [data[2] for data in Data]):
                                 Data.append(read)
@@ -256,7 +265,7 @@ def CleanDataTF(*args):
                                     ])
 
             #\ write to the file
-            with open(filepath, 'w', newline='', errors="ignore", encoding='utf-8') as w:
+            with open(filepath, 'w', newline='', errors="ignore", encoding=Index.DefaultEncoding) as w:
                 File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                 File_writer.writerow(Index.CSV_Head)
                 File_writer.writerows(newData)
@@ -486,7 +495,7 @@ def parse_all_dragonfly_data(self):
 def ReadFromFile(file:str)->List[DataClass.DetailedTableInfo]:
     ReadFileList = []
     if (os.path.exists(file) == True):
-        with open(file, 'r', newline="", errors='ignore', encoding='utf-8') as r:
+        with open(file, 'r', newline="", errors='ignore', encoding=Index.DefaultEncoding) as r:
             ReadFile = csv.reader(r)
             for line in ReadFile:
                 ReadFileList.append(

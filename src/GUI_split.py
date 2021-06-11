@@ -1,4 +1,10 @@
 # this is GUI split program
+#\
+#\
+#\ Main GUI program
+#\
+#\
+#\
 
 import tkinter as tk
 import tkinter.font as tkFont
