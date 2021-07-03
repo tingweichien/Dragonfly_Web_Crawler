@@ -887,9 +887,25 @@ reference :
 
 1. Comment color
 
-    ```python
+    ```cmd
     # !
     # todo
     # *
     # ?
     ```
+
+
+
+## [2021/07/03]
+
+1. git rename
+
+    ```cmd
+    git mv old-name new-name
+    ```
+
+2. git del
+
+   ```cmd
+   git rm XXXXX
+   ```

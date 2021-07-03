@@ -104,20 +104,24 @@
 
 ![LoginPage](./docs/image/program_result_picture/Login.PNG)
 
-#### (3) ***Mainpage***
+#### (3) ***Waiting***
+
+![WaitingPage](https://i.imgur.com/li0ydJu.png)
+
+#### (4) ***Mainpage***
 
 ![Mainpage](https://i.imgur.com/inTKauJ.png)
 
-#### (4) ***Plot to Google map***
+#### (5) ***Plot to Google map***
 
 ![Table](./docs/image/program_result_picture/Tablepng.png)
 ![GoogleMapPlot](./docs/image/program_result_picture/googlemap.png)
 
-#### (5) ***Save the data***
+#### (6) ***Save the data***
 
 ![Updating](https://i.imgur.com/rTNEyS2.png)
 
-#### (6) ***Plot by matplotlib***
+#### (7) ***Plot by matplotlib***
 
 - **Tree plot for species relationship**
     ![Tree plot](https://imgur.com/GIxAQAo.gif)
@@ -126,7 +130,7 @@
 - **(Pie plot) Species apperance among different month and year**
     ![Pie plot](https://imgur.com/rD3qrCO.png)
 
-#### (7) ***Plot by pyecharts***
+#### (8) ***Plot by pyecharts***
 - **Overview**
   ![pyecharts overview](https://i.imgur.com/toAw1z1.png)
 
