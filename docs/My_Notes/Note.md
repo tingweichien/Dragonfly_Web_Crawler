@@ -121,7 +121,7 @@ i.e. "command = lambda: your_function(input_args)"
 I do not bind my canvas to the PhotoImage
 <https://stackoverflow.com/questions/16846469/tkinter-canvas-image-is-not-displayed-in-class>
 
-![GUI](https://i.imgur.com/E3DI0r6.png) 
+![GUI](https://i.imgur.com/E3DI0r6.png)
 
 
 ## [2020/08/03]
@@ -879,6 +879,17 @@ reference :
 3. tkinter font : <https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-set-font-of-tkinter-text-widget/>
 4. tkinter label image with text : <https://stackoverflow.com/questions/33200257/create-a-text-over-an-image-using-python-tkinter>
 5. For multithread you should create the all the instance first and start all of them later. If starting the thread right after it created and do the next, this might cause delay, make all the stuff looks not in multithread
-6. Add the waiting frame between the login and main frame. Move 
+6. Add the waiting frame between the login and main frame. Move
     login function and chromedriver init to during this frame.
-    ![waiting frame](https://i.imgur.com/F4hBGub.png) 
+    ![waiting frame](https://i.imgur.com/F4hBGub.png)
+
+## [2021/07/01]
+
+1. Comment color
+
+    ```python
+    # !
+    # todo
+    # *
+    # ?
+    ```

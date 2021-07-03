@@ -1,9 +1,15 @@
-# this is GUI split program
+#\ this is GUI split program
+#\
+#\
+#\ Main GUI program
+#\
+#\
+#\
 
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import ttk, messagebox
-from ttkthemes import ThemedStyle
+# import ttkthemes
 from PySimpleGUI.PySimpleGUI import RELIEF_FLAT, RELIEF_GROOVE, RELIEF_SUNKEN
 import Dragonfly
 import DataClass
@@ -312,7 +318,7 @@ class LoginPage(tk.Frame):
 class WaitPage(tk.Frame):
     def __init__(self, parent, controller):
         if __name__ == '__main__':
-            tk.Frame.__init__(self, parent, bg="white")
+            tk.Frame.__init__(self, parent, bg="black")
             # w, h = Index.Waiting_geometry.split("x")
             # img_file = Image.open(Index.Image_path + "\\waiting.gif")
             # img_file = img_file.resize((int(w), int(h)), Image.ANTIALIAS)
@@ -323,8 +329,13 @@ class WaitPage(tk.Frame):
             self.waiting_image_Label = tk.Label(self, text="LOGGIN IN ~", fg="white", font=Font,
                                                 image=self.waiting_image_frame[0], bg="black",
                                                 compound=tk.BOTTOM)
+
+            Font2 = tkFont.Font(family="Arial", size=8, weight="bold")
+            self.waiting_progress_Label = tk.Label(self, text="start", fg="white", font=Font2, bg="black")
+
             self.ind = 0 #\ image
             self.waiting_image_Label.pack()
+            self.waiting_progress_Label.pack()
 
 
     #\ auto run when enter this page
@@ -367,6 +378,7 @@ class WaitPage(tk.Frame):
             #\ (3) login fail then return to the login page
             if gLoginResponseCheck_state is False:
                 print("[Warning] Login fail !!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                self.waiting_progress_Label["text"] = "Login fail !!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
                 #\ reset the state
                 gLogin_processing_state = False
@@ -406,7 +418,7 @@ class WaitPage(tk.Frame):
             #\ end the login process thread when all done
             for thread in gLogin_thread:
                 thread.join()
-            print("[info] waiting frame thread joied")
+            print("[info] Waiting frame thread joied")
 
             #\ move to the main page
             ################################
@@ -449,6 +461,7 @@ class WaitPage(tk.Frame):
                 messagebox.showwarning('Warning!!!',"No connection to server, check the internet connection!!!")
             else:
                 print("[INFO] login state success")
+                self.waiting_progress_Label["text"] = "login state success"
 
                 #\ save the login authorization info
                 self.SaveEncryptedAuth(controller)
@@ -490,7 +503,9 @@ class WaitPage(tk.Frame):
     #\ get the mainpage picture and do the pre-request
     def parse_mainpage_picture(self):
         global gMainpage_img_list, gParse_mainpage_picture_state
-        print("[INFO] Start Parsing the mainpage picture")
+        print("[INFO] Start parsing the mainpage picture")
+        self.waiting_progress_Label["text"] = "Start parsing the mainpage picture"
+
         for img_cnt in range(len(Index.img_url_list)):
             #\ open the image from url
             image_bytes = urlopen(Index.img_url_list[img_cnt], timeout=Index.Img_timeout).read()
@@ -509,15 +524,18 @@ class WaitPage(tk.Frame):
 
         #\ finished
         gParse_mainpage_picture_state = True
-        print("[INFO] parsing mainpage picture successfully")
+        print("[INFO] Parsing mainpage picture successfully")
+        self.waiting_progress_Label["text"] = "Parsing mainpage picture successfully"
 
 
     #\ chrome driver init
     def ChromeDriverInit(self):
         global gChromeDriverInit_state
         print("[INFO] Start Chrome driver initialization")
+        self.waiting_progress_Label["text"] = "Start Chrome driver initialization"
         Chromedriver.update_chromedriver.check_chromedriver()
         print("[INFO] Chrome driver init successfully")
+        self.waiting_progress_Label["text"] = "Chrome driver init successfully"
         gChromeDriverInit_state = True
 
 
@@ -531,12 +549,14 @@ class WaitPage(tk.Frame):
                 gfinish_process_check_loop = False
                 gLoginResponseCheck_state = None
                 print("\n[INFO] Finish process checking successfully (finish process check)")
+                self.waiting_progress_Label["text"] = "Finish process checking successfully (finish process check)"
                 return
 
             elif (gLogin_processing_state is False) and (gLoginResponseCheck_state is False):
                 gfinish_process_check_loop = False
                 gLoginResponseCheck_state = None
                 print("\n[INFO] Login fail (finish process check)")
+                self.waiting_progress_Label["text"] = "Login fail (finish process check)"
                 return
 
 
@@ -585,7 +605,7 @@ class MainPage(tk.Frame):
 
             #\ ---Image Frame---
             #####################
-            #\ 設定圖片
+            #\ 設�????????
             #\ directory from where script was ran
             self.img_counter = 0
             self.previous_img = None
@@ -1053,8 +1073,10 @@ class MainPage(tk.Frame):
             return Index.SpinLabel[self.SpinLabelIndex % len(Index.SpinLabel)]
         else:
             if self.expecting_CNT != 0:
-                self.pbVar_partial.set(100*Dragonfly.DataCNT.value/self.expecting_CNT)
-                return f"({Dragonfly.DataCNT.value}/{self.expecting_CNT})"
+                # current_data = Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE
+                self.pbVar_partial.set(100 * (Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) / self.expecting_CNT)
+                return f"{Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value}/{self.expecting_CNT}" + \
+                        f"({100 * (Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) //self.expecting_CNT}%)"
             else:
                 return "(0/0)"
 
@@ -1092,7 +1114,7 @@ class MainPage(tk.Frame):
 
     #\ very important!!! using thread makes the progressbar move outside the main thread
     #\ Var_MySQL_enable : Update the crawling data from csv to MySQL
-    #\ Var_weather_enable :　Update the weather data
+    #\ Var_weather_enable :???Update the weather data
     #\ Var_UpdatefWeb_enable : Update the data from web and save to the csv
     def start_button(self):
         print("[Button] Start the Updating")
@@ -1197,8 +1219,7 @@ class MainPage(tk.Frame):
         #\ Update progress infomation
         self.TextLabelFrame = tk.LabelFrame(self.NewWindow, text="Info", padx=40, bg="white")
         self.TextLabelFrame.pack(pady=10)
-        self.Info_Name_label_Var = tk.StringVar(self.TextLabelFrame)
-        self.Info_Name_label = tk.Label(self.TextLabelFrame, text="Ready to start Updating......", width=30, anchor='w', bg="white", textvariable=self.Info_Name_label_Var)
+        self.Info_Name_label = tk.Label(self.TextLabelFrame, text="Ready to start Updating......", anchor='w', bg="white")
         self.Info_Name_label.pack(pady=3)
         self.Info_FileName_label = tk.Label(self.TextLabelFrame, anchor='w', bg="white")
         self.Info_FileName_label.pack(pady=3)
@@ -1643,10 +1664,6 @@ if __name__ == '__main__':
 
     #\ set the title
     app.title(" Please Login")
-
-    #\ Specify the style1
-    # style = ThemedStyle(app)
-    # style.set_theme("xpnative")
 
     #\ Let the main loop running
     app.mainloop()

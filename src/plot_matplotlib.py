@@ -8,7 +8,7 @@ import re
 import Index
 import calendar
 from operator import add
-from scipy.stats import norm
+# from scipy.stats import norm
 import scipy.stats as st
 import Database_function
 

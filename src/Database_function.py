@@ -286,6 +286,10 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str, CsvOldDat
     self.Info_FileName_label['text']  = f'Current crawling --- {Index.Species_key_fullname_E2C[DB_species]} --- weather data'
     print(f'Current crawling --- {Index.Species_key_fullname_E2C[DB_species]} --- weather data')
 
+    #\ Check if the api key is expire or not, if all of them are expired then return
+    if CheckKeyExpire() is False :
+        return
+
     #\ create the new column
     ALTER_TABLE(weather_connection, "Weather", "JSON", DB_species)
 
@@ -341,6 +345,34 @@ def get_weather_data(self, connection:mysql.connector, DB_species:str, CsvOldDat
         weather_data_class.ErrorLog += "\n[warning] key counts overflow, no weather key is available\n"
         print(weather_data_class.ErrorLog)
         return False
+
+
+#\ Check key expire or not
+def CheckKeyExpire()->bool:
+    key_expire_list = []
+    key_expire_str = ""
+    for keycnt in range(len(Index.weather_Key_expire_date)) :
+        if datetime.now().date() > Index.weather_Key_expire_date[keycnt]:
+            key_expire_list.append([keycnt,
+                                    Index.weather_Key_expire_date[keycnt]
+                                    ])
+            key_expire_str += f"Weather api key ({Index.weather_key[keycnt]}) expire, the valid date is due on {Index.weather_Key_expire_date[keycnt].strftime('%Y-%m-%d')}\n"
+            Index.weather_key.remove(Index.weather_key[keycnt])
+            Index.weather_Key_expire_date.remove(Index.weather_Key_expire_date[keycnt])
+
+        #\ if there are some key out of date
+        if len(Index.weather_Key_expire_date) > len(key_expire_list) > 0:
+            messagebox.showwarning('Warning!!!', key_expire_str)
+            print(f"[Warning] Some of the weather api key is expire, please renew the key\n{key_expire_str}")
+            return True
+        #\ All of the keys are expired
+        elif len(Index.weather_Key_expire_date) == len(key_expire_list):
+            messagebox.showwarning('Warning!!!', "All the weather api key is expire, please renew the key")
+            print("[Warning] All the weather api key is expire, please renew the key")
+            return False
+        #\ All keys are vaild
+        else:
+            return True
 
 
 

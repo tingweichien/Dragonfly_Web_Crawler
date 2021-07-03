@@ -10,7 +10,7 @@ import Index
 from multiprocessing import Process, Pool, Value, Lock
 from typing import List
 import proxyscrape
-
+from fake_useragent import UserAgent
 
 
 # global
@@ -19,10 +19,11 @@ session = requests.Session()
 stop_crawl_all_data_mp = False
 
 DataCNT = Value('i', 0)
+tmp_DATA_CNT_ACCUMULATE = Value('i', 0)
 
 TotalCount = 0
 
-
+DataCNT_lock = Lock()
 
 ##################################################################
 
@@ -367,18 +368,19 @@ def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, 
 ###########################################################
 #\ multiprocessing ver
 #\ init pool
-def init(args):
-    global DataCNT
-    DataCNT = args
+def init(*args):
+    global DataCNT, tmp_DATA_CNT_ACCUMULATE
+    DataCNT = args[0]
+    tmp_DATA_CNT_ACCUMULATE = args[1]
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, page:int)->List[DataClass.DetailedTableInfo]:
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, _tmp_DATA_CNT_ACCUMULATE:int, page:int)->List[DataClass.DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
-    global DataCNT
+    global DataCNT, DataCNT_lock
     tmp_List = []
     Data_List = []
-    Species_all_record_data = session.post( Index.general_url +
+    Species_all_record_data = session.get( Index.general_url +
                                             Index.species_all_record_data_first_url +
                                             Index.species_all_record_data_page_url + str(page) +
                                             Index.species_all_record_data_species_url +
@@ -394,7 +396,8 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
     for Species_all_record_data_Data_Set in Row_Data:
         tmp_List = Species_all_record_data_Data_Set.find_all('td')
         id = tmp_List[0].text
-        response_DetailedInfo = session.post(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
+        # response_DetailedInfo = session.get(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers, timeout=Index.requests_timeout)
+        response_DetailedInfo = session.get(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
         Data_List.append(DataClass.DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
                                             soup2.find(id='R_LAT').get('value'),
@@ -405,12 +408,12 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
 
 
         #\ counts for the crawling times
-        DataCNT_lock = Lock()
+        # DataCNT_lock = Lock()
         with DataCNT_lock:
             DataCNT.value += 1
-            print("\rCurrent finished datas >> " +
-                    str(DataCNT.value) + " /" + str(expecting_CNT) +
-                    " (" + str(int(DataCNT.value * 100 / expecting_CNT)) + "%)", end='\r')
+            print("\r[Multi-process] Current Progress >> " +
+                    str(DataCNT.value + _tmp_DATA_CNT_ACCUMULATE) + " / " + str(expecting_CNT) +
+                    " (" + str(int((DataCNT.value + _tmp_DATA_CNT_ACCUMULATE) * 100 / expecting_CNT)) + "%)", end='\r')
 
     return Data_List
 
