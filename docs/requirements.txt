@@ -5,7 +5,7 @@ DateTime==4.3
 fake-useragent==0.1.11
 gmplot==1.4.1
 import==0.0.1
-Jinja2==2.11.2
+Jinja2==2.11.3
 matplotlib==3.3.3
 mysql-connector-python==8.0.22
 numpy==1.19.4
