@@ -44,11 +44,21 @@ def Read_check_File(File_name:str):
     if file_check:
         file_size = os.stat(Index.current_path + "\\" + File_name).st_size
         if not file_size == 0:
-            with open(File_name, newline='', errors = "ignore", encoding=DetectFileEncoding(File_name, False)) as F:
-                R = csv.reader(F, dialect='excel', skipinitialspace=True)
-                oldData = [line for line in R]
-                oldID = oldData[0][0]
-                oldData_len = len(oldData) - 1
+
+            #\ encoding detect
+            enc = DetectFileEncoding(File_name, False)
+
+            if enc in Index.AcceptedEncoding:
+                with open(File_name, newline='', errors = "ignore", encoding=enc) as F:
+                    R = csv.reader(F, dialect='excel', skipinitialspace=True)
+                    oldData = [line for line in R]
+                    oldID = oldData[0][0]
+                    oldData_len = len(oldData) - 1
+            else:
+                #\ delet the file if the file encoding is not in the supported type
+                os.remove(File_name)
+                print(f"[Warning] Remove {File_name} since the encoding {enc} is not vaild")
+
     return [oldData, oldData_len, oldID, file_check, file_size]
 
 
@@ -63,19 +73,27 @@ def DetectFileEncoding(File_path:str, return_or_not:bool) -> str:
     Returns:
         str: encoding
     """
-    with open(File_path, "rb") as r:
-        result = chardet.detect(r.read(10000))
-        print(f"[Info] {File_path} is encoding in {result['encoding']} type")
-        if return_or_not:
-            return result['encoding']
-        else:
-            return Index.DefaultEncoding
+    return_encoding = Index.DefaultEncoding
+    try :
+        with open(File_path, "rb") as r:
+            result = chardet.detect(r.read(Index.FileEncodeDetectNum))
+            print(f"[Info] {File_path} is encoding in {result['encoding']} type")
+            if return_or_not:
+                if result['encoding'] is not Index.EncodingException:
+                    return_encoding = result['encoding']
+    except:
+        return_encoding = Index.DefaultEncoding
+
+    return return_encoding
+
+
+
 
 
 #\ transform the file encoding to certain type
 def Encode2SpecificType(File_path:str, target_path:str, Type:str):
     #\ read
-    with open(File_path, "r", encoding="cp950") as In_File:
+    with open(File_path, "r", encoding=DetectFileEncoding(File_path, False)) as In_File:
         # R = csv.reader(F, skipinitialspace=True)
         # oldData = [line for line in R]
 
@@ -84,6 +102,27 @@ def Encode2SpecificType(File_path:str, target_path:str, Type:str):
             # File_writer = csv.writer(Save_File, delimiter=',')
             # File_writer.writerows(oldData)
             Save_File.write(In_File.read())
+
+
+
+#\ patch to update the header for csv files
+def UpdateCsvHeader(File_path:str):
+    print("[INFO] Patch to update the header")
+    enc = DetectFileEncoding(File_path, False)
+    oldData = []
+    with open(File_path, newline='', errors = "ignore", encoding=enc) as F:
+        R = csv.reader(F, dialect='excel', skipinitialspace=True)
+        for idx, line in enumerate(R):
+            #\ patch to remove incorrectlu duplicated header in the file
+            if idx > 0 and line[0] != Index.CSV_Head[0]:
+                oldData.append(line)
+
+        #\ If there is no header
+        if oldData[0][0] != Index.CSV_Head[0]:
+            with open(File_path, mode='w', newline='', errors = "ignore", encoding=enc) as Save_File:
+                File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                oldData.insert(0, Index.CSV_Head)
+                File_writer.writerows(oldData)
 
 
 
@@ -96,20 +135,24 @@ def Write2File(File_path:str, folder:str, file_check:bool, file_size:int, CSV_He
         os.mkdir(newDir)
 
     #\ 'a' stands for append, which can append the new data to old one
-    with open(File_path, mode='w', newline='', errors = "ignore", encoding=DetectFileEncoding(File_path, False)) as Save_File:
+    enc = DetectFileEncoding(File_path, False)
+    with open(File_path, mode='w', newline='', errors = "ignore", encoding=enc) as Save_File:
         File_writer = csv.writer(Save_File, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         # init , for there is no file exists or the file is empty
         if ((not file_check) or (file_size == 0)):
             File_writer.writerow(CSV_Header)
             File_writer.writerows(Data)
-            print("\n[write type]: First write")
+            print(f"\n[write type]: First write, encoding type {enc}\n")
 
         #\ for inserting the data into the old one
         else:
+            #\ patch to add the header
+            oldData.insert(0, CSV_Header)
+            #\ end of the patch
             for i in range(0, len(Data)):
                 oldData.insert(i+1, Data[i])
             File_writer.writerows(oldData)
-            print('\n[write type]: Insert')
+            print(f'\n[write type]: Insert, encoding type {enc}\n')
 
 
 #\ Update data to CSV database for fixing or adding to current database
@@ -211,6 +254,7 @@ def checkUpdateSpecies(NewNumberData:dict, filepath:str)->list:
 
 
 #\ remove the empty data and duplicate data in csv database
+"""
 def removeEmpty():
     Data = []
     for spec_family in Index.Species_Family_Name:
@@ -233,7 +277,7 @@ def removeEmpty():
                         File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                         File_writer.writerows(Data)
                         Data = []
-
+"""
 
 
 #\ transfer to clear data without dataa that has no latitude and longitutde information
@@ -265,7 +309,7 @@ def CleanDataTF(*args):
                                     ])
 
             #\ write to the file
-            with open(filepath, 'w', newline='', errors="ignore", encoding=Index.DefaultEncoding) as w:
+            with open(filepath, 'w', newline='', errors="ignore", encoding=DetectFileEncoding(filepath, False)) as w:
                 File_writer = csv.writer(w, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                 File_writer.writerow(Index.CSV_Head)
                 File_writer.writerows(newData)
@@ -289,6 +333,8 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         print("\n--Start crawling-- " + Input_species_famliy + " " + Input_species)
         self.IFileNameLabel_text(File_name)
         print("[File name]: " + File_name)
+        self.IStateLabel_text(" ")
+        self.IFinishStateLabel_text(" ")
 
         #\ <timing>
         start = time.time()
@@ -299,107 +345,170 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         #\ get the total data number
         Total_num = int(Species_total_num_Dict[Input_species])
 
+        #\ get the total number of data need to be update ot crawl
+        expecting_CNT = Total_num - oldData_len
+        self.expecting_CNT = expecting_CNT
+
+        #\ change page every ten counts
+        expecting_page = int(expecting_CNT / Index.data_per_page)
+
+        #\ since it starts form page 0, control the counter within the range 0~10 in each page
+        renmain_data_Last_page = expecting_CNT % Index.data_per_page
+
+        #\ Patch to avoid crawling too many data at ram
+        #\ save half of them and then keep doing the rest
+        start_end_page_list = []
+        if expecting_CNT > Index.CrawlingNumSegLimit:
+            # for StartEndIndex in range(expecting_page+1, 0, -Index.CrawlingNumSegLimit):
+            StartPage = expecting_page
+            while StartPage > 0:
+                tmp_start_page = StartPage - Index.CrawlingNumSegLimit//Index.data_per_page
+                EndPage = tmp_start_page if tmp_start_page > 0 else 0
+                start_end_page_list.append([EndPage, StartPage])
+                StartPage = tmp_start_page
+        else:
+            start_end_page_list = [[0, expecting_page]]
+
+
+        #\ GUI display
+        self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
+
+        #\ check if the expecting update number is zero, which the don't need to update
+        if expecting_CNT <= 0 or expecting_page <= 0:
+            self.IStateLabel_text("No Data need to update~")
+            print("[warning] No Data need to update~")
+            return False
+
         #\ choose to do the multiprocessing or not
         if Index.do_multiprocessing :
-
-            #\ get the total number of data need to be update ot crawl
-            expecting_CNT = Total_num - oldData_len
-            self.expecting_CNT = expecting_CNT
-
-            #\ GUI display
-            self.IUpdateNumLabel_text("[Update]: {}, CurrentData: {}, OldData: {}".format(expecting_CNT, Total_num, oldData_len))
-
-            #\ check if the expecting update number is zero, which the don't need to update
-            if expecting_CNT <= 0:
-                self.IStateLabel_text("No Data need to update~")
-                print("[warning] No Data need to update~")
-                return False
-
-            #\ change page every ten counts
-            expecting_page = int(expecting_CNT / Index.data_per_page)
-
-            #\ since it starts form page 0, control the counter within the range 0~10 in each page
-            renmaind_data_Last_page = expecting_CNT % Index.data_per_page
 
             #\ Multi-processing pool
             pool = multiprocessing.Pool(Index.cpus,
                         initializer=Dragonfly.init,
-                        initargs=(Dragonfly.DataCNT,))
+                        initargs=(Dragonfly.DataCNT, Dragonfly.tmp_DATA_CNT_ACCUMULATE,),
+                        maxtasksperchild=100)
             func = partial( Dragonfly.crawl_all_data_mp2,
                             session_S2F,
                             Input_species_famliy,
                             Input_species,
                             expecting_CNT,
                             expecting_page,
-                            renmaind_data_Last_page) # combine the not iterable value
+                            renmain_data_Last_page,
+                            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) # combine the none iterable value
 
-            #\ result
-            returnList = pool.map_async(func, list(range(expecting_page + 1)))
+            #\ loop through the end page and start page set
+            for start_page, end_page in start_end_page_list:
 
-            #\ Accumulate the counter by lock
-            DataCNT_lock = multiprocessing.Lock()
-            with DataCNT_lock:
-                Dragonfly.TotalCount += Dragonfly.DataCNT.value
-                Dragonfly.DataCNT.value = 0
+                #\ Patch due to somehow the return of the pool.map will cause noneType object has no attribute "get" error
+                try:
+                    returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
+                    break
+                except:
+                    print("[Warning] Exception for the pool map >> retry")
+                    #\ Accumulate the counter by lock (with will do acquire and release the lock)
+                    DataCNT_lock = Dragonfly.DataCNT_lock
+                    with DataCNT_lock:
+                        Dragonfly.TotalCount += Dragonfly.DataCNT.value
+                        Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
+                        Dragonfly.DataCNT.value = 0
+                    try:
+                        returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
+                        break
+                    except:
+                        print("[Warning]Rety for the pool map still failed")
+                        pass
 
-            #\ GUI display
-            self.ICurrentNumLabel_text(Dragonfly.TotalCount)
-            print("[current total crawl]: {} data".format(Dragonfly.TotalCount))
 
-            #\ check if the total counts over the limit
-            #\ to prevent over crawling which will cause heavy load to the web owner
-            #\ set the limit yourself in Index.limit_cnt
-            if Dragonfly.TotalCount <= Index.limit_cnt:
-                if not (len(returnList.get()) == 0) :
-                    #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
-                    DataTmpList = reduce(add, returnList.get())
+
+
+                #\ Accumulate the counter by lock (with will do acquire and release the lock)
+                # DataCNT_lock = multiprocessing.Lock()
+                DataCNT_lock = Dragonfly.DataCNT_lock
+                with DataCNT_lock:
+                    Dragonfly.TotalCount += Dragonfly.DataCNT.value
+                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
+                    Dragonfly.DataCNT.value = 0
+
+
+                #\ GUI display
+                self.ICurrentNumLabel_text(Dragonfly.TotalCount)
+                print("[current total crawl]: {} data".format(Dragonfly.TotalCount))
+
+                #\ check if the total counts over the limit
+                #\ to prevent over crawling which will cause heavy load to the web owner
+                #\ set the limit yourself in Index.limit_cnt
+                if Dragonfly.TotalCount <= Index.limit_cnt:
+                    if not (len(returnList.get()) == 0) :
+                        #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
+                        DataTmpList = reduce(add, returnList.get())
+                    else:
+                        print("No Data need to update\n")
+                        return False
+                    # try:
+                    #     if not (len(returnList.get()) == 0) :
+                    #         #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
+                    #         DataTmpList = reduce(add, returnList.get())
+                    #     else:
+                    #         print("No Data need to update\n")
+                    #         return False
+                    # except:
+                    #     print("[Warning] Fail to do DateTmpList or \"no data need to update\"")
+
                 else:
-                    print("No Data need to update\n")
+                    self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
+                    print("[warning] !!!Meet the limit for data counts!!!!\n")
+                    pool.terminate()
+                    return True  #\End the program
+
+
+            #\ without multiprocessing singal thread and singal process
+            #\ If going to use this, comment the above
+            # else:
+            #\    print("[INFO] Doing single process")
+            #     DataTmpList = Dragonfly.crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+
+
+                #\ reformat the data
+                Data = []
+                for Data_tmp in DataTmpList:
+                    Data.append([Data_tmp.SpeciesFamily,
+                            Data_tmp.Species,
+                            Data_tmp.IdNumber,
+                            Data_tmp.Dates,
+                            Data_tmp.Times,
+                            Data_tmp.User,
+                            Data_tmp.City,
+                            Data_tmp.Dictrict,
+                            Data_tmp.Place,
+                            Data_tmp.Altitude,
+                            Data_tmp.Latitude,
+                            Data_tmp.Longitude,
+                            Data_tmp.Description
+                            ])
+
+                #\ check if there is data need to update
+                if len(Data) == 0:
+                    self.IStateLabel_text("No Data need to update")
+                    print("[INFO] No Data need to update")
                     return False
-            else:
-                self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
-                print("[warning] !!!Meet the limit for data counts!!!!\n")
-                pool.terminate()
-                return True  #\End the program
+
+                #\ Read the old data
+                [oldData, oldData_len, oldID, file_check, file_size] = Read_check_File(File_name)
+
+                #\ write the data to file
+                Write2File(File_name, folder, file_check, file_size, Index.CSV_Head, Data, oldData)
+
+                if len(start_end_page_list) > 1:
+                    print(f"[INFO] Save data to file each {Index.CrawlingNumSegLimit} data\n")
+                    self.IStateLabel_text(f"Save data to file each {Index.CrawlingNumSegLimit} data")
 
 
-        #\ without multiprocessing
-        #\ singal thread and singal process
-        else:
-            DataTmpList = Dragonfly.crawl_all_data(Input_species_famliy, Input_species, Total_num, Index.limit_cnt, oldID)
+            #\ End of for  loop-----------------------------------------------------------------------
 
-
-        #\ reformat the data
-        Data = []
-        for Data_tmp in DataTmpList:
-            Data.append([Data_tmp.SpeciesFamily,
-                    Data_tmp.Species,
-                    Data_tmp.IdNumber,
-                    Data_tmp.Dates,
-                    Data_tmp.Times,
-                    Data_tmp.User,
-                    Data_tmp.City,
-                    Data_tmp.Dictrict,
-                    Data_tmp.Place,
-                    Data_tmp.Altitude,
-                    Data_tmp.Latitude,
-                    Data_tmp.Longitude,
-                    Data_tmp.Description
-                    ])
-
-        #\ check if there is data need to update
-        if len(Data) == 0:
-            self.IStateLabel_text("No Data need to update")
-            print("[warning] No Data need to update")
-            return False
-
-        #\ write the data to file
-        Write2File(File_name, folder, file_check, file_size, Index.CSV_Head, Data, oldData)
-
-        if Index.do_multiprocessing :
             #\ make sure whe main is finished, subfunctions still keep rolling on
             pool.close()
             pool.join()
+
 
         #\ <timing>
         end = time.time()
@@ -407,6 +516,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
         #\ GUI display
         self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
+
 
 
 
@@ -441,6 +551,10 @@ def parse_all(self):
                 Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                 self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
+
+                #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
+                Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+
                 if program_stop_check:
                     return
 
@@ -468,6 +582,10 @@ def parse_all(self):
                     ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     ##########################################################################################################
+
+                    #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
+                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+
                     if program_stop_check:
                         return
 
@@ -495,13 +613,14 @@ def parse_all_dragonfly_data(self):
 def ReadFromFile(file:str)->List[DataClass.DetailedTableInfo]:
     ReadFileList = []
     if (os.path.exists(file) == True):
-        with open(file, 'r', newline="", errors='ignore', encoding=Index.DefaultEncoding) as r:
+        with open(file, 'r', newline="", errors='ignore', encoding=DetectFileEncoding(file, False)) as r:
             ReadFile = csv.reader(r)
             for line in ReadFile:
-                ReadFileList.append(
-                    DataClass.DetailedTableInfo(line[2], line[3], line[4], line[6], line[7], line[8], line[9],
-                                        line[5], line[10], line[11], line[0], line[1], line[12])
-                )
+                if len(line) > 0:
+                    ReadFileList.append(
+                        DataClass.DetailedTableInfo(line[2], line[3], line[4], line[6], line[7], line[8], line[9],
+                                            line[5], line[10], line[11], line[0], line[1], line[12])
+                    )
             del ReadFileList[0:1]
             if len(ReadFileList) == 0:
                 messagebox.showinfo("info", "No record")

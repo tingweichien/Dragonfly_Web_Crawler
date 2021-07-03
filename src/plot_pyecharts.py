@@ -111,7 +111,7 @@ def plot_species_city(connection, DB_species:str, time:list):
     value_multi = []
 
     #\ time line
-    x_mon = ['Jan','Feb','Mar','Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    x_mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     #\ title
     Title = Index.Species_key_fullname_E2C[DB_species.split(".")[1]]
@@ -149,12 +149,12 @@ def plot_species_city(connection, DB_species:str, time:list):
         attrS.clear()
         attrT.clear()
         value.clear()
-        value_multi.clear()
+        value_multi = [0]*12
         for data,data2 in zip(DataSameYear, DataSameYear_multi):
             value.append(data['COUNT(*)'])
             attrS.append(t2s[data['City']])
             attrT.append(data['City'])
-            value_multi.append(data2['COUNT(*)'])
+            value_multi[data2['MONTH(Dates)']-1] = data2['COUNT(*)']
 
         #\ make sure that the emoty data can keep on
         if value == [] or attrS == []:

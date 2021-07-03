@@ -10,8 +10,10 @@ from datetime import datetime, date
 
 
 #\ default encoding
-DefaultEncoding = "utf-8"
-
+DefaultEncoding = "utf-8" #"Big5" #"utf-8"
+AcceptedEncoding = ["utf-8", "Big5"]
+FileEncodeDetectNum = 10000 #\ this use for the file encoding detection
+EncodingException = "GB2312"
 
 ##################################################
 # my account and password
@@ -28,7 +30,7 @@ Login_Filename = "src/Password_Account_info.txt"
 ###################################################
 ##\ Gui setting
 Login_geometry = "300x330" # Width x Height
-Waiting_geometry = "300x330"
+Waiting_geometry = "300x360"
 MainPageGeometry = "380x680"
 updateWinGeometry = "600x420"
 
@@ -126,6 +128,9 @@ headers = {
         'User-Agent' : UA.random,
 }
 
+#\ Timeout for the requests session (sec)
+requests_timeout = 60
+
 
 #\ login proxy
 proxy_list = [
@@ -144,6 +149,9 @@ proxy_list = [
 
 #\ re-login limits
 re_try_limit = 4
+
+#\ re-crawling fro multiprocessing
+re_try_MP_limit = 2
 
 
 #\ chrome driver path
@@ -228,6 +236,13 @@ cpus = maxcpus
 
 #\ do multiprocessing or not
 do_multiprocessing = True
+
+#\ Crawling Number Segment Limit
+#\ To avoid too many data stay in the ram, if exceed this value then
+#\ patially save the 1/n data each time. n will be decided by the value "CrawlingSegDivide"
+CrawlingNumSegLimit = 2000
+CrawlingSegDivide = 2
+
 
 #\ state how many row data in one page
 data_per_page = 10

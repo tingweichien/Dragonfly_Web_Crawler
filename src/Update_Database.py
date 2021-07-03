@@ -115,7 +115,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
 
     #\ End of the updating
-    for idx, update_state in enumerate(Update_enable):
+    for idx, update_state in enumerate(Update_enable[:2]):
         if update_state:
             print(f"\n[Update] --Finished{update_string[idx]}--\n")
             print("----------------------------------------------")
@@ -161,16 +161,20 @@ def Update_data_updating_GUI(self, update_enable:List[bool], state:str):
 #\ Update data from CSV to MySQL
 def UpdateCsv2MySql(connection:mysql.connector, S:str, Sp:str, Id:int ,Species_table_name:str):
     #\ Insert query
-    create_species_info_table = Database_function.create_species_info_table_first + Species_table_name + Database_function.create_species_info_table_end
-    Database_function.create_table(connection, create_species_info_table)
+    # create_species_info_table = Database_function.create_species_info_table_first + Species_table_name + Database_function.create_species_info_table_end
+    # Database_function.create_table(connection, create_species_info_table)
 
     filepath = ".\\Crawl_Data\\" + Index.Species_class_key[S] + "\\" + Index.Species_class_key[S] + Index.Species_key[Sp] + ".csv"
+
+    #\ patch to update the CSV header
+    Save2File.UpdateCsvHeader(filepath)
+
     with open(filepath, 'r', newline='', errors='ignore') as r:
         CSVData_org = csv.DictReader(r)
         CSVData = [line for line in CSVData_org]
         currentData_Num = Database_function.read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
         Data_update_Num = len(CSVData) - currentData_Num[0]['COUNT(*)']
-        print(f"start from 0 ~ {Data_update_Num}")
+        print(f"\nstart from 0 ~ {Data_update_Num}")
         if Data_update_Num > 0 :
             insertdata_SI = []
             #\ read the database to check the current data number and insert the data from csv file start from it.
