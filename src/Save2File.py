@@ -397,12 +397,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                             Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) # combine the none iterable value
 
             #\ loop through the end page and start page set
+            returnList = None
             for start_page, end_page in start_end_page_list:
 
                 #\ Patch due to somehow the return of the pool.map will cause noneType object has no attribute "get" error
                 try:
                     returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
-                    break
                 except:
                     print("[Warning] Exception for the pool map >> retry")
                     #\ Accumulate the counter by lock (with will do acquire and release the lock)
@@ -438,26 +438,27 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 #\ to prevent over crawling which will cause heavy load to the web owner
                 #\ set the limit yourself in Index.limit_cnt
                 if Dragonfly.TotalCount <= Index.limit_cnt:
+                    if returnList is None:
+                        return False
                     if not (len(returnList.get()) == 0) :
                         #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
                         DataTmpList = reduce(add, returnList.get())
                     else:
                         print("No Data need to update\n")
+                        #\ Clear the temp data
+                        DataCNT_lock = Dragonfly.DataCNT_lock
+                        with DataCNT_lock:
+                            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
                         return False
-                    # try:
-                    #     if not (len(returnList.get()) == 0) :
-                    #         #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
-                    #         DataTmpList = reduce(add, returnList.get())
-                    #     else:
-                    #         print("No Data need to update\n")
-                    #         return False
-                    # except:
-                    #     print("[Warning] Fail to do DateTmpList or \"no data need to update\"")
 
                 else:
                     self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
                     print("[warning] !!!Meet the limit for data counts!!!!\n")
                     pool.terminate()
+                    #\ Clear the temp data
+                    DataCNT_lock = Dragonfly.DataCNT_lock
+                    with DataCNT_lock:
+                        Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
                     return True  #\End the program
 
 
@@ -490,6 +491,8 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 if len(Data) == 0:
                     self.IStateLabel_text("No Data need to update")
                     print("[INFO] No Data need to update")
+                    #\ Clear the temp data
+                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
                     return False
 
                 #\ Read the old data
@@ -516,7 +519,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
         #\ GUI display
         self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
+        print(f"\nSpent time: {int(derivation/60)}min {round(derivation%60)}s")
 
+        #\ Clear the temp data
+        DataCNT_lock = Dragonfly.DataCNT_lock
+        with DataCNT_lock:
+            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
 
 
 

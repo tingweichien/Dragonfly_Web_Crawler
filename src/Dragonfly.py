@@ -375,7 +375,13 @@ def init(*args):
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, _tmp_DATA_CNT_ACCUMULATE:int, page:int)->List[DataClass.DetailedTableInfo]:
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str,
+                       Web_rawl_Species_name:str,
+                       expecting_CNT:int,
+                       expecting_page:int,
+                       remain_data_Last_page:int,
+                       _tmp_DATA_CNT_ACCUMULATE:int,
+                       page:int)->List[DataClass.DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT, DataCNT_lock
     tmp_List = []

@@ -151,10 +151,13 @@ def plot_species_city(connection, DB_species:str, time:list):
         value.clear()
         value_multi = [0]*12
         for data,data2 in zip(DataSameYear, DataSameYear_multi):
-            value.append(data['COUNT(*)'])
-            attrS.append(t2s[data['City']])
-            attrT.append(data['City'])
-            value_multi[data2['MONTH(Dates)']-1] = data2['COUNT(*)']
+            try:
+                value.append(data['COUNT(*)'])
+                attrS.append(t2s[data['City']])
+                attrT.append(data['City'])
+                value_multi[data2['MONTH(Dates)']-1] = data2['COUNT(*)']
+            except:
+                print(f"[Error] Some thing error for appending data")
 
         #\ make sure that the emoty data can keep on
         if value == [] or attrS == []:
