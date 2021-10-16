@@ -1073,6 +1073,12 @@ class MainPage(tk.Frame):
             return Index.SpinLabel[self.SpinLabelIndex % len(Index.SpinLabel)]
         else:
             if self.expecting_CNT != 0:
+
+                #\ Workaround to fix the incorrect progressbar due to the accumulate tmp function
+                if Save2File.mClearDataCntAccuForProgressbar is True:
+                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+                    Save2File.mClearDataCntAccuForProgressbar = False
+
                 # current_data = Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE
                 self.pbVar_partial.set(100 * (Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) / self.expecting_CNT)
                 return f"{Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value}/{self.expecting_CNT}" + \

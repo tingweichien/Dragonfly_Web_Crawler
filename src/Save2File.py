@@ -29,6 +29,7 @@ import codecs
 
 
 TotalSpeciesNumber = 0
+mClearDataCntAccuForProgressbar = False
 
 #\ Read data from csv file
 def Read_check_File(File_name:str):
@@ -327,6 +328,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         file_size = 0
         DataTmpList = []
         oldData = []
+        global mClearDataCntAccuForProgressbar
 
         #\ For displaying in GUI
         self.INameLabel_text(Input_species_famliy, Input_species)
@@ -449,6 +451,8 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                         DataCNT_lock = Dragonfly.DataCNT_lock
                         with DataCNT_lock:
                             Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+                            #\ Workaround to fix the error for incorrect progressabar dispalying
+                            mClearDataCntAccuForProgressbar = True
                         return False
 
                 else:
@@ -459,6 +463,8 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                     DataCNT_lock = Dragonfly.DataCNT_lock
                     with DataCNT_lock:
                         Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+                        #\ Workaround to fix the error for incorrect progressabar dispalying
+                        mClearDataCntAccuForProgressbar = True
                     return True  #\End the program
 
 
@@ -525,6 +531,9 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         DataCNT_lock = Dragonfly.DataCNT_lock
         with DataCNT_lock:
             Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
+            #\ Workaround to fix the error for incorrect progressabar dispalying
+            mClearDataCntAccuForProgressbar = True
+            return False
 
 
 
