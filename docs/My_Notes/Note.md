@@ -556,7 +556,7 @@ reference :
     ```
 
 4. result
-![result add Github readthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
+    ![result add Github readthedocs and web ver](https://i.imgur.com/ilXZYQh.png)
 
 ## [2020/12/3]
 
@@ -887,9 +887,25 @@ reference :
 
 1. Comment color
 
-    ```python
+    ```cmd
     # !
     # todo
     # *
     # ?
     ```
+
+
+
+## [2021/07/03]
+
+1. git rename
+
+    ```cmd
+    git mv old-name new-name
+    ```
+
+2. git del
+
+   ```cmd
+   git rm XXXXX
+   ```

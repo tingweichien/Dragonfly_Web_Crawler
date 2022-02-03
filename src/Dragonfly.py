@@ -19,7 +19,7 @@ session = requests.Session()
 stop_crawl_all_data_mp = False
 
 DataCNT = Value('i', 0)
-tmp_DATA_CNT_ACCUMULATE = Value('i', 0)
+BoolClearDataCntAccuForProgressbar = Value('i', False)
 
 TotalCount = 0
 
@@ -369,13 +369,18 @@ def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, 
 #\ multiprocessing ver
 #\ init pool
 def init(*args):
-    global DataCNT, tmp_DATA_CNT_ACCUMULATE
+    global DataCNT
     DataCNT = args[0]
-    tmp_DATA_CNT_ACCUMULATE = args[1]
+
 
 
 #\ multiprocessing
-def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, expecting_CNT:int, expecting_page:int, remain_data_Last_page:int, _tmp_DATA_CNT_ACCUMULATE:int, page:int)->List[DataClass.DetailedTableInfo]:
+def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str,
+                       Web_rawl_Species_name:str,
+                       expecting_CNT:int,
+                       expecting_page:int,
+                       remain_data_Last_page:int,
+                       page:int)->List[DataClass.DetailedTableInfo]:
     #\ 執行進入"蜓種觀察資料查詢作業"
     global DataCNT, DataCNT_lock
     tmp_List = []
@@ -412,8 +417,8 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str, Web_rawl_Speci
         with DataCNT_lock:
             DataCNT.value += 1
             print("\r[Multi-process] Current Progress >> " +
-                    str(DataCNT.value + _tmp_DATA_CNT_ACCUMULATE) + " / " + str(expecting_CNT) +
-                    " (" + str(int((DataCNT.value + _tmp_DATA_CNT_ACCUMULATE) * 100 / expecting_CNT)) + "%)", end='\r')
+                    str(DataCNT.value) + " / " + str(expecting_CNT) +
+                    " (" + str(int((DataCNT.value) * 100 / expecting_CNT)) + "%)", end='\r')
 
     return Data_List
 

@@ -385,7 +385,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
             #\ Multi-processing pool
             pool = multiprocessing.Pool(Index.cpus,
                         initializer=Dragonfly.init,
-                        initargs=(Dragonfly.DataCNT, Dragonfly.tmp_DATA_CNT_ACCUMULATE,),
+                        initargs=(Dragonfly.DataCNT,),
                         maxtasksperchild=100)
             func = partial( Dragonfly.crawl_all_data_mp2,
                             session_S2F,
@@ -393,41 +393,25 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                             Input_species,
                             expecting_CNT,
                             expecting_page,
-                            renmain_data_Last_page,
-                            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) # combine the none iterable value
+                            renmain_data_Last_page
+                            ) # combine the none iterable value
 
             #\ loop through the end page and start page set
+            returnList = None
             for start_page, end_page in start_end_page_list:
 
                 #\ Patch due to somehow the return of the pool.map will cause noneType object has no attribute "get" error
                 try:
                     returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
-                    break
                 except:
                     print("[Warning] Exception for the pool map >> retry")
                     #\ Accumulate the counter by lock (with will do acquire and release the lock)
-                    DataCNT_lock = Dragonfly.DataCNT_lock
-                    with DataCNT_lock:
-                        Dragonfly.TotalCount += Dragonfly.DataCNT.value
-                        Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
-                        Dragonfly.DataCNT.value = 0
                     try:
                         returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
                         break
                     except:
                         print("[Warning]Rety for the pool map still failed")
                         pass
-
-
-
-
-                #\ Accumulate the counter by lock (with will do acquire and release the lock)
-                # DataCNT_lock = multiprocessing.Lock()
-                DataCNT_lock = Dragonfly.DataCNT_lock
-                with DataCNT_lock:
-                    Dragonfly.TotalCount += Dragonfly.DataCNT.value
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
-                    Dragonfly.DataCNT.value = 0
 
 
                 #\ GUI display
@@ -438,21 +422,14 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 #\ to prevent over crawling which will cause heavy load to the web owner
                 #\ set the limit yourself in Index.limit_cnt
                 if Dragonfly.TotalCount <= Index.limit_cnt:
+                    if returnList is None:
+                        return False
                     if not (len(returnList.get()) == 0) :
                         #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
                         DataTmpList = reduce(add, returnList.get())
                     else:
                         print("No Data need to update\n")
                         return False
-                    # try:
-                    #     if not (len(returnList.get()) == 0) :
-                    #         #\ The function tools "reduce(add, list_args)" will add all the element in the list_args and output the final sum
-                    #         DataTmpList = reduce(add, returnList.get())
-                    #     else:
-                    #         print("No Data need to update\n")
-                    #         return False
-                    # except:
-                    #     print("[Warning] Fail to do DateTmpList or \"no data need to update\"")
 
                 else:
                     self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
@@ -488,8 +465,6 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
                 #\ check if there is data need to update
                 if len(Data) == 0:
-                    self.IStateLabel_text("No Data need to update")
-                    print("[INFO] No Data need to update")
                     return False
 
                 #\ Read the old data
@@ -503,11 +478,16 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                     self.IStateLabel_text(f"Save data to file each {Index.CrawlingNumSegLimit} data")
 
 
-            #\ End of for  loop-----------------------------------------------------------------------
+            #\ End of for loop-----------------------------------------------------------------------
+
+            #\
+            with Dragonfly.DataCNT_lock:
+                Dragonfly.DataCNT.value = 0
 
             #\ make sure whe main is finished, subfunctions still keep rolling on
             pool.close()
             pool.join()
+
 
 
         #\ <timing>
@@ -516,7 +496,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
         #\ GUI display
         self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
-
+        print(f"\nSpent time: {int(derivation/60)}min {round(derivation%60)}s")
 
 
 
@@ -552,9 +532,6 @@ def parse_all(self):
                 self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
 
-                #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
-                Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-
                 if program_stop_check:
                     return
 
@@ -582,9 +559,6 @@ def parse_all(self):
                     ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     ##########################################################################################################
-
-                    #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
 
                     if program_stop_check:
                         return
