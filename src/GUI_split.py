@@ -1074,15 +1074,10 @@ class MainPage(tk.Frame):
         else:
             if self.expecting_CNT != 0:
 
-                #\ Workaround to fix the incorrect progressbar due to the accumulate tmp function
-                if Save2File.mClearDataCntAccuForProgressbar is True:
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-                    Save2File.mClearDataCntAccuForProgressbar = False
+                self.pbVar_partial.set(100 * (Dragonfly.DataCNT.value) / self.expecting_CNT)
 
-                # current_data = Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE
-                self.pbVar_partial.set(100 * (Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) / self.expecting_CNT)
-                return f"{Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value}/{self.expecting_CNT}" + \
-                        f"({100 * (Dragonfly.DataCNT.value + Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) //self.expecting_CNT}%)"
+                return f"{Dragonfly.DataCNT.value}/{self.expecting_CNT}" + \
+                        f"({100 * (Dragonfly.DataCNT.value) // self.expecting_CNT}%)"
             else:
                 return "(0/0)"
 
@@ -1092,31 +1087,34 @@ class MainPage(tk.Frame):
     #\ also for update the update timer
     #\ the sub-progressbar will also included
     def UpdateGIF(self, index):
-        if self.GIFcheck == True :
-            if index < Index.GIFMAXFRAME-1:
-                index += 1
-            elif index == Index.GIFMAXFRAME-1:
-                index = 0
-            frame = self.Load_image[index]
-            self.loading_label.config(image=frame)
+        try:
+            if self.GIFcheck == True :
+                if index < Index.GIFMAXFRAME-1:
+                    index += 1
+                elif index == Index.GIFMAXFRAME-1:
+                    index = 0
+                frame = self.Load_image[index]
+                self.loading_label.config(image=frame)
 
-            #\ update the timer
-            if self.update_timer_flag:
-                delta_time = datetime.now() - self.start_time
-                sec = delta_time.seconds
-                milisec = delta_time.microseconds
-                self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
+                #\ update the timer
+                if self.update_timer_flag:
+                    delta_time = datetime.now() - self.start_time
+                    sec = delta_time.seconds
+                    milisec = delta_time.microseconds
+                    self.progressbar_label_time["text"] = f"({str(sec//60).zfill(2)}:{str(sec%60).zfill(2)}.{str(milisec//10**(Index.pb_microsecond_ndigits-Index.pb_showing_digit)).zfill(Index.pb_showing_digit)})"
 
-            #\update the sub progressbar for value and label
-            text = self.set_sub_progressbar()
-            self.progressbar_partial_label["text"] = text
+                #\update the sub progressbar for value and label
+                text = self.set_sub_progressbar()
+                self.progressbar_partial_label["text"] = text
 
-            #\ Update updating image
-            self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
-        else:
-            self.loading_label.config(image=self.Load_image[10])
+                #\ Update updating image
+                self.progressbarFrame.after(100, lambda:self.UpdateGIF(index,))
+            else:
+                self.loading_label.config(image=self.Load_image[10])
+                return
+        except:
+            print("[Warning] Something wrong with the UpdateGIF")
             return
-
 
     #\ very important!!! using thread makes the progressbar move outside the main thread
     #\ Var_MySQL_enable : Update the crawling data from csv to MySQL

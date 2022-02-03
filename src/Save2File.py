@@ -29,7 +29,6 @@ import codecs
 
 
 TotalSpeciesNumber = 0
-mClearDataCntAccuForProgressbar = False
 
 #\ Read data from csv file
 def Read_check_File(File_name:str):
@@ -328,7 +327,6 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         file_size = 0
         DataTmpList = []
         oldData = []
-        global mClearDataCntAccuForProgressbar
 
         #\ For displaying in GUI
         self.INameLabel_text(Input_species_famliy, Input_species)
@@ -387,7 +385,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
             #\ Multi-processing pool
             pool = multiprocessing.Pool(Index.cpus,
                         initializer=Dragonfly.init,
-                        initargs=(Dragonfly.DataCNT, Dragonfly.tmp_DATA_CNT_ACCUMULATE,),
+                        initargs=(Dragonfly.DataCNT,),
                         maxtasksperchild=100)
             func = partial( Dragonfly.crawl_all_data_mp2,
                             session_S2F,
@@ -395,8 +393,8 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                             Input_species,
                             expecting_CNT,
                             expecting_page,
-                            renmain_data_Last_page,
-                            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value) # combine the none iterable value
+                            renmain_data_Last_page
+                            ) # combine the none iterable value
 
             #\ loop through the end page and start page set
             returnList = None
@@ -408,28 +406,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                 except:
                     print("[Warning] Exception for the pool map >> retry")
                     #\ Accumulate the counter by lock (with will do acquire and release the lock)
-                    DataCNT_lock = Dragonfly.DataCNT_lock
-                    with DataCNT_lock:
-                        Dragonfly.TotalCount += Dragonfly.DataCNT.value
-                        Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
-                        Dragonfly.DataCNT.value = 0
                     try:
                         returnList = pool.map_async(func, list(range(start_page, end_page + 1)), chunksize=10)
                         break
                     except:
                         print("[Warning]Rety for the pool map still failed")
                         pass
-
-
-
-
-                #\ Accumulate the counter by lock (with will do acquire and release the lock)
-                # DataCNT_lock = multiprocessing.Lock()
-                DataCNT_lock = Dragonfly.DataCNT_lock
-                with DataCNT_lock:
-                    Dragonfly.TotalCount += Dragonfly.DataCNT.value
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value += Dragonfly.DataCNT.value
-                    Dragonfly.DataCNT.value = 0
 
 
                 #\ GUI display
@@ -447,24 +429,12 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                         DataTmpList = reduce(add, returnList.get())
                     else:
                         print("No Data need to update\n")
-                        #\ Clear the temp data
-                        DataCNT_lock = Dragonfly.DataCNT_lock
-                        with DataCNT_lock:
-                            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-                            #\ Workaround to fix the error for incorrect progressabar dispalying
-                            mClearDataCntAccuForProgressbar = True
                         return False
 
                 else:
                     self.IStateLabel_text("!!!Meet the limit for data counts!!!!")
                     print("[warning] !!!Meet the limit for data counts!!!!\n")
                     pool.terminate()
-                    #\ Clear the temp data
-                    DataCNT_lock = Dragonfly.DataCNT_lock
-                    with DataCNT_lock:
-                        Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-                        #\ Workaround to fix the error for incorrect progressabar dispalying
-                        mClearDataCntAccuForProgressbar = True
                     return True  #\End the program
 
 
@@ -495,10 +465,6 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
 
                 #\ check if there is data need to update
                 if len(Data) == 0:
-                    self.IStateLabel_text("No Data need to update")
-                    print("[INFO] No Data need to update")
-                    #\ Clear the temp data
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
                     return False
 
                 #\ Read the old data
@@ -512,11 +478,16 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                     self.IStateLabel_text(f"Save data to file each {Index.CrawlingNumSegLimit} data")
 
 
-            #\ End of for  loop-----------------------------------------------------------------------
+            #\ End of for loop-----------------------------------------------------------------------
+
+            #\
+            with Dragonfly.DataCNT_lock:
+                Dragonfly.DataCNT.value = 0
 
             #\ make sure whe main is finished, subfunctions still keep rolling on
             pool.close()
             pool.join()
+
 
 
         #\ <timing>
@@ -526,14 +497,6 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
         #\ GUI display
         self.IStateLabel_text(f"Finished crawling data ~  spend: {int(derivation/60)}min {round(derivation%60)}s") #\print('Finished crawling data ~  spend: {} min {} s'.format(int(derivation/60), round(derivation%60), 1))
         print(f"\nSpent time: {int(derivation/60)}min {round(derivation%60)}s")
-
-        #\ Clear the temp data
-        DataCNT_lock = Dragonfly.DataCNT_lock
-        with DataCNT_lock:
-            Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-            #\ Workaround to fix the error for incorrect progressabar dispalying
-            mClearDataCntAccuForProgressbar = True
-            return False
 
 
 
@@ -569,9 +532,6 @@ def parse_all(self):
                 self.progressbar.step((100*progressbar_portion["UpdatefWeb_portion"]) / TotalSpeciesNumber)
                 self.pbLabel_text()
 
-                #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
-                Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
-
                 if program_stop_check:
                     return
 
@@ -599,9 +559,6 @@ def parse_all(self):
                     ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     ##########################################################################################################
-
-                    #\ Clean the tmp accumulate DATA CNT for the progress bar and it's label
-                    Dragonfly.tmp_DATA_CNT_ACCUMULATE.value = 0
 
                     if program_stop_check:
                         return
