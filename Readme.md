@@ -39,10 +39,11 @@
 
 ## 2. Installation
 
-- Execute the ```Dragonfly-Data-V3.exe``` to run the program.
-![start](https://i.imgur.com/OtUhkse.png)
+- Execute the ```Dragonfly-Data-debug-V4.exe``` to run the program.
+![start](https://i.imgur.com/4ftdjnv.png)
 
-- Open ```Dragonfly-Data-debug-V3.py``` or ```.\src\GUI_split.py``` debug it.
+
+- Open ```.\src\GUI_split.py``` to debug.
 
 ---
 
