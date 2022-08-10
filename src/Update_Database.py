@@ -92,7 +92,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
                 print('\nUpdate the {} weather data\n'.format(Species_table_name))
 
                 #\ Stop update the weather data due to key problem or calling limit per day.
-                if state == False:
+                if not state:
                     messagebox.showwarning("Weather Crawling warning", f"Weather data crawling warning\n{weather_data_class.ErrorLog}")
                     return
 
