@@ -1444,8 +1444,11 @@ class MainPage(tk.Frame):
                 self.window['and'].update(button_color=("black","green"))
                 self.window['or'].update(button_color=("black", "white"))
             elif event == '-IN-':
-                if int(values['-IN-']) <= 0:
-                    messagebox.showwarning('Warning!!!', 'Please set the positive integer value')
+                if values['-IN-'] != '':
+                    if int(values['-IN-']) <= 0:
+                        messagebox.showwarning('Warning!!!', 'Please set the positive integer value')
+                else :
+                    messagebox.showwarning('Warning!!!', 'Don\'t left it empty!')
         self.window.Close()
 
 
