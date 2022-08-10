@@ -507,20 +507,25 @@ class WaitPage(tk.Frame):
         self.waiting_progress_Label["text"] = "Start parsing the mainpage picture"
 
         for img_cnt in range(len(Index.img_url_list)):
-            #\ open the image from url
-            image_bytes = urlopen(Index.img_url_list[img_cnt], timeout=Index.Img_timeout).read()
+            try:
+                #\ open the image from url
+                image_bytes = urlopen(Index.img_url_list[img_cnt], timeout=Index.Img_timeout).read()
 
-            #\ internal data file
-            data_stream = io.BytesIO(image_bytes)
+                #\ internal data file
+                data_stream = io.BytesIO(image_bytes)
 
-            #\ open as a PIL image object
-            pil_image = Image.open(data_stream)
+                #\ open as a PIL image object
+                pil_image = Image.open(data_stream)
 
-            #\ convert PIL image object to Tkinter PhotoImage object
-            pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
+                #\ convert PIL image object to Tkinter PhotoImage object
+                pil_image = pil_image.resize((Index.coverImagWidth, Index.coverImagHeight), Image.ANTIALIAS)
 
-            #\ save the processed image to the list
-            gMainpage_img_list.append(pil_image)
+                #\ save the processed image to the list
+                gMainpage_img_list.append(pil_image)
+
+            except:
+                print("Please Reopen~ something wrong with image parsing")
+
 
         #\ finished
         gParse_mainpage_picture_state = True
@@ -1641,10 +1646,11 @@ class MainPage(tk.Frame):
     #\ Update image thread to call the finction again by using after function
     #\ Waiting fot the gLogin_Initial_state to be disable by login function, else keep waiting
     def update_img_thread(self):
+        global gParse_mainpage_picture_state
         if (gLogin_Initial_state):
             pass
         else:
-            if (self.init_while):
+            if (self.init_while & gParse_mainpage_picture_state):
                 #\ blending the picture in another thread
                 threading.Thread(target=self.blending_img()).start()
 

@@ -197,7 +197,7 @@ img_url_list = [img_url1, img_url2, img_url3, img_url4, img_url5, img_url6, img_
 
 
 #\ img timeout
-Img_timeout = 30
+Img_timeout = 60
 
 
 #\ cover img change times(sec)
