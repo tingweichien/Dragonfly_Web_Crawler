@@ -31,6 +31,8 @@ from PIL import Image, ImageTk, ImageSequence
 import random
 import time
 import base64
+import Database_function
+from typing import List
 
 
 
@@ -418,7 +420,7 @@ class WaitPage(tk.Frame):
             #\ end the login process thread when all done
             for thread in gLogin_thread:
                 thread.join()
-            print("[info] Waiting frame thread joied")
+            print("[INFO] Waiting frame thread joied")
 
             #\ move to the main page
             ################################
@@ -1003,7 +1005,10 @@ class MainPage(tk.Frame):
         if self.VarDatacheckbox.get() == True:
             map_result_list = Save2File.ReadFromFile(Index.folder_all_crawl_data + Index.Species_class_key[gVar_family] + "\\" + Index.Species_class_key[gVar_family] + Index.Species_key[gVar_species] + ".csv")
         else:
-            map_result_list = Dragonfly.SpeiciesCrawler(gVar_family, gVar_species)
+            # Do not use this, since the web have been restricted to the limited information.
+            # map_result_list = Dragonfly.SpeiciesCrawler(gVar_family, gVar_species)
+            connection_SF = Database_function.create_connection(Index.hostaddress, Index.username, Index.password, Index.DB_name)
+            map_result_list =  Database_function.Read_data_DetailedTable(connection_SF ,Index.Species_class_key[gVar_family] + Index.Species_key[gVar_species])
 
         if len(map_result_list) == 0:
             messagebox.showinfo("Infomation", "The selected species does not have any record")
@@ -1332,7 +1337,7 @@ class MainPage(tk.Frame):
     #\ Table
     #\ bad since the flexibility of the option are limited
     #\ these are coded in PySimpleGUI library
-    def New_table(self, map_result_list:list):
+    def New_table(self, map_result_list:List[DataClass.DetailedTableInfo]):
         global gVar_species, gVar_family
         Data = [
             [index.Place,

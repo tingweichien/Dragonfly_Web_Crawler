@@ -123,13 +123,19 @@ headers = {
 '''
 #--->Now use random fake user agent
 # https://ithelp.ithome.com.tw/articles/10209356
+#--->Connection close: 
+# issue: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+# https://stackoverflow.com/questions/10115126/python-requests-close-http-connection/15511852#15511852
+# https://blog.csdn.net/qq_33446100/article/details/118113121
 UA = UserAgent()
 headers = {
         'User-Agent' : UA.random,
+        'Connection':'close'
 }
 
 #\ Timeout for the requests session (sec)
-requests_timeout = 60
+# requests_timeout = 60
+requestTimeOut = 10
 
 
 #\ login proxy
@@ -503,6 +509,7 @@ Species_class_key_dragonfly = {
 }
 
 Species_class_key = {**Species_class_key_damselfly, **Species_class_key_dragonfly}
+
 #\ 科別中文
 Species_Family_Name = list(Species_class_key.keys())
 #\ 科別英文

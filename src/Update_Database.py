@@ -58,12 +58,16 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
             ##########################################################################
             Species_table_name = Index.Species_class_key[S] + Index.Species_key[Sp]
             ##########################################################################
+            print("\n\n"+"="*25)
+            print(f"Update {Species_table_name}")
+            print("="*25)
 
             #\ [Temp fix] Change the table name to new name
             #Database_function.update_header(connection, Species_table_name)
 
             #\ (1)Insert the data to the MySQL database from excel file
             if Update_MySQL:
+                print(">>>>> Update MySQL data")
                 try:
                   UpdateCsv2MySql(connection, S, Sp, Id, Species_table_name)
 
@@ -72,7 +76,7 @@ def Update_database(self, connection:mysql.connector, Update_enable:List[bool]):
 
             #\ (2)This is to update the weather information from World weather online
             if Update_weather:
-
+                print(">>>>> Update weather data")
                 #\ [Temp fix] Add a new weather column in csv
                 file_path = f'{Index.folder_all_crawl_data}{Index.Species_class_key[S]}\\{Species_table_name}.csv'
                 CsvOldData, _, _, _, _ = Save2File.Read_check_File(file_path)
@@ -159,7 +163,7 @@ def Update_data_updating_GUI(self, update_enable:List[bool], state:str):
 
 
 #\ Update data from CSV to MySQL
-def UpdateCsv2MySql(connection:mysql.connector, S:str, Sp:str, Id:int ,Species_table_name:str):
+def UpdateCsv2MySql(connection:mysql.connector, S:str, Sp:str, Id:int ,Species_table_name:str): # type: ignore
     #\ Insert query
     # create_species_info_table = Database_function.create_species_info_table_first + Species_table_name + Database_function.create_species_info_table_end
     # Database_function.create_table(connection, create_species_info_table)
@@ -172,9 +176,11 @@ def UpdateCsv2MySql(connection:mysql.connector, S:str, Sp:str, Id:int ,Species_t
     with open(filepath, 'r', newline='', errors='ignore') as r:
         CSVData_org = csv.DictReader(r)
         CSVData = [line for line in CSVData_org]
-        currentData_Num = Database_function.read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp])
+        currentData_Num = Database_function.read_data(connection, "SELECT COUNT(*) FROM " + Index.Species_class_key[S] + Index.Species_key[Sp]) # type: ignore
+        print(f"currentData_Num: {currentData_Num}")
+        # CSV Data have titile, data length need to -1
         Data_update_Num = len(CSVData) - currentData_Num[0]['COUNT(*)']
-        print(f"\nstart from 0 ~ {Data_update_Num}")
+        print(f"CSVData length: {len(CSVData)}, DataBase length: {currentData_Num[0]['COUNT(*)']}, start from 0 ~ {Data_update_Num}")
         if Data_update_Num > 0 :
             insertdata_SI = []
             #\ read the database to check the current data number and insert the data from csv file start from it.
@@ -192,7 +198,7 @@ def UpdateCsv2MySql(connection:mysql.connector, S:str, Sp:str, Id:int ,Species_t
                 Database_function.insert_single_data(connection, insertquery_SI, insertdata_SI)
                 print(f"Updating ~ {Cnt}/{Data_update_Num}", end="\r")
         else:
-            print("[info] All been updated, no need to update from CSV to MySQL")
+            print("[INFO]  All been updated, no need to update from CSV to MySQL")
 
     #\ rearrange the primary key
     if Data_update_Num > 0 :

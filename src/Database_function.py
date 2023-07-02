@@ -9,6 +9,7 @@ from datetime import datetime
 import queue
 import weather_data_class
 from tkinter import messagebox
+import DataClass
 
 #\ global
 weather_cursor = None
@@ -113,13 +114,34 @@ def ALTER_TABLE(connection: mysql.connector, column_name:str, column_type:str ,T
 
 #\ Delete the duplicate column in the database
 def Delete_duplicate(connection:mysql.connector, table:str):
-    read_query = "SELECT *, COUNT(ID) FROM {Index.DB_name}.{table} GROUP BY ID HAVING COUNT(ID)>1;"
+    read_query = f"SELECT *, COUNT(ID) FROM {Index.DB_name}.{table} GROUP BY ID HAVING COUNT(ID)>1;"
     if read_data(connection, read_query) != None:
         print("[Info]Start to delete duplicate column---------")
         delete_query = f"DELETE t1 FROM {Index.DB_name}.{table} t1 INNER JOIN {Index.DB_name}.{table} t2 WHERE t1.ID = t2.ID AND t1.species_info_id > t2.species_info_id;"
         ExecuteQuery(connection, delete_query)
 
 
+#\ Read all the data with certain species from Database and return the general format: DataClass.DetailedTableInfo
+def Read_data_DetailedTable(connection, species_name):
+    print(f">>>>> Species name: {species_name}")
+    read_query = f"SELECT * FROM {species_name}"
+    read_list = read_data(connection, read_query)
+    return [DataClass.DetailedTableInfo(eachline["ID"],
+                                         eachline["Dates"],
+                                         eachline["Times"],
+                                         eachline["City"],
+                                         eachline["District"],
+                                         eachline["Place"],
+                                         eachline["Altitude"],
+                                         eachline["recorder"],
+                                         eachline["Latitude"],
+                                         eachline["Longitude"],
+                                         Index.Species_Family_Name[int(eachline["species_family_id"])-1],# chinese species name
+                                         eachline["Species_Name"],
+                                         "No description currently",  # description, currently ignore
+                                         None)  # weather, ignore anyway
+
+             for eachline in read_list if ((eachline["Latitude"] != None) & (eachline["Longitude"] != None))]
 
 
 #\ Insert the data that's not exit after the table been build

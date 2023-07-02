@@ -181,7 +181,7 @@ def Update2File(File_path:str, Data:list, task:str, Row_index:int=None, Col_inde
                 if Col_index != None and Content != None:
                     Data[0][Col_index] = Content
                     File_writer.writerows(Data)
-                    print(f"\n[info] Update the header [{Content}] to become new header --> {Data[0]}")
+                    print(f"\n[INFO]  Update the header [{Content}] to become new header --> {Data[0]}")
                     Flag = True
             #\ add header and initial the column
             elif task == Update2FileTaskList[1]:
@@ -192,7 +192,7 @@ def Update2File(File_path:str, Data:list, task:str, Row_index:int=None, Col_inde
                     for i in range(1,len(Data)):
                         Data[i].insert(Col_index, "")
                     File_writer.writerows(Data)
-                    print(f"\n[info] Insert the header [{Content}] to become new header --> {Data[0]}")
+                    print(f"\n[INFO]  Insert the header [{Content}] to become new header --> {Data[0]}")
                     Flag = True
             #\ update Content
             elif task == Update2FileTaskList[2]:
@@ -200,7 +200,7 @@ def Update2File(File_path:str, Data:list, task:str, Row_index:int=None, Col_inde
                     if (ListIndexValid(Data, Row_index, Col_index)):
                         Data[Row_index][Col_index] = Content
                         File_writer.writerows(Data)
-                        print(f"\n[info] Update the data [{Content}] -->  Data[{Row_index}][{Col_index}]")
+                        print(f"\n[INFO]  Update the data [{Content}] -->  Data[{Row_index}][{Col_index}]")
                         Flag = True
     else :
         print("[warning] No avaliable Update2File task been assign")
@@ -300,7 +300,7 @@ def CleanDataTF(*args):
                                     row.Dates,
                                     row.User,
                                     row.City,
-                                    row.Dictrict,
+                                    row.District,
                                     row.Place,
                                     row.Altitude,
                                     row.Latitude,
@@ -413,6 +413,9 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                         print("[Warning]Rety for the pool map still failed")
                         pass
 
+                with Dragonfly.DataCNT_lock:
+                    Dragonfly.TotalCount += Dragonfly.DataCNT.value
+                    Dragonfly.DataCNT.value = 0
 
                 #\ GUI display
                 self.ICurrentNumLabel_text(Dragonfly.TotalCount)
@@ -455,7 +458,7 @@ def Save2File(self, Input_species_famliy:str, Input_species:str, session_S2F, Sp
                             Data_tmp.Times,
                             Data_tmp.User,
                             Data_tmp.City,
-                            Data_tmp.Dictrict,
+                            Data_tmp.District,
                             Data_tmp.Place,
                             Data_tmp.Altitude,
                             Data_tmp.Latitude,
@@ -511,7 +514,7 @@ def parse_all(self):
     Species_total_num_Dict = Dragonfly.Find_species_total_data()
 
     #\ store the items that need to update in this variable
-    Update = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
+    UpdateList = checkUpdateSpecies(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
 
     #\ write the total number to json file
     writeTotalNum2Json(Species_total_num_Dict, Index.TotalNumberOfSpecies_filepath)
@@ -523,7 +526,7 @@ def parse_all(self):
     progressbar_portion = self.progressbar_portion_calc()
 
     #\ if there is no json file, which means parsing at the first time
-    if len(Update) == 0:
+    if len(UpdateList) == 0:
         for species_family_loop in Index.Species_Family_Name:
             for species_loop in Index.Species_Name_Group[Index.Species_Family_Name.index(species_family_loop)]:
                 folder = Index.folder_all_crawl_data + Index.Species_class_key[species_family_loop]
@@ -555,7 +558,7 @@ def parse_all(self):
                 self.pbLabel_text()
 
                 #\ if the species is in the update list or the file doesn't exist
-                if (species_loop in Update) or (not file_check):
+                if (species_loop in UpdateList) or (not file_check):
                     ##########################################################################################################
                     Save2File(self, species_family_loop, species_loop, Session_S2F, Species_total_num_Dict, File_name, folder)
                     ##########################################################################################################

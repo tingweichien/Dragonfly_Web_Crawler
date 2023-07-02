@@ -11,10 +11,12 @@ from multiprocessing import Process, Pool, Value, Lock
 from typing import List
 import proxyscrape
 from fake_useragent import UserAgent
-
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 
 # global
-session = requests.Session()
+session = requests.session()
+session.mount('https://', HTTPAdapter(max_retries=Retry(total=5)))
 
 stop_crawl_all_data_mp = False
 
@@ -70,13 +72,13 @@ def Login_Web(Input_account:str, Input_password:str):
                 loginStatus = requests.get(Index.Login_url)
                 Login_type = "No proxy"
 
-            print(f"[info] login type: {Login_type}, login status: {loginStatus}")
+            print(f"[INFO]  login type: {Login_type}, login status: {loginStatus}")
 
 
         except:
             #\ print the retry
             re_try += 1
-            print(f"[info] retry: {re_try}")
+            print(f"[INFO]  retry: {re_try}")
 
 
         else:
@@ -352,11 +354,11 @@ def crawl_all_data(Web_rawl_Species_family_name:str, Web_rawl_Species_name:str, 
                                                 tmp_List[5].text,
                                                 tmp_List[7].text,
                                                 tmp_List[6].text,
-                                                soup2.find(id='R_LAT').get('value'),
-                                                soup2.find(id='R_LNG').get('value'),
+                                                soup2.find(id='R_LAT').get('value'),  # type: ignore
+                                                soup2.find(id='R_LNG').get('value'),  # type: ignore
                                                 Web_rawl_Species_family_name,
                                                 Web_rawl_Species_name,
-                                                soup2.find(id='R_MEMO').get('value')))
+                                                soup2.find(id='R_MEMO').get('value')))  # type: ignore
             DataCNT += 1
             print("Current finished datas >> " +
                     str(DataCNT) + " /" + str(Total_num) +
@@ -391,7 +393,8 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str,
                                             Index.species_all_record_data_species_url +
                                             Index.Species_class_key[Web_rawl_Species_family_name] +
                                             Index.Species_key[Web_rawl_Species_name],
-                                            headers=Index.headers  )
+                                            headers=Index.headers,
+                                            timeout=Index.requestTimeOut)
 
     soup = BeautifulSoup(Species_all_record_data.text, 'html.parser')
     Row_Data = soup.find_all(id='theRow')
@@ -405,11 +408,11 @@ def crawl_all_data_mp2(session, Web_rawl_Species_family_name:str,
         response_DetailedInfo = session.get(Index.general_url + Index.Detailed_discriptions_url + id, headers=Index.headers)
         soup2 = BeautifulSoup(response_DetailedInfo.text, 'html.parser')
         Data_List.append(DataClass.DetailedTableInfo(tmp_List[0].text, tmp_List[1].text, tmp_List[2].text, tmp_List[3].text, tmp_List[4].text, tmp_List[5].text, tmp_List[7].text, tmp_List[6].text,
-                                            soup2.find(id='R_LAT').get('value'),
-                                            soup2.find(id='R_LNG').get('value'),
+                                            soup2.find(id='R_LAT').get('value'),  # type: ignore
+                                            soup2.find(id='R_LNG').get('value'),  # type: ignore
                                             Web_rawl_Species_family_name,
                                             Web_rawl_Species_name,
-                                            soup2.find(id='R_MEMO').get('value')))
+                                            soup2.find(id='R_MEMO').get('value')))  # type: ignore
 
 
         #\ counts for the crawling times
@@ -493,6 +496,11 @@ def Find_species_total_data():
                 number = '0'
             Dictionary[td_list_text_tmp.split('.')[1].strip()] = number
     driver.quit()
+
+    #\ Temp WA for 黑翅蜻蜓, Since this has been removed on the remote website
+    #\ Keep the current data and let it go
+    #\ need to modify the all content again
+    Dictionary["黑翅蜻蜓"] = 0
 
     return Dictionary
 

@@ -7,12 +7,13 @@ except ImportError:
 
 # Data class for the simplify imfomation
 class simplifyTableInfo:
-    def __init__(self, IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User):
+    def __init__(self, IdNumber:str="", Dates:str="", Times:str="", City:str="", District:str="", Place:str="",
+                Altitude:str="", User:str=""):
         self.IdNumber = IdNumber
         self.Dates = Dates
         self.Times = Times
         self.City = City
-        self.Dictrict = Dictrict
+        self.District = District
         self.Place = Place
         self.Altitude = Altitude
         self.User = User
@@ -22,7 +23,7 @@ class simplifyTableInfo:
                 '  [Dates]: ' + self.Dates +
                 '  [Times]: ' + self.Times +
                 '  [City]: ' + self.City +
-                '  [Dictrict]: ' + self.Dictrict +
+                '  [District]: ' + self.District +
                 '  [Altitude]: ' + self.Altitude +
                 '  [Place]: ' + self.Place,
                 '  [User]:' + self.User)
@@ -30,10 +31,10 @@ class simplifyTableInfo:
 
 # Data class for DetailedTable infomation
 class DetailedTableInfo(simplifyTableInfo):
-    def __init__(self, IdNumber:str, Dates:str, Times:str, City:str, Dictrict:str, Place:str,
-                Altitude:str, User:str, Latitude:str, Longitude:str, SpeciesFamily:str,
-                Species:str, Description:str, weather=None):
-        super(DetailedTableInfo, self).__init__(IdNumber, Dates, Times, City, Dictrict, Place, Altitude, User)
+    def __init__(self, IdNumber:str="", Dates:str="", Times:str="", City:str="", District:str="", Place:str="",
+                Altitude:str="", User:str="", Latitude:str="", Longitude:str="", SpeciesFamily:str="",
+                Species:str="", Description:str="", weather=None):
+        super(DetailedTableInfo, self).__init__(IdNumber, Dates, Times, City, District, Place, Altitude, User)
         self.Latitude       = Latitude
         self.Longitude      = Longitude
         self.SpeciesFamily  = SpeciesFamily
@@ -52,16 +53,16 @@ class DetailedTableInfo(simplifyTableInfo):
                 '  [Dates]: ' + self.Dates +
                 '  [Times]: ' + self.Times +
                 '  [City]: ' + self.City +
-                '  [Dictrict]: ' + self.Dictrict +
+                '  [District]: ' + self.District +
                 '  [Altitude]: ' + self.Altitude +
                 '  [Place]: ' + self.Place,
                 '  [User]:' + self.User+
                 '  [Latitude]: ' + self.Latitude +
                 '  [Longitude]: ' + self.Longitude +
-                '  [Species]: ' + self.Species +
                 '  [SpeciesFamily]: ' + self.SpeciesFamily +
+                '  [Species]: ' + self.Species +
                 '  [Description]: ' + self.Description +
-                '  [weather]: ' + self.weather)
+                '  [weather]: ' + self.weather) # type: ignore
 
 
 # table class for tk GUI
